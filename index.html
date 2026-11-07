@@ -1,0 +1,1191 @@
+<title>Asisten Bayi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,650&family=Figtree:wght@400;500;650&display=swap">
+<style>
+/* Tata letak: satu kolom sempit seperti buku saku KIA, navigasi bawah untuk jempol, kartu tingkat sebagai satu-satunya elemen berwarna kuat. */
+:root {
+  --bg: #f3f5f2;
+  --surface: #ffffff;
+  --ink: #17282a;
+  --muted: #566a6b;
+  --line: #d9e0dc;
+  --accent: #1f6f6a;
+  --accent-ink: #ffffff;
+  --accent-soft: #e2efec;
+  --lv1: #2e7d4f; --lv1-bg: #e5f2ea;
+  --lv2: #8a6400; --lv2-bg: #fbf1d6;
+  --lv3: #b0480f; --lv3-bg: #fbe7da;
+  --lv4: #b3232a; --lv4-bg: #fbe2e2;
+  --font-display: "Literata", Georgia, "Times New Roman", serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --radius: 14px;
+  --nav-h: 64px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1a1b; --surface: #172526; --ink: #e4ecea; --muted: #9db0ae; --line: #2a3b3c;
+  --accent: #5fb8b0; --accent-ink: #0b1414; --accent-soft: #1d3434;
+  --lv1: #7fd1a0; --lv1-bg: #183326; --lv2: #e8c25a; --lv2-bg: #352c12;
+  --lv3: #f39a62; --lv3-bg: #3a2516; --lv4: #ff8b8b; --lv4-bg: #3d1c1e;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0f1a1b; --surface: #172526; --ink: #e4ecea; --muted: #9db0ae; --line: #2a3b3c;
+  --accent: #5fb8b0; --accent-ink: #0b1414; --accent-soft: #1d3434;
+  --lv1: #7fd1a0; --lv1-bg: #183326; --lv2: #e8c25a; --lv2-bg: #352c12;
+  --lv3: #f39a62; --lv3-bg: #3a2516; --lv4: #ff8b8b; --lv4-bg: #3d1c1e;
+  color-scheme: dark; }
+
+html, body { height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 640px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 16px calc(var(--nav-h) + 32px + env(safe-area-inset-bottom, 0px)); }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 650; line-height: 1.2; text-wrap: balance; margin: 0; }
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.05rem; font-family: var(--font-body); font-weight: 650; }
+p { margin: 0; }
+a { color: var(--accent); }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.stack-s { display: flex; flex-direction: column; gap: 8px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.muted { color: var(--muted); }
+.small { font-size: 0.875rem; }
+.eyebrow { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 650; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+button, .btn { font: inherit; cursor: pointer; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 10px 14px; min-height: 44px; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 650; }
+.btn-ghost { background: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+button:disabled { opacity: 0.5; cursor: default; }
+input, select, textarea { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 44px; width: 100%; box-sizing: border-box; }
+textarea { min-height: 96px; resize: vertical; }
+label { font-weight: 500; }
+
+/* Header */
+.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.brand { font-family: var(--font-display); font-weight: 650; font-size: 1.15rem; }
+.child-chip { font-size: 0.875rem; color: var(--muted); text-decoration: none; }
+
+/* Navigasi bawah */
+nav.bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+nav.bottom .inner { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); height: var(--nav-h); }
+nav.bottom a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; color: var(--muted); font-size: 0.72rem; font-weight: 500; }
+nav.bottom a svg { width: 22px; height: 22px; }
+nav.bottom a[aria-current="page"] { color: var(--accent); font-weight: 650; }
+
+/* Daftar menu */
+.list { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+.list a { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; text-decoration: none; color: var(--ink); border-top: 1px solid var(--line); }
+.list a:first-child { border-top: 0; }
+.list a .t { font-weight: 650; }
+.list a .s { color: var(--muted); font-size: 0.875rem; }
+.list a .chev { color: var(--muted); flex: none; }
+.list a > div { min-width: 0; }
+
+/* Tingkat */
+.lv { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-weight: 650; font-size: 0.875rem; }
+.lv::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.lv-1 { color: var(--lv1); background: var(--lv1-bg); }
+.lv-2 { color: var(--lv2); background: var(--lv2-bg); }
+.lv-3 { color: var(--lv3); background: var(--lv3-bg); }
+.lv-4 { color: var(--lv4); background: var(--lv4-bg); }
+.result { border-radius: var(--radius); padding: 16px; border: 1px solid var(--line); background: var(--surface); }
+.result.r-1 { border-left: 6px solid var(--lv1); }
+.result.r-2 { border-left: 6px solid var(--lv2); }
+.result.r-3 { border-left: 6px solid var(--lv3); }
+.result.r-4 { border-left: 6px solid var(--lv4); }
+.result h2 { font-size: 1.4rem; }
+.result .lv { align-self: flex-start; }
+.diff { display: flex; flex-direction: column; gap: 4px; padding-top: 10px; border-top: 1px solid var(--line); }
+.diff:first-of-type { border-top: 0; padding-top: 0; }
+.diff-h { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.freq { font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.levels-key { display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; align-items: start; }
+
+/* Pertanyaan */
+.q { padding: 14px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
+.q:first-child { border-top: 0; padding-top: 0; }
+.q .help { font-size: 0.85rem; color: var(--muted); }
+.seg { display: flex; gap: 8px; flex-wrap: wrap; }
+.seg button { flex: 1 1 auto; min-width: 72px; }
+.seg button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); font-weight: 650; }
+.seg.col { flex-direction: column; }
+.seg.col button { text-align: left; }
+.num-in { display: flex; gap: 8px; align-items: center; }
+.num-in input { max-width: 140px; }
+
+/* Sumber */
+.src { font-size: 0.8rem; color: var(--muted); }
+.src a { color: var(--muted); }
+.tag { display: inline-block; font-size: 0.7rem; padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line); color: var(--muted); margin-left: 4px; vertical-align: 1px; }
+ul.items { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 10px; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 650; font-size: 0.8rem; }
+
+/* Hitung napas */
+.counter { display: flex; flex-direction: column; align-items: center; gap: 16px; padding-block: 8px; }
+.ring { position: relative; width: min(64vw, 240px); aspect-ratio: 1; max-width: 100%; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .c-bg { fill: none; stroke: var(--line); stroke-width: 10; }
+.ring .c-fg { fill: none; stroke: var(--accent); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 0.25s linear; }
+.ring .mid { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ring .big { font-family: var(--font-display); font-size: 3.2rem; font-weight: 650; font-variant-numeric: tabular-nums; line-height: 1; }
+.tap { width: 100%; min-height: 96px; font-size: 1.15rem; font-weight: 650; }
+
+/* Milestone */
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+.tabs button { flex: none; min-height: 44px; padding: 6px 12px; border-radius: 999px; font-size: 0.875rem; }
+.tabs button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.check { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; }
+.check input { width: 22px; height: 22px; min-height: 0; flex: none; margin-top: 2px; accent-color: var(--accent); }
+
+/* Tanya */
+.answer { white-space: pre-wrap; }
+.skeleton { height: 14px; border-radius: 6px; background: var(--line); }
+.banner { border-radius: 12px; padding: 12px 14px; background: var(--accent-soft); font-size: 0.9rem; }
+.banner.warn { background: var(--lv2-bg); }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 0.9rem; z-index: 30; max-width: calc(100% - 32px); }
+/* Alur satu pertanyaan per layar */
+.progress { display: flex; flex-direction: column; gap: 6px; }
+.bar { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--accent); transition: width 0.2s ease; }
+.qbig { font-family: var(--font-display); font-size: 1.35rem; font-weight: 650; line-height: 1.3; text-wrap: balance; }
+.answers { display: flex; flex-direction: column; gap: 10px; }
+.answers button { min-height: 52px; text-align: left; padding: 12px 16px; font-size: 1.02rem; }
+.answers button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); font-weight: 650; }
+.toggle { display: flex; gap: 12px; align-items: flex-start; text-align: left; width: 100%; min-height: 52px; padding: 12px 14px; }
+.toggle .box { flex: none; width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--muted); margin-top: 1px; display: grid; place-items: center; }
+.toggle[aria-pressed="true"] { border-color: var(--lv4); background: var(--lv4-bg); }
+.toggle[aria-pressed="true"] .box { border-color: var(--lv4); background: var(--lv4); }
+.toggle[aria-pressed="true"] .box::after { content: ""; width: 10px; height: 6px; border-left: 2px solid var(--surface); border-bottom: 2px solid var(--surface); transform: rotate(-45deg) translate(1px, -1px); }
+.navrow { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.main-msg { font-size: 1.08rem; }
+.cta { font-weight: 650; }
+details.review summary { cursor: pointer; font-weight: 650; min-height: 44px; display: flex; align-items: center; }
+.review-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+.review-row > div { min-width: 0; }
+.review-row button { flex: none; min-height: 44px; padding: 4px 10px; font-size: 0.875rem; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap" id="app">
+  <div class="stack">
+    <div class="top"><span class="brand">Asisten Bayi</span></div>
+    <div class="card stack-s">
+      <div class="skeleton" style="width:60%"></div>
+      <div class="skeleton" style="width:90%"></div>
+      <div class="skeleton" style="width:75%"></div>
+      <p class="muted small">Membuka database pengetahuan…</p>
+    </div>
+  </div>
+</div>
+<nav class="bottom" aria-label="Menu utama"><div class="inner" id="nav"></div></nav>
+<div class="toast" id="toast" hidden></div>
+
+<script id="offline-tpl" type="application/json">"\u003c!doctype html>\u003chtml lang=\"id\">\u003chead>\u003cmeta charset=\"utf-8\">\u003cmeta name=\"viewport\" content=\"width=device-width,initial-scale=1,viewport-fit=cover\">\u003ctitle>Asisten Bayi\u003c/title>\n\u003cmeta name=\"claude:viewport-fit-sides\" content=\"cover\">\n\u003clink rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n\u003clink rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,650&family=Figtree:wght@400;500;650&display=swap\">\n\u003cstyle>\n/* Tata letak: satu kolom sempit seperti buku saku KIA, navigasi bawah untuk jempol, kartu tingkat sebagai satu-satunya elemen berwarna kuat. */\n:root {\n  --bg: #f3f5f2;\n  --surface: #ffffff;\n  --ink: #17282a;\n  --muted: #566a6b;\n  --line: #d9e0dc;\n  --accent: #1f6f6a;\n  --accent-ink: #ffffff;\n  --accent-soft: #e2efec;\n  --lv1: #2e7d4f; --lv1-bg: #e5f2ea;\n  --lv2: #8a6400; --lv2-bg: #fbf1d6;\n  --lv3: #b0480f; --lv3-bg: #fbe7da;\n  --lv4: #b3232a; --lv4-bg: #fbe2e2;\n  --font-display: \"Literata\", Georgia, \"Times New Roman\", serif;\n  --font-body: \"Figtree\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif;\n  --radius: 14px;\n  --nav-h: 64px;\n}\n@media (prefers-color-scheme: dark) { :root:not([data-theme=\"light\"]) {\n  --bg: #0f1a1b; --surface: #172526; --ink: #e4ecea; --muted: #9db0ae; --line: #2a3b3c;\n  --accent: #5fb8b0; --accent-ink: #0b1414; --accent-soft: #1d3434;\n  --lv1: #7fd1a0; --lv1-bg: #183326; --lv2: #e8c25a; --lv2-bg: #352c12;\n  --lv3: #f39a62; --lv3-bg: #3a2516; --lv4: #ff8b8b; --lv4-bg: #3d1c1e;\n  color-scheme: dark; } }\n:root[data-theme=\"dark\"] {\n  --bg: #0f1a1b; --surface: #172526; --ink: #e4ecea; --muted: #9db0ae; --line: #2a3b3c;\n  --accent: #5fb8b0; --accent-ink: #0b1414; --accent-soft: #1d3434;\n  --lv1: #7fd1a0; --lv1-bg: #183326; --lv2: #e8c25a; --lv2-bg: #352c12;\n  --lv3: #f39a62; --lv3-bg: #3a2516; --lv4: #ff8b8b; --lv4-bg: #3d1c1e;\n  color-scheme: dark; }\n\nhtml, body { height: 100%; }\nbody { margin: 0; }\n[hidden] { display: none !important; }\nbody { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }\nbody::before { content: \"\"; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }\n.wrap { max-width: 640px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 16px calc(var(--nav-h) + 32px + env(safe-area-inset-bottom, 0px)); }\nh1, h2, h3 { font-family: var(--font-display); font-weight: 650; line-height: 1.2; text-wrap: balance; margin: 0; }\nh1 { font-size: 1.75rem; }\nh2 { font-size: 1.3rem; }\nh3 { font-size: 1.05rem; font-family: var(--font-body); font-weight: 650; }\np { margin: 0; }\na { color: var(--accent); }\n.stack { display: flex; flex-direction: column; gap: 16px; }\n.stack-s { display: flex; flex-direction: column; gap: 8px; }\n.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }\n.muted { color: var(--muted); }\n.small { font-size: 0.875rem; }\n.eyebrow { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 650; }\n.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }\nbutton, .btn { font: inherit; cursor: pointer; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 10px 14px; min-height: 44px; }\n.btn-primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 650; }\n.btn-ghost { background: transparent; }\nbutton:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }\nbutton:disabled { opacity: 0.5; cursor: default; }\ninput, select, textarea { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 44px; width: 100%; box-sizing: border-box; }\ntextarea { min-height: 96px; resize: vertical; }\nlabel { font-weight: 500; }\n\n/* Header */\n.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }\n.brand { font-family: var(--font-display); font-weight: 650; font-size: 1.15rem; }\n.child-chip { font-size: 0.875rem; color: var(--muted); text-decoration: none; }\n\n/* Navigasi bawah */\nnav.bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }\nnav.bottom .inner { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); height: var(--nav-h); }\nnav.bottom a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; color: var(--muted); font-size: 0.72rem; font-weight: 500; }\nnav.bottom a svg { width: 22px; height: 22px; }\nnav.bottom a[aria-current=\"page\"] { color: var(--accent); font-weight: 650; }\n\n/* Daftar menu */\n.list { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }\n.list a { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; text-decoration: none; color: var(--ink); border-top: 1px solid var(--line); }\n.list a:first-child { border-top: 0; }\n.list a .t { font-weight: 650; }\n.list a .s { color: var(--muted); font-size: 0.875rem; }\n.list a .chev { color: var(--muted); flex: none; }\n.list a > div { min-width: 0; }\n\n/* Tingkat */\n.lv { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-weight: 650; font-size: 0.875rem; }\n.lv::before { content: \"\"; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }\n.lv-1 { color: var(--lv1); background: var(--lv1-bg); }\n.lv-2 { color: var(--lv2); background: var(--lv2-bg); }\n.lv-3 { color: var(--lv3); background: var(--lv3-bg); }\n.lv-4 { color: var(--lv4); background: var(--lv4-bg); }\n.result { border-radius: var(--radius); padding: 16px; border: 1px solid var(--line); background: var(--surface); }\n.result.r-1 { border-left: 6px solid var(--lv1); }\n.result.r-2 { border-left: 6px solid var(--lv2); }\n.result.r-3 { border-left: 6px solid var(--lv3); }\n.result.r-4 { border-left: 6px solid var(--lv4); }\n.result h2 { font-size: 1.4rem; }\n.result .lv { align-self: flex-start; }\n.diff { display: flex; flex-direction: column; gap: 4px; padding-top: 10px; border-top: 1px solid var(--line); }\n.diff:first-of-type { border-top: 0; padding-top: 0; }\n.diff-h { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }\n.freq { font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }\n.levels-key { display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; align-items: start; }\n\n/* Pertanyaan */\n.q { padding: 14px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }\n.q:first-child { border-top: 0; padding-top: 0; }\n.q .help { font-size: 0.85rem; color: var(--muted); }\n.seg { display: flex; gap: 8px; flex-wrap: wrap; }\n.seg button { flex: 1 1 auto; min-width: 72px; }\n.seg button[aria-pressed=\"true\"] { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); font-weight: 650; }\n.seg.col { flex-direction: column; }\n.seg.col button { text-align: left; }\n.num-in { display: flex; gap: 8px; align-items: center; }\n.num-in input { max-width: 140px; }\n\n/* Sumber */\n.src { font-size: 0.8rem; color: var(--muted); }\n.src a { color: var(--muted); }\n.tag { display: inline-block; font-size: 0.7rem; padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line); color: var(--muted); margin-left: 4px; vertical-align: 1px; }\nul.items { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 10px; }\n.tbl { overflow-x: auto; }\ntable { border-collapse: collapse; width: 100%; font-size: 0.9rem; }\nth, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }\nth { color: var(--muted); font-weight: 650; font-size: 0.8rem; }\n\n/* Hitung napas */\n.counter { display: flex; flex-direction: column; align-items: center; gap: 16px; padding-block: 8px; }\n.ring { position: relative; width: min(64vw, 240px); aspect-ratio: 1; max-width: 100%; }\n.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }\n.ring .c-bg { fill: none; stroke: var(--line); stroke-width: 10; }\n.ring .c-fg { fill: none; stroke: var(--accent); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 0.25s linear; }\n.ring .mid { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }\n.ring .big { font-family: var(--font-display); font-size: 3.2rem; font-weight: 650; font-variant-numeric: tabular-nums; line-height: 1; }\n.tap { width: 100%; min-height: 96px; font-size: 1.15rem; font-weight: 650; }\n\n/* Milestone */\n.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }\n.tabs button { flex: none; min-height: 44px; padding: 6px 12px; border-radius: 999px; font-size: 0.875rem; }\n.tabs button[aria-pressed=\"true\"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }\n.check { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; }\n.check input { width: 22px; height: 22px; min-height: 0; flex: none; margin-top: 2px; accent-color: var(--accent); }\n\n/* Tanya */\n.answer { white-space: pre-wrap; }\n.skeleton { height: 14px; border-radius: 6px; background: var(--line); }\n.banner { border-radius: 12px; padding: 12px 14px; background: var(--accent-soft); font-size: 0.9rem; }\n.banner.warn { background: var(--lv2-bg); }\n.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 0.9rem; z-index: 30; max-width: calc(100% - 32px); }\n/* Alur satu pertanyaan per layar */\n.progress { display: flex; flex-direction: column; gap: 6px; }\n.bar { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }\n.bar > span { display: block; height: 100%; background: var(--accent); transition: width 0.2s ease; }\n.qbig { font-family: var(--font-display); font-size: 1.35rem; font-weight: 650; line-height: 1.3; text-wrap: balance; }\n.answers { display: flex; flex-direction: column; gap: 10px; }\n.answers button { min-height: 52px; text-align: left; padding: 12px 16px; font-size: 1.02rem; }\n.answers button[aria-pressed=\"true\"] { background: var(--accent-soft); border-color: var(--accent); font-weight: 650; }\n.toggle { display: flex; gap: 12px; align-items: flex-start; text-align: left; width: 100%; min-height: 52px; padding: 12px 14px; }\n.toggle .box { flex: none; width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--muted); margin-top: 1px; display: grid; place-items: center; }\n.toggle[aria-pressed=\"true\"] { border-color: var(--lv4); background: var(--lv4-bg); }\n.toggle[aria-pressed=\"true\"] .box { border-color: var(--lv4); background: var(--lv4); }\n.toggle[aria-pressed=\"true\"] .box::after { content: \"\"; width: 10px; height: 6px; border-left: 2px solid var(--surface); border-bottom: 2px solid var(--surface); transform: rotate(-45deg) translate(1px, -1px); }\n.navrow { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }\n.main-msg { font-size: 1.08rem; }\n.cta { font-weight: 650; }\ndetails.review summary { cursor: pointer; font-weight: 650; min-height: 44px; display: flex; align-items: center; }\n.review-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }\n.review-row > div { min-width: 0; }\n.review-row button { flex: none; min-height: 44px; padding: 4px 10px; font-size: 0.875rem; }\n@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }\n\u003c/style>\n\n\u003c/head>\u003cbody>\u003cdiv class=\"wrap\" id=\"app\">\n  \u003cdiv class=\"stack\">\n    \u003cdiv class=\"top\">\u003cspan class=\"brand\">Asisten Bayi\u003c/span>\u003c/div>\n    \u003cdiv class=\"card stack-s\">\n      \u003cdiv class=\"skeleton\" style=\"width:60%\">\u003c/div>\n      \u003cdiv class=\"skeleton\" style=\"width:90%\">\u003c/div>\n      \u003cdiv class=\"skeleton\" style=\"width:75%\">\u003c/div>\n      \u003cp class=\"muted small\">Membuka database pengetahuan…\u003c/p>\n    \u003c/div>\n  \u003c/div>\n\u003c/div>\n\u003cnav class=\"bottom\" aria-label=\"Menu utama\">\u003cdiv class=\"inner\" id=\"nav\">\u003c/div>\u003c/nav>\n\u003cdiv class=\"toast\" id=\"toast\" hidden>\u003c/div>\n\u003cscript id=\"kb-embed\" type=\"application/json\">/*KB_EMBED*/\u003c/script>\n\n\n\u003cscript>\n/* Mesin penilaian Asisten Bayi (berorientasi objek).\n   Dipakai di halaman web, aplikasi Android (WebView), dan tes Node. */\n(function (root, factory) {\n  if (typeof module === \"object\" && module.exports) module.exports = factory();\n  else root.Engine = factory();\n})(typeof self !== \"undefined\" ? self : this, function () {\n  \"use strict\";\n\n  /** Empat tingkat triase + catatan. */\n  class Level {\n    constructor(value, key, name, action) { this.value = value; this.key = key; this.name = name; this.action = action; Object.freeze(this); }\n    static of(v) { return Level.ALL[v] || Level.ALL[1]; }\n  }\n  Level.ALL = {\n    0: new Level(0, \"info\", \"Catatan\", \"\"),\n    1: new Level(1, \"umum\", \"Umum\", \"Bisa dirawat di rumah sambil dipantau.\"),\n    2: new Level(2, \"pantau\", \"Pantau\", \"Perhatikan beberapa jam ke depan.\"),\n    3: new Level(3, \"periksa\", \"Periksa hari ini\", \"Bawa ke dokter, puskesmas, atau bidan hari ini.\"),\n    4: new Level(4, \"igd\", \"Segera ke IGD\", \"Bawa ke IGD atau fasilitas kesehatan terdekat sekarang.\")\n  };\n\n  /** Menilai satu kondisi aturan terhadap jawaban dan konteks (usia). */\n  class ConditionEvaluator {\n    constructor(answers, ctx) { this.answers = answers || {}; this.ctx = ctx || {}; }\n    static compare(a, op, b) {\n      switch (op) { case \">\": return a > b; case \">=\": return a >= b; case \"\u003c\": return a \u003c b; case \"\u003c=\": return a \u003c= b; case \"==\": return a === b; default: return false; }\n    }\n    static toNumber(v) {\n      if (v === null || v === undefined || v === \"\") return NaN;\n      return typeof v === \"number\" ? v : parseFloat(String(v).replace(\",\", \".\"));\n    }\n    test(c) {\n      if (!c || typeof c !== \"object\") return false;\n      const a = this.answers;\n      if (\"yes\" in c) return a[c.yes] === \"ya\";\n      if (\"no\" in c) return a[c.no] === \"tidak\";\n      if (\"eq\" in c) return a[c.eq[0]] === c.eq[1];\n      if (\"num\" in c) { const n = ConditionEvaluator.toNumber(a[c.num[0]]); return Number.isFinite(n) && ConditionEvaluator.compare(n, c.num[1], c.num[2]); }\n      if (\"age\" in c) { const d = this.ctx.ageDays; return typeof d === \"number\" && Number.isFinite(d) && ConditionEvaluator.compare(d, c.age[0], c.age[1]); }\n      if (\"all\" in c) return c.all.every(x => this.test(x));\n      if (\"any\" in c) return c.any.some(x => this.test(x));\n      if (\"not\" in c) return !this.test(c.not);\n      if (\"count\" in c) return c.count.of.filter(x => this.test(x)).length >= c.count.min;\n      return false;\n    }\n    /** Id pertanyaan yang dirujuk sebuah kondisi. */\n    static refs(c, out) {\n      out = out || [];\n      if (!c || typeof c !== \"object\") return out;\n      if (\"yes\" in c) out.push(c.yes);\n      else if (\"no\" in c) out.push(c.no);\n      else if (\"eq\" in c) out.push(c.eq[0]);\n      else if (\"num\" in c) out.push(c.num[0]);\n      else if (\"all\" in c) c.all.forEach(x => ConditionEvaluator.refs(x, out));\n      else if (\"any\" in c) c.any.forEach(x => ConditionEvaluator.refs(x, out));\n      else if (\"not\" in c) ConditionEvaluator.refs(c.not, out);\n      else if (\"count\" in c) c.count.of.forEach(x => ConditionEvaluator.refs(x, out));\n      return out;\n    }\n  }\n\n  /** Hasil penilaian yang siap ditampilkan. */\n  class Assessment {\n    constructor(props) { Object.assign(this, props); Object.freeze(this); }\n    get levelInfo() { return Level.of(this.level); }\n    get isUrgent() { return this.level >= 4; }\n  }\n\n  /** Penilai gejala untuk satu definisi checker dari basis pengetahuan. */\n  class SymptomChecker {\n    constructor(def) { this.def = def; }\n    get id() { return this.def.id; }\n    get title() { return this.def.title; }\n    get dangerIds() { return this.def.danger || []; }\n    visibleQuestions(answers, ctx) {\n      const ev = new ConditionEvaluator(answers, ctx);\n      return (this.def.questions || []).filter(q => !q.showIf || ev.test(q.showIf));\n    }\n    /** Pertanyaan tanda bahaya (ditanyakan bersama di langkah pertama) dan sisanya (satu per layar). */\n    split(answers, ctx) {\n      const vis = this.visibleQuestions(answers, ctx);\n      const d = new Set(this.dangerIds);\n      return { danger: vis.filter(q => d.has(q.id)), rest: vis.filter(q => !d.has(q.id)) };\n    }\n    assess(answers, ctx) {\n      const visible = new Set(this.visibleQuestions(answers, ctx).map(q => q.id));\n      const clean = {};\n      Object.keys(answers || {}).forEach(k => { if (visible.has(k) && answers[k] !== undefined && answers[k] !== \"\") clean[k] = answers[k]; });\n      const ev = new ConditionEvaluator(clean, ctx);\n      const def = this.def;\n      const matched = (def.rules || []).filter(r => ev.test(r.when));\n      const graded = matched.filter(r => r.level > 0).sort((a, b) => b.level - a.level);\n      const notes = matched.filter(r => r.level === 0);\n      const fallback = def.default || { level: 1, title: \"Umum\", text: \"\", src: [] };\n      const level = graded.length ? graded[0].level : fallback.level;\n\n      let differentials = (def.differentials || []).filter(d => d.when && ev.test(d.when));\n      if (level \u003c= 2) differentials = (def.differentials || []).filter(d => d.baseline).concat(differentials.filter(d => !d.baseline));\n\n      const src = new Set();\n      const add = l => (l || []).forEach(s => src.add(s));\n      if (!graded.length) add(fallback.src);\n      graded.forEach(r => add(r.src)); notes.forEach(r => add(r.src)); differentials.forEach(d => add(d.src)); (def.care || []).forEach(c => add(c.src));\n\n      return new Assessment({\n        level,\n        headline: graded.length ? Level.of(level).name : (fallback.title || Level.of(level).name),\n        summary: graded.length ? null : fallback.text,\n        summarySrc: graded.length ? [] : (fallback.src || []),\n        reasons: graded, notes, differentials,\n        care: def.care || [], escalate: def.escalate || [],\n        sources: Array.from(src),\n        answered: Object.keys(clean).length\n      });\n    }\n  }\n\n  /** Perhitungan usia. */\n  class Age {\n    static days(birth, today) {\n      if (!birth) return null;\n      const b = new Date(birth + \"T00:00:00\");\n      const t = today ? new Date(today + \"T00:00:00\") : new Date();\n      if (isNaN(b)) return null;\n      const tt = new Date(t.getFullYear(), t.getMonth(), t.getDate());\n      const d = Math.round((tt - b) / 86400000);\n      return d >= 0 ? d : null;\n    }\n    static label(days) {\n      if (days === null || days === undefined) return \"\";\n      if (days \u003c 31) return days + \" hari\";\n      const months = Math.floor(days / 30.4375);\n      if (months \u003c 24) return months + \" bulan\";\n      const y = Math.floor(months / 12), m = months % 12;\n      return y + \" tahun\" + (m ? \" \" + m + \" bulan\" : \"\");\n    }\n    static monthsSince(dateStr, today) {\n      const a = new Date(dateStr + \"T00:00:00\"), b = today ? new Date(today + \"T00:00:00\") : new Date();\n      if (isNaN(a)) return Infinity;\n      return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());\n    }\n  }\n\n  /** Penjaga anti-halusinasi: setiap pernyataan wajib bersumber terdaftar. */\n  class KnowledgeValidator {\n    constructor(kb) { this.kb = kb || {}; this.errors = []; }\n    static honestEmpty(t) { return /belum (punya|diverifikasi|ada)|sengaja tidak|tidak memuat|belum dihitung/i.test(t || \"\"); }\n    checkSrc(where, list, allowEmpty) {\n      const sources = this.kb.sources || {};\n      if (!Array.isArray(list)) { this.errors.push(where + \": src bukan array\"); return; }\n      if (!list.length && !allowEmpty) this.errors.push(where + \": tanpa sumber\");\n      list.forEach(s => { if (!sources[s]) this.errors.push(where + \": sumber tidak dikenal '\" + s + \"'\"); });\n    }\n    validate() {\n      const kb = this.kb, H = KnowledgeValidator.honestEmpty;\n      (kb.checkers || []).forEach(c => {\n        const qids = new Set((c.questions || []).map(q => q.id));\n        (c.danger || []).forEach(q => { if (!qids.has(q)) this.errors.push(\"checker \" + c.id + \": tanda bahaya tidak ada '\" + q + \"'\"); });\n        (c.rules || []).forEach(r => {\n          const w = \"checker \" + c.id + \" rule \" + r.id;\n          this.checkSrc(w, r.src, H(r.text));\n          if (![0, 1, 2, 3, 4].includes(r.level)) this.errors.push(w + \": level tidak valid\");\n          ConditionEvaluator.refs(r.when).forEach(q => { if (!qids.has(q)) this.errors.push(w + \": pertanyaan tidak ada '\" + q + \"'\"); });\n        });\n        this.checkSrc(\"checker \" + c.id + \" default\", (c.default || {}).src, false);\n        (c.differentials || []).forEach(d => this.checkSrc(\"checker \" + c.id + \" diferensial \" + d.name, d.src, false));\n        (c.care || []).forEach((x, i) => this.checkSrc(\"checker \" + c.id + \" care \" + i, x.src, H(x.t)));\n      });\n      (kb.guides || []).forEach(g => (g.sections || []).forEach(s => {\n        if (s.items) s.items.forEach((it, i) => this.checkSrc(\"panduan \" + g.id + \" / \" + s.h + \" #\" + i, it.src, false));\n        if (s.table) this.checkSrc(\"panduan \" + g.id + \" / \" + s.h + \" tabel\", s.src, false);\n      }));\n      (kb.obat || []).forEach(o => this.checkSrc(\"obat \" + o.id, o.src, H(o.t)));\n      if (kb.imunisasi) this.checkSrc(\"imunisasi\", kb.imunisasi.src, false);\n      if (!kb.meta || !kb.meta.verifiedDate) this.errors.push(\"meta: verifiedDate kosong\");\n      return this.errors;\n    }\n    static validate(kb) { return new KnowledgeValidator(kb).validate(); }\n  }\n\n  return { Level, ConditionEvaluator, Assessment, SymptomChecker, Age, KnowledgeValidator };\n});\n\n\u003c/script>\n\u003cscript>\n(function () {\n  \"use strict\";\n  const { Level, SymptomChecker, Age, KnowledgeValidator } = window.Engine;\n  const ONLINE_URL = \"https://claude.ai/artifact/2DjnViTVkzraEi3o7Qmwqr\";\n\n  // =============================================================\n  // Utilitas\n  // =============================================================\n  class Html {\n    static esc(s) { return String(s == null ? \"\" : s).replace(/[&\u003c>\"']/g, c => ({ \"&\": \"&amp;\", \"\u003c\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\", \"'\": \"&#39;\" }[c])); }\n    static chev() { return '\u003cspan class=\"chev\" aria-hidden=\"true\">›\u003c/span>'; }\n    static levelChip(v) { return '\u003cspan class=\"lv lv-' + v + '\">' + Html.esc(Level.of(v).name) + \"\u003c/span>\"; }\n    static table(t) {\n      const e = Html.esc;\n      return '\u003cdiv class=\"tbl\">\u003ctable>\u003cthead>\u003ctr>' + t.head.map(x => \"\u003cth>\" + e(x) + \"\u003c/th>\").join(\"\") + \"\u003c/tr>\u003c/thead>\u003ctbody>\" +\n        t.rows.map(r => \"\u003ctr>\" + r.map((x, i) => i === 0 ? \"\u003ctd>\u003cstrong>\" + e(x) + \"\u003c/strong>\u003c/td>\" : \"\u003ctd>\" + e(x) + \"\u003c/td>\").join(\"\") + \"\u003c/tr>\").join(\"\") + \"\u003c/tbody>\u003c/table>\u003c/div>\";\n    }\n    static back(href, label) { return '\u003ca href=\"#' + href + '\" class=\"small\">‹ ' + Html.esc(label) + \"\u003c/a>\"; }\n  }\n\n  class Clock {\n    static today() { const d = new Date(); return d.getFullYear() + \"-\" + String(d.getMonth() + 1).padStart(2, \"0\") + \"-\" + String(d.getDate()).padStart(2, \"0\"); }\n  }\n\n  /** Penyimpanan lokal untuk kenyamanan per perangkat; aman bila diblokir. */\n  class LocalStore {\n    static get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }\n    static set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* abaikan */ } }\n  }\n\n  class Toast {\n    static show(msg) {\n      const t = document.getElementById(\"toast\");\n      t.textContent = msg; t.hidden = false;\n      clearTimeout(Toast.timer); Toast.timer = setTimeout(() => { t.hidden = true; }, 2800);\n    }\n  }\n\n  // =============================================================\n  // Model\n  // =============================================================\n  class Profile {\n    constructor() { const p = LocalStore.get(\"ab.profile\", {}); this.name = p.nama || \"\"; this.birth = p.lahir || \"\"; }\n    save(name, birth) { this.name = name; this.birth = birth; LocalStore.set(\"ab.profile\", { nama: name, lahir: birth }); }\n    get ageDays() { return Age.days(this.birth); }\n    get hasAge() { return this.ageDays !== null; }\n    get label() { return this.hasAge ? (this.name ? this.name + \" · \" : \"\") + Age.label(this.ageDays) : \"Atur usia anak\"; }\n  }\n\n  /** Basis pengetahuan yang sedang aktif, dari sumber data mana pun. */\n  class KnowledgeBase {\n    constructor() { this.clear(); }\n    clear() { this.sources = {}; this.checkers = []; this.guides = []; this.milestones = []; this.obat = []; this.changelog = []; this.usulan = []; this.meta = null; this.imunisasi = null; }\n    load(kb) {\n      this.sources = kb.sources || {}; this.checkers = kb.checkers || []; this.guides = kb.guides || []; this.milestones = kb.milestones || [];\n      this.obat = kb.obat || []; this.changelog = kb.changelog || []; this.meta = kb.meta || null; this.imunisasi = kb.imunisasi || null;\n    }\n    get isEmpty() { return !this.checkers.length; }\n    get isStale() { return !!this.meta && Age.monthsSince(this.meta.verifiedDate) >= (this.meta.reviewMonths || 12); }\n    byOrder(list) { return list.slice().sort((a, b) => (a.order || 99) - (b.order || 99)); }\n    checker(id) { const d = this.checkers.find(c => c.id === id); return d ? new SymptomChecker(d) : null; }\n    guide(id) { return this.guides.find(g => g.id === id) || null; }\n    source(id) { return this.sources[id] || null; }\n    snapshot() {\n      const strip = o => { const c = { ...o }; delete c._id; return c; };\n      return { sources: this.sources, checkers: this.checkers.map(strip), guides: this.guides.map(strip), milestones: this.milestones.map(strip), obat: this.obat.map(strip), imunisasi: this.imunisasi, meta: this.meta, changelog: this.changelog.map(strip) };\n    }\n    static parse(text) {\n      let kb;\n      try { kb = JSON.parse(text); } catch (e) { return { error: \"File bukan JSON yang valid.\" }; }\n      if (!kb || !Array.isArray(kb.checkers) || !kb.meta) return { error: \"Isi file bukan data Asisten Bayi.\" };\n      const errs = KnowledgeValidator.validate(kb);\n      if (errs.length) return { error: \"Ditolak karena ada pernyataan tanpa sumber: \" + errs[0] };\n      return { kb };\n    }\n  }\n\n  /** Satu sesi menjawab satu penilai: langkah tanda bahaya, lalu satu pertanyaan per layar. */\n  class CheckerSession {\n    constructor(checker, profile) { this.checker = checker; this.profile = profile; this.answers = {}; this.step = null; this.skippedByUrgent = false; this.reset(); }\n    get ctx() { return { ageDays: this.profile.ageDays }; }\n    get parts() { return this.checker.split(this.answers, this.ctx); }\n    reset() { this.answers = {}; this.skippedByUrgent = false; this.step = this.parts.danger.length ? \"danger\" : 0; }\n    get assessment() { return this.checker.assess(this.answers, this.ctx); }\n    get questions() { return this.parts.rest; }\n    get total() { return this.questions.length + (this.parts.danger.length ? 1 : 0); }\n    get position() { if (this.step === \"danger\") return 1; if (this.step === \"result\") return this.total; return this.step + 1 + (this.parts.danger.length ? 1 : 0); }\n    get current() { return typeof this.step === \"number\" ? this.questions[this.step] : null; }\n    toggleDanger(qid) { this.answers[qid] = this.answers[qid] === \"ya\" ? undefined : \"ya\"; }\n    get dangerSelected() { return this.parts.danger.filter(q => this.answers[q.id] === \"ya\").length; }\n    confirmDanger() {\n      this.parts.danger.forEach(q => { if (this.answers[q.id] !== \"ya\") this.answers[q.id] = \"tidak\"; });\n      if (this.assessment.isUrgent) { this.skippedByUrgent = this.questions.length > 0; this.step = \"result\"; return; }\n      this.step = this.questions.length ? 0 : \"result\";\n    }\n    answer(qid, value) {\n      this.answers[qid] = value;\n      if (this.assessment.isUrgent) { this.skippedByUrgent = this.step !== \"result\" && typeof this.step === \"number\" && this.step \u003c this.questions.length - 1; this.step = \"result\"; return; }\n      this.next();\n    }\n    next() {\n      if (typeof this.step !== \"number\") return;\n      const qs = this.questions;\n      const i = qs.indexOf(this.current);\n      this.step = i + 1 \u003c qs.length ? i + 1 : \"result\";\n    }\n    back() {\n      if (this.step === \"result\") { this.step = this.questions.length ? this.questions.length - 1 : (this.parts.danger.length ? \"danger\" : 0); return; }\n      if (typeof this.step === \"number\") { this.step = this.step > 0 ? this.step - 1 : (this.parts.danger.length ? \"danger\" : 0); }\n    }\n    goTo(qid) {\n      if (this.parts.danger.some(q => q.id === qid)) { this.step = \"danger\"; return; }\n      const i = this.questions.findIndex(q => q.id === qid);\n      if (i >= 0) this.step = i;\n    }\n    get reviewRows() {\n      const all = this.checker.visibleQuestions(this.answers, this.ctx);\n      return all.filter(q => this.answers[q.id] !== undefined && this.answers[q.id] !== \"\").map(q => ({ q, label: CheckerSession.answerLabel(q, this.answers[q.id]) }));\n    }\n    static answerLabel(q, v) {\n      if (q.type === \"yn\") return v === \"ya\" ? \"Ya\" : v === \"tidak\" ? \"Tidak\" : \"Tidak tahu\";\n      if (q.type === \"choice\") { const o = q.options.find(x => x.v === v); return o ? o.label : v; }\n      return v + (q.unit ? \" \" + q.unit : \"\");\n    }\n  }\n\n  /** Penghitung napas 60 detik. Ambang WHO per usia. */\n  class BreathCounter {\n    constructor(onTick, onDone) { this.onTick = onTick; this.onDone = onDone; this.reset(); }\n    reset() { clearInterval(this.timer); this.running = false; this.left = 60; this.count = 0; this.done = false; }\n    start() {\n      this.reset(); this.running = true;\n      const t0 = Date.now();\n      this.timer = setInterval(() => {\n        this.left = Math.max(0, 60 - Math.floor((Date.now() - t0) / 1000));\n        if (this.left \u003c= 0) { clearInterval(this.timer); this.running = false; this.done = true; this.onDone(); } else this.onTick();\n      }, 250);\n    }\n    tap() { if (this.running) this.count++; }\n    static threshold(days) {\n      if (days === null) return null;\n      if (days \u003c= 28) return { min: 61, label: \"lebih dari 60×/menit\", src: [\"who_newborn\"], level: 4 };\n      if (days \u003c 60) return null;\n      if (days \u003c 365) return { min: 50, label: \"50×/menit atau lebih\", src: [\"who_imci_pneu\"], level: 3 };\n      if (days \u003c= 1825) return { min: 40, label: \"40×/menit atau lebih\", src: [\"who_imci_pneu\"], level: 3 };\n      return null;\n    }\n  }\n\n  // =============================================================\n  // Sumber data\n  // =============================================================\n  class DataSource {\n    constructor(kb) { this.kb = kb; }\n    get mode() { return \"static\"; }\n    get canAsk() { return false; }\n    get canApprove() { return false; }\n    get canExport() { return false; }\n    get canUpdateLocal() { return false; }\n    start(onReady, onFail) { onFail(); }\n  }\n\n  /** Versi online: database artifak claude.ai, tanya Claude, persetujuan usulan. */\n  class CloudSource extends DataSource {\n    constructor(kb, claude) { super(kb); this.claude = claude; this.db = null; this.sample = null; this.downloads = null; this.editor = false; }\n    get mode() { return \"db\"; }\n    get canAsk() { return !!this.sample; }\n    get canApprove() { return this.editor; }\n    get canExport() { return !!this.downloads; }\n    async start(onReady, onFail) {\n      const [db, user, sample, downloads] = await Promise.all([\"db\", \"user\", \"sample\", \"downloads\"].map(n => this.claude.use(n)));\n      this.db = db; this.sample = sample; this.downloads = downloads;\n      this.editor = user ? await user.canEdit().catch(() => false) : false;\n      if (!db) { onFail(); return; }\n      const kb = this.kb, pending = new Set([\"sources\", \"checkers\", \"guides\", \"milestones\", \"obat\", \"changelog\", \"usulan\", \"meta\", \"imunisasi\"]);\n      let ready = false;\n      const timer = setTimeout(() => { if (!ready) onFail(); }, 10000);\n      const settle = key => { pending.delete(key); if (!pending.size && !ready) { ready = true; clearTimeout(timer); } if (ready) onReady(); };\n      const fail = () => { clearTimeout(timer); onFail(); };\n      const coll = (name, apply) => db.collection(name).onSnapshot(s => { apply(s.docs.map(d => ({ ...d.data(), _id: d.id }))); settle(name); }, fail);\n      coll(\"sources\", docs => { kb.sources = Object.fromEntries(docs.map(d => { const { _id, ...r } = d; return [_id, r]; })); });\n      coll(\"checkers\", docs => { kb.checkers = docs; });\n      coll(\"guides\", docs => { kb.guides = docs; });\n      coll(\"milestones\", docs => { kb.milestones = docs; });\n      coll(\"obat\", docs => { kb.obat = docs; });\n      coll(\"changelog\", docs => { kb.changelog = docs; });\n      coll(\"usulan\", docs => { kb.usulan = docs; });\n      db.doc(\"kb/meta\").onSnapshot(s => { kb.meta = s.exists ? s.data() : null; settle(\"meta\"); }, fail);\n      db.doc(\"kb/imunisasi\").onSnapshot(s => { kb.imunisasi = s.exists ? s.data() : null; settle(\"imunisasi\"); }, fail);\n    }\n    async ask(question, ageDays, onText, signal) {\n      const prompt = new AskPrompt(this.kb, ageDays).build(question);\n      return this.sample(prompt, { signal, cache: false, onText });\n    }\n    async approve(u) {\n      const coll = u.target && u.target.collection, id = u.target && u.target.id;\n      if (![\"checkers\", \"guides\", \"milestones\", \"obat\", \"kb\", \"sources\"].includes(coll) || !u.patch) throw new Error(\"Target usulan tidak dikenali.\");\n      const trial = JSON.parse(JSON.stringify(this.kb.snapshot()));\n      Object.assign(trial.sources, u.newSources || {});\n      const put = (arr) => { const i = arr.findIndex(x => x.id === id); if (i >= 0) arr[i] = u.patch; else arr.push(u.patch); };\n      if (coll === \"sources\") trial.sources[id] = u.patch;\n      else if (coll === \"kb\" && id === \"imunisasi\") trial.imunisasi = u.patch;\n      else if (trial[coll]) put(trial[coll]);\n      const errs = KnowledgeValidator.validate(trial);\n      if (errs.length) throw new Error(\"Ditolak otomatis: \" + errs[0]);\n      for (const [sid, s] of Object.entries(u.newSources || {})) await this.db.doc(\"sources/\" + sid).set(s);\n      await this.db.doc(coll + \"/\" + id).set(u.patch);\n      const d = Clock.today(), stamp = d.replace(/-/g, \".\");\n      const v = (this.kb.meta && this.kb.meta.version) || \"\";\n      const seq = v.startsWith(stamp) ? parseInt(v.split(\"-\")[1] || \"0\", 10) + 1 : 1;\n      await this.db.doc(\"kb/meta\").update({ version: stamp + \"-\" + seq, verifiedDate: d });\n      await this.db.doc(\"changelog/\" + d + \"-\" + Date.now()).set({ date: d, title: u.title || \"Pembaruan data\", text: u.summary || \"\", by: \"Disetujui pemilik\", usulan: u._id });\n      await this.db.doc(\"usulan/\" + u._id).update({ status: \"disetujui\", decidedAt: new Date().toISOString() });\n    }\n    async reject(u) { await this.db.doc(\"usulan/\" + u._id).update({ status: \"ditolak\", decidedAt: new Date().toISOString() }); }\n    async saveQuestion(q) { await this.db.collection(\"usulan\").add({ type: \"pertanyaan\", question: q, title: q.slice(0, 140), status: \"baru\", createdAt: new Date().toISOString() }); }\n    get canExportOffline() { return !!this.downloads && !!document.getElementById(\"offline-tpl\"); }\n    async exportOffline() {\n      const snap = this.kb.snapshot();\n      const errs = KnowledgeValidator.validate(snap);\n      if (errs.length) throw new Error(\"Data tidak lolos pemeriksaan: \" + errs[0]);\n      const tpl = JSON.parse(document.getElementById(\"offline-tpl\").textContent);\n      const kbText = JSON.stringify(snap).replace(/\u003c/g, \"\\\\u003c\");\n      const html = tpl.replace(\"/*KB_\" + \"EMBED*/\", () => kbText);\n      await this.downloads.save({ filename: \"asisten-bayi-offline-\" + snap.meta.version + \".html\", data: html });\n    }\n    async exportForApk() {\n      const snap = this.kb.snapshot();\n      const errs = KnowledgeValidator.validate(snap);\n      if (errs.length) throw new Error(\"Data tidak lolos pemeriksaan: \" + errs[0]);\n      await this.downloads.save({ filename: \"asisten-bayi-data-\" + snap.meta.version + \".json\", data: JSON.stringify(snap) });\n    }\n  }\n\n  /** Jembatan ke kode Java di aplikasi Android. */\n  class AndroidBridge {\n    constructor(native) { this.native = native; this.seq = 0; this.cbs = {}; window.__androidCb = (id, ok, text) => { const f = this.cbs[id]; delete this.cbs[id]; if (f) f(ok, text); }; }\n    call(method, arg) { return new Promise(resolve => { const id = ++this.seq; this.cbs[id] = (ok, text) => resolve({ ok, text }); if (arg === undefined) this.native[method](id); else this.native[method](arg, id); }); }\n    getKb() { return this.native.getKb(); }\n    save(text) { return this.native.save(text); }\n    getUrl() { return this.native.getUrl() || \"\"; }\n    setUrl(u) { this.native.setUrl(u); }\n    open(url) { this.native.openUrl(url); }\n    fetch(url) { return this.call(\"fetchText\", url); }\n    pickFile() { return this.call(\"pickFile\"); }\n  }\n\n  /** Aplikasi Android: data tersimpan di perangkat, bisa dipakai tanpa internet. */\n  class AndroidSource extends DataSource {\n    constructor(kb, bridge) { super(kb); this.bridge = bridge; this.status = \"\"; }\n    get mode() { return \"android\"; }\n    get canUpdateLocal() { return true; }\n    start(onReady, onFail) {\n      const r = KnowledgeBase.parse(this.bridge.getKb() || \"\");\n      if (r.error) { onFail(); return; }\n      this.kb.load(r.kb); onReady();\n      this.refresh(true).then(changed => { if (changed) onReady(); });\n    }\n    accept(text, fromUrl) {\n      const r = KnowledgeBase.parse(text);\n      if (r.error) { this.status = r.error; return false; }\n      const cur = this.kb.meta ? String(this.kb.meta.version) : \"\";\n      if (fromUrl && cur && String(r.kb.meta.version) \u003c= cur) { this.status = \"Data sudah terbaru (versi \" + cur + \").\"; return false; }\n      if (!this.bridge.save(text)) { this.status = \"Gagal menyimpan data di perangkat.\"; return false; }\n      this.kb.load(r.kb); this.status = \"Data diperbarui ke versi \" + r.kb.meta.version + \".\"; return true;\n    }\n    async refresh(silent) {\n      const url = this.bridge.getUrl();\n      if (!url) { if (!silent) this.status = \"Alamat file data belum diisi. Gunakan Impor file data, atau isi alamatnya.\"; return false; }\n      const res = await this.bridge.fetch(url);\n      if (!res.ok) { if (!silent) this.status = \"Tidak bisa mengambil data: \" + res.text; return false; }\n      const before = this.status, changed = this.accept(res.text, true);\n      if (silent && !changed) this.status = before;\n      return changed;\n    }\n    async importFile() { const res = await this.bridge.pickFile(); if (!res.ok) { if (res.text) this.status = res.text; return false; } return this.accept(res.text, false); }\n  }\n\n  /** File lokal / peramban biasa: data tertanam di file, bisa diganti dengan impor file data. */\n  class StaticSource extends DataSource {\n    constructor(kb) { super(kb); this.status = \"\"; this.origin = \"\"; }\n    get canUpdateLocal() { return true; }\n    static embedded() { const el = document.getElementById(\"kb-embed\"); return el ? el.textContent.trim() : \"\"; }\n    static stored() { try { return localStorage.getItem(\"ab.kb\") || \"\"; } catch (e) { return \"\"; } }\n    start(onReady, onFail) {\n      const pick = (...texts) => {\n        let best = null;\n        texts.forEach(([t, origin]) => { if (!t) return; const r = KnowledgeBase.parse(t); if (!r.error && (!best || String(r.kb.meta.version) > String(best.kb.meta.version))) best = { kb: r.kb, origin }; });\n        return best;\n      };\n      const finish = best => { if (!best) { onFail(); return; } this.kb.load(best.kb); this.origin = best.origin; onReady(); };\n      const local = pick([StaticSource.embedded(), \"tertanam\"], [StaticSource.stored(), \"impor\"]);\n      if (local) { finish(local); return; }\n      fetch(\"kb.json\").then(r => (r.ok ? r.text() : \"\")).then(t => finish(pick([t, \"kb.json\"]))).catch(onFail);\n    }\n    importFile() {\n      return new Promise(resolve => {\n        const inp = document.createElement(\"input\");\n        inp.type = \"file\"; inp.accept = \".json,application/json\";\n        inp.onchange = () => {\n          const f = inp.files && inp.files[0];\n          if (!f) { resolve(false); return; }\n          const rd = new FileReader();\n          rd.onload = () => {\n            const r = KnowledgeBase.parse(String(rd.result));\n            if (r.error) { this.status = r.error; resolve(false); return; }\n            try { localStorage.setItem(\"ab.kb\", String(rd.result)); } catch (e) { this.status = \"Data terbaca, tetapi peramban ini tidak mengizinkan penyimpanan. Data hanya berlaku sampai halaman ditutup.\"; }\n            this.kb.load(r.kb); this.origin = \"impor\";\n            if (!this.status) this.status = \"Data diperbarui ke versi \" + r.kb.meta.version + \".\";\n            resolve(true);\n          };\n          rd.onerror = () => { this.status = \"File tidak bisa dibaca.\"; resolve(false); };\n          rd.readAsText(f);\n        };\n        inp.click();\n      });\n    }\n  }\n\n  /** Prompt \"Tanya\": Claude hanya boleh menjawab dari database. */\n  class AskPrompt {\n    constructor(kb, ageDays) { this.kb = kb; this.ageDays = ageDays; }\n    database() {\n      const kb = this.kb;\n      return {\n        sources: Object.fromEntries(Object.entries(kb.sources).map(([k, v]) => [k, (v.type === \"sekunder\" ? \"[sekunder] \" : \"\") + v.title])),\n        penilai_gejala: kb.checkers.map(c => ({ id: c.id, judul: c.title, aturan: c.rules.map(r => ({ tingkat: Level.of(r.level).name, teks: r.text, src: r.src })), default: c.default, kemungkinan: c.differentials, perawatan: c.care, naik_tingkat: c.escalate })),\n        panduan: kb.guides.map(g => ({ judul: g.title, bagian: g.sections })),\n        obat: kb.obat, imunisasi: kb.imunisasi,\n        perkembangan: kb.milestones.map(m => ({ usia: m.label, kemampuan: m.d }))\n      };\n    }\n    build(question) {\n      const d = this.ageDays;\n      return [\n        \"Anda adalah asisten kesehatan bayi dan anak untuk orang tua di Indonesia. Jawab dalam Bahasa Indonesia yang tenang, jelas, dan sederhana.\",\n        \"ATURAN WAJIB:\",\n        \"1. Jawab HANYA dari DATABASE di bawah, jangan memakai pengetahuan lain. Bila tidak ada di database, tulis persis: \\\"Belum ada di database terverifikasi aplikasi ini.\\\" lalu sarankan konsultasi tenaga kesehatan bila menyangkut gejala.\",\n        \"2. Setiap pernyataan fakta diberi kode sumber dalam kurung siku sesuai kunci sources, misalnya [who_newborn]. Jangan mengarang kode.\",\n        \"3. Kalimat pertama adalah pesan utama: tingkat (Umum, Pantau, Periksa hari ini, atau Segera ke IGD) dan apa yang harus dilakukan, sesuai aturan penilai di database. Ikuti jumlah tanda sesuai kriteria; satu tanda yang belum memenuhi kriteria cukup disebut Pantau.\",\n        \"4. Sebut kemungkinan dari yang paling sering, memakai frekuensi alami seperti \\\"3 dari 10 bayi\\\". Kondisi langka hanya disebut bila ciri pembedanya ada pada cerita pengguna, selalu dengan angka kejadiannya.\",\n        \"5. Jangan memberi vonis pasti; sebut pemeriksaan yang memastikan bila ada di database. Jangan memberi dosis obat selain yang tertulis di database.\",\n        \"6. Jangan menakut-nakuti; tanpa kata dramatis. Maksimal sekitar 180 kata, kalimat pendek, tanpa tabel.\",\n        \"Usia anak menurut profil: \" + (d === null ? \"tidak diketahui\" : Age.label(d) + \" (\" + d + \" hari)\") + \". Tanggal hari ini: \" + Clock.today() + \".\",\n        \"DATABASE (JSON):\", JSON.stringify(this.database()),\n        \"PERTANYAAN ORANG TUA:\", question.trim()\n      ].join(\"\\n\");\n    }\n  }\n\n  // =============================================================\n  // Tampilan\n  // =============================================================\n  class View {\n    constructor(app) { this.app = app; }\n    get kb() { return this.app.kb; }\n    get profile() { return this.app.profile; }\n    get source() { return this.app.source; }\n    header() { return '\u003cdiv class=\"top\">\u003cspan class=\"brand\">Asisten Bayi\u003c/span>\u003ca class=\"child-chip\" href=\"#profil\">' + Html.esc(this.profile.label) + \"\u003c/a>\u003c/div>\"; }\n    page(inner) { return '\u003cdiv class=\"stack\">' + this.header() + inner + \"\u003c/div>\"; }\n    sources(ids) {\n      const list = (ids || []).map(id => { const s = this.kb.source(id); return s ? s : null; }).filter(Boolean);\n      if (!list.length) return \"\";\n      const short = t => { const i = t.indexOf(\" — \"); return i > 0 ? t.slice(0, i) : t; };\n      return '\u003cp class=\"src\">Sumber: ' + list.map(s => '\u003ca href=\"' + Html.esc(s.url) + '\" target=\"_blank\" rel=\"noopener\">' + Html.esc(short(s.title)) + \"\u003c/a>\" + (s.type === \"sekunder\" ? '\u003cspan class=\"tag\">sekunder\u003c/span>' : \"\")).join(\" · \") + \"\u003c/p>\";\n    }\n    render() { return \"\"; }\n    onClick() { return false; }\n    onInput() {}\n    onSubmit() {}\n  }\n\n  class HomeView extends View {\n    render() {\n      const kb = this.kb, d = this.profile.ageDays, m = kb.meta;\n      const pick = d !== null && d \u003c= 28 ? [\"neonatus\", \"gumoh\", \"kuning\", \"demam\"] : [\"gumoh\", \"demam\", \"diare\", \"napas\"];\n      const pending = kb.usulan.filter(u => u.status === \"baru\").length;\n      const items = pick.map(id => kb.checkers.find(c => c.id === id)).filter(Boolean);\n      const keyText = { 1: \"Pola yang umum, tanpa tanda bahaya.\", 2: \"Satu tanda belum memenuhi kriteria. Perhatikan beberapa jam ke depan.\", 3: \"Kriteria rujukan terpenuhi. Periksakan hari ini.\", 4: \"Tanda gawat menurut kriteria resmi. Ke IGD sekarang.\" };\n      return this.page(\n        '\u003cdiv class=\"stack-s\">\u003ch1>' + (this.profile.hasAge ? \"Ada keluhan apa hari ini?\" : \"Selamat datang\") + \"\u003c/h1>\" +\n        '\u003cp class=\"muted\">Jawab beberapa pertanyaan singkat, lalu lihat apa yang perlu dilakukan. Setiap hasil menyebut sumbernya: WHO, IDAI, Kemenkes, atau AAP. Hasilnya berupa kemungkinan, bukan vonis.\u003c/p>\u003c/div>' +\n        (this.profile.hasAge ? \"\" : '\u003ca class=\"btn btn-primary\" href=\"#profil\" style=\"text-align:center;text-decoration:none\">Isi tanggal lahir anak\u003c/a>') +\n        (kb.isStale ? '\u003cdiv class=\"banner warn\">Data terakhir diverifikasi ' + Html.esc(m.verifiedDate) + \". Sebagian fakta mungkin perlu dicek ulang.\u003c/div>\" : \"\") +\n        (pending && this.source.canApprove ? '\u003ca class=\"banner\" href=\"#data\" style=\"text-decoration:none;color:inherit\">' + pending + \" usulan pembaruan data menunggu persetujuan Anda ›\u003c/a>\" : \"\") +\n        '\u003cdiv class=\"stack-s\">\u003cp class=\"eyebrow\">Cek gejala\u003c/p>\u003cdiv class=\"list\">' +\n        items.map(c => '\u003ca href=\"#cek-' + Html.esc(c.id) + '\">\u003cdiv>\u003cdiv class=\"t\">' + Html.esc(c.title) + '\u003c/div>\u003cdiv class=\"s\">' + Html.esc(c.short) + \"\u003c/div>\u003c/div>\" + Html.chev() + \"\u003c/a>\").join(\"\") +\n        '\u003ca href=\"#cek\">\u003cdiv>\u003cdiv class=\"t\">Semua keluhan\u003c/div>\u003c/div>' + Html.chev() + \"\u003c/a>\u003c/div>\u003c/div>\" +\n        '\u003cdiv class=\"stack-s\">\u003cp class=\"eyebrow\">Arti hasil\u003c/p>\u003cdiv class=\"card levels-key\">' + [1, 2, 3, 4].map(l => Html.levelChip(l) + '\u003cspan class=\"small\">' + keyText[l] + \"\u003c/span>\").join(\"\") + \"\u003c/div>\u003c/div>\" +\n        (m ? '\u003cp class=\"small muted\">Data versi ' + Html.esc(m.version) + \" · diverifikasi \" + Html.esc(m.verifiedDate) + ' · \u003ca href=\"#data\">sumber & pembaruan\u003c/a>\u003c/p>' : \"\"));\n    }\n  }\n\n  class CheckerListView extends View {\n    render() {\n      return this.page('\u003ch1>Cek gejala\u003c/h1>\u003cp class=\"muted\">Pilih keluhan yang paling sesuai.\u003c/p>\u003cdiv class=\"list\">' +\n        this.kb.byOrder(this.kb.checkers).map(c => '\u003ca href=\"#cek-' + Html.esc(c.id) + '\">\u003cdiv>\u003cdiv class=\"t\">' + Html.esc(c.title) + '\u003c/div>\u003cdiv class=\"s\">' + Html.esc(c.short) + \"\u003c/div>\u003c/div>\" + Html.chev() + \"\u003c/a>\").join(\"\") + \"\u003c/div>\");\n    }\n  }\n\n  class CheckerView extends View {\n    constructor(app) { super(app); this.sessions = {}; this.id = null; }\n    session(id) {\n      const checker = this.kb.checker(id);\n      if (!checker) return null;\n      let s = this.sessions[id];\n      if (!s || s.checker.def !== checker.def) { const old = s; s = this.sessions[id] = new CheckerSession(checker, this.profile); if (old) { s.answers = old.answers; s.step = old.step; } }\n      return s;\n    }\n    render(id) {\n      this.id = id;\n      const s = this.session(id);\n      if (!s) return this.page('\u003cp>Keluhan ini belum ada di database.\u003c/p>' + Html.back(\"cek\", \"Semua keluhan\"));\n      const def = s.checker.def;\n      let body = Html.back(\"cek\", \"Semua keluhan\") + \"\u003ch1>\" + Html.esc(def.title) + \"\u003c/h1>\";\n      if (def.needsAge && !this.profile.hasAge) body += '\u003cdiv class=\"banner warn\">Usia anak belum diisi, padahal beberapa kriteria bergantung pada usia. \u003ca href=\"#profil\">Isi tanggal lahir\u003c/a>\u003c/div>';\n      if (s.step === \"result\") body += this.result(s);\n      else if (s.step === \"danger\") body += this.progress(s) + this.dangerStep(s);\n      else body += this.progress(s) + this.questionStep(s);\n      return this.page(body);\n    }\n    progress(s) {\n      const pct = Math.round((s.position - 1) / Math.max(1, s.total) * 100);\n      return '\u003cdiv class=\"progress\">\u003cspan class=\"small muted\">Langkah ' + s.position + \" dari \" + s.total + '\u003c/span>\u003cdiv class=\"bar\" aria-hidden=\"true\">\u003cspan style=\"width:' + pct + '%\">\u003c/span>\u003c/div>\u003c/div>';\n    }\n    dangerStep(s) {\n      const qs = s.parts.danger, n = s.dangerSelected;\n      return '\u003cdiv class=\"card stack\">\u003cdiv class=\"stack-s\">\u003cp class=\"qbig\">Pertama, adakah salah satu tanda ini?\u003c/p>\u003cp class=\"small muted\">Ketuk yang ada. Tanda-tanda ini dicek lebih dulu karena masing-masing sudah cukup untuk segera mencari pertolongan.\u003c/p>\u003c/div>' +\n        '\u003cdiv class=\"answers\">' + qs.map(q => '\u003cbutton type=\"button\" class=\"toggle\" data-danger=\"' + Html.esc(q.id) + '\" aria-pressed=\"' + (s.answers[q.id] === \"ya\") + '\">\u003cspan class=\"box\" aria-hidden=\"true\">\u003c/span>\u003cspan>' + Html.esc(q.text) + \"\u003c/span>\u003c/button>\").join(\"\") + \"\u003c/div>\" +\n        '\u003cbutton type=\"button\" class=\"btn-primary\" data-act=\"danger-ok\">' + (n ? \"Lihat hasil\" : \"Tidak ada, lanjut\") + \"\u003c/button>\u003c/div>\";\n    }\n    questionStep(s) {\n      const q = s.current;\n      if (!q) return \"\";\n      const v = s.answers[q.id];\n      let ctl;\n      if (q.type === \"yn\") {\n        const opts = [[\"ya\", \"Ya\"], [\"tidak\", \"Tidak\"]].concat(q.allowUnknown ? [[\"tdk-tahu\", \"Tidak tahu\"]] : []);\n        ctl = '\u003cdiv class=\"answers\">' + opts.map(([val, l]) => '\u003cbutton type=\"button\" data-ans=\"' + Html.esc(q.id) + '\" data-v=\"' + val + '\" aria-pressed=\"' + (v === val) + '\">' + l + \"\u003c/button>\").join(\"\") + \"\u003c/div>\";\n      } else if (q.type === \"choice\") {\n        ctl = '\u003cdiv class=\"answers\">' + q.options.map(o => '\u003cbutton type=\"button\" data-ans=\"' + Html.esc(q.id) + '\" data-v=\"' + Html.esc(o.v) + '\" aria-pressed=\"' + (v === o.v) + '\">' + Html.esc(o.label) + \"\u003c/button>\").join(\"\") + \"\u003c/div>\";\n      } else {\n        ctl = '\u003cform class=\"stack-s\" data-form=\"num\">\u003cdiv class=\"num-in\">\u003cinput id=\"num-' + Html.esc(q.id) + '\" inputmode=\"decimal\" value=\"' + Html.esc(v || \"\") + '\" aria-label=\"' + Html.esc(q.text) + '\">\u003cspan class=\"muted\">' + Html.esc(q.unit || \"\") + '\u003c/span>\u003c/div>\u003cdiv class=\"row\">\u003cbutton class=\"btn-primary\" type=\"submit\">Lanjut\u003c/button>' + (q.optional ? '\u003cbutton type=\"button\" data-act=\"skip\">Lewati\u003c/button>' : \"\") + \"\u003c/div>\u003c/form>\";\n      }\n      return '\u003cdiv class=\"card stack\">\u003clabel class=\"qbig\"' + (q.type === \"number\" ? ' for=\"num-' + Html.esc(q.id) + '\"' : \"\") + \">\" + Html.esc(q.text) + \"\u003c/label>\" + (q.help ? '\u003cp class=\"small muted\">' + Html.esc(q.help) + \"\u003c/p>\" : \"\") + ctl + \"\u003c/div>\" +\n        '\u003cdiv class=\"navrow\">\u003cbutton type=\"button\" class=\"btn-ghost\" data-act=\"back\">‹ Kembali\u003c/button>' + (q.type === \"yn\" ? '\u003cbutton type=\"button\" class=\"btn-ghost\" data-act=\"skip\">Lewati\u003c/button>' : \"\") + \"\u003c/div>\";\n    }\n    result(s) {\n      const r = s.assessment, lv = r.levelInfo;\n      const main = r.summary || (r.reasons[0] && r.reasons[0].text) || \"\";\n      const mainSrc = r.summary ? r.summarySrc : (r.reasons[0] ? r.reasons[0].src : []);\n      // Pesan utama di atas (CDC Clear Communication Index): tingkat, tindakan, lalu alasannya.\n      let h = '\u003cdiv class=\"result r-' + r.level + '\" aria-live=\"polite\">\u003cdiv class=\"stack-s\">' + Html.levelChip(r.level) + \"\u003ch2>\" + Html.esc(lv.action) + \"\u003c/h2>\" +\n        (r.summary && r.headline !== lv.name ? '\u003cp class=\"eyebrow\">' + Html.esc(r.headline) + \"\u003c/p>\" : \"\") +\n        '\u003cp class=\"main-msg\">' + Html.esc(main) + \"\u003c/p>\" + this.sources(mainSrc) + \"\u003c/div>\u003c/div>\";\n      if (s.skippedByUrgent) h += '\u003cp class=\"small muted\">Pertanyaan lain dilewati karena sudah ada tanda yang perlu segera ditangani.\u003c/p>';\n      const more = r.reasons.slice(1);\n      if (more.length) h += '\u003cdiv class=\"card stack-s\">\u003ch3>Alasan lain\u003c/h3>' + more.map(x => \"\u003cdiv>\u003cp>\" + Html.esc(x.text) + \"\u003c/p>\" + this.sources(x.src) + \"\u003c/div>\").join(\"\") + \"\u003c/div>\";\n      r.notes.forEach(n => { h += '\u003cdiv class=\"banner\">\u003cp>' + Html.esc(n.text) + \"\u003c/p>\" + this.sources(n.src) + \"\u003c/div>\"; });\n      if (!r.isUrgent) {\n        if (r.differentials.length) h += '\u003cdiv class=\"card stack-s\">\u003ch3>Kemungkinan, dari yang paling sering\u003c/h3>' +\n          r.differentials.map(d => '\u003cdiv class=\"diff\">\u003cp class=\"diff-h\">\u003cstrong>' + Html.esc(d.name) + '\u003c/strong>\u003cspan class=\"freq\">' + Html.esc(d.freq) + \"\u003c/span>\u003c/p>\u003cp class=\\\"small\\\">\" + Html.esc(d.features) + \"\u003c/p>\" + this.sources(d.src) + \"\u003c/div>\").join(\"\") + \"\u003c/div>\";\n        if (r.care.length) h += '\u003cdiv class=\"card stack-s\">\u003ch3>Yang bisa dilakukan sekarang\u003c/h3>\u003cul class=\"items\">' + r.care.map(x => \"\u003cli>\" + Html.esc(x.t) + this.sources(x.src) + \"\u003c/li>\").join(\"\") + \"\u003c/ul>\u003c/div>\";\n        if (r.escalate.length) h += '\u003cdiv class=\"card stack-s\">\u003ch3>Periksakan bila kemudian muncul\u003c/h3>\u003cul class=\"items\">' + r.escalate.map(x => \"\u003cli>\" + Html.esc(x) + \"\u003c/li>\").join(\"\") + \"\u003c/ul>\u003c/div>\";\n      }\n      const rows = s.reviewRows;\n      h += '\u003cdiv class=\"card\">\u003cdetails class=\"review\">\u003csummary>Jawaban Anda (' + rows.length + \")\u003c/summary>\" +\n        rows.map(x => '\u003cdiv class=\"review-row\">\u003cdiv>\u003cp class=\"small\">' + Html.esc(x.q.text) + '\u003c/p>\u003cp class=\"small\">\u003cstrong>' + Html.esc(x.label) + '\u003c/strong>\u003c/p>\u003c/div>\u003cbutton type=\"button\" data-goto=\"' + Html.esc(x.q.id) + '\">Ubah\u003c/button>\u003c/div>').join(\"\") + \"\u003c/details>\u003c/div>\";\n      h += '\u003cdiv class=\"navrow\">\u003cbutton type=\"button\" class=\"btn-ghost\" data-act=\"back\">‹ Kembali\u003c/button>\u003cbutton type=\"button\" data-act=\"restart\">Mulai ulang\u003c/button>\u003c/div>';\n      h += '\u003cp class=\"small muted\">Hasil ini berupa kemungkinan berdasarkan kriteria resmi, bukan vonis.' + (r.level \u003c= 2 ? \" Bila Anda tetap khawatir, periksakan anak meski hasilnya hijau atau kuning.\" : \"\") + \"\u003c/p>\";\n      return h;\n    }\n    onClick(t) {\n      const s = this.id && this.sessions[this.id];\n      if (!s) return false;\n      if (t.dataset.danger) { s.toggleDanger(t.dataset.danger); return true; }\n      if (t.dataset.ans) { s.answer(t.dataset.ans, t.dataset.v); window.scrollTo(0, 0); return true; }\n      if (t.dataset.goto) { s.goTo(t.dataset.goto); return true; }\n      const act = t.dataset.act;\n      if (act === \"danger-ok\") { s.confirmDanger(); window.scrollTo(0, 0); return true; }\n      if (act === \"back\") { s.back(); return true; }\n      if (act === \"skip\") { s.next(); return true; }\n      if (act === \"restart\") { s.reset(); return true; }\n      return false;\n    }\n    onSubmit(form) {\n      const s = this.id && this.sessions[this.id];\n      if (!s || form.dataset.form !== \"num\" || !s.current) return false;\n      const val = form.querySelector(\"input\").value.trim();\n      if (val === \"\") { s.next(); return true; }\n      s.answer(s.current.id, val); return true;\n    }\n    prefill(id, qid, value) { const s = this.session(id); if (s) s.answers[qid] = value; }\n  }\n\n  class BreathView extends View {\n    constructor(app) {\n      super(app);\n      this.counter = new BreathCounter(() => this.tick(), () => this.app.render());\n    }\n    tick() {\n      const l = document.getElementById(\"b-left\"); if (l) l.textContent = this.counter.left + \" detik\";\n      const fg = document.querySelector(\".ring .c-fg\");\n      if (fg) { const C = 2 * Math.PI * 52; fg.setAttribute(\"stroke-dashoffset\", (C - C * (this.counter.left / 60)).toFixed(1)); }\n    }\n    render() {\n      const c = this.counter, d = this.profile.ageDays, th = BreathCounter.threshold(d);\n      const C = 2 * Math.PI * 52, off = C * (c.left / 60);\n      let res = \"\";\n      if (c.done) {\n        const fast = th && c.count >= th.min;\n        res = '\u003cdiv class=\"result r-' + (fast ? th.level : 1) + '\">\u003cdiv class=\"stack-s\">\u003ch2>' + c.count + \"×/menit\u003c/h2>\" +\n          (th ? \"\u003cp>\" + (fast ? \"Di atas ambang napas cepat WHO untuk usia ini (\" + Html.esc(th.label) + \").\" : \"Di bawah ambang napas cepat WHO untuk usia ini (\" + Html.esc(th.label) + \").\") + \"\u003c/p>\" + this.sources(th.src)\n            : '\u003cp class=\"muted\">Aplikasi belum punya ambang terverifikasi untuk usia ini' + (d === null ? \" (usia belum diisi)\" : \"\") + \".\u003c/p>\") +\n          '\u003cbutton type=\"button\" class=\"btn-primary\" data-act=\"use-rr\">Lanjut ke penilaian batuk & napas\u003c/button>\u003c/div>\u003c/div>';\n      }\n      return this.page(\"\u003ch1>Hitung napas\u003c/h1>\" +\n        '\u003cp class=\"muted\">Hitung saat anak tenang atau tidur, tidak sedang menangis. Satu kali perut atau dada naik-turun = satu napas. Ketuk tombol besar setiap satu napas selama 60 detik.\u003c/p>' +\n        '\u003cdiv class=\"card counter\">\u003cdiv class=\"ring\">\u003csvg viewBox=\"0 0 120 120\" aria-hidden=\"true\">\u003ccircle class=\"c-bg\" cx=\"60\" cy=\"60\" r=\"52\"/>\u003ccircle class=\"c-fg\" cx=\"60\" cy=\"60\" r=\"52\" stroke-dasharray=\"' + C.toFixed(1) + '\" stroke-dashoffset=\"' + (C - off).toFixed(1) + '\"/>\u003c/svg>' +\n        '\u003cdiv class=\"mid\">\u003cspan class=\"big\" id=\"b-count\" aria-live=\"polite\">' + c.count + '\u003c/span>\u003cspan class=\"muted small\" id=\"b-left\">' + (c.running ? c.left + \" detik\" : c.done ? \"selesai\" : \"60 detik\") + \"\u003c/span>\u003c/div>\u003c/div>\" +\n        (c.running ? '\u003cbutton class=\"btn-primary tap\" data-act=\"tap\" type=\"button\">Napas\u003c/button>\u003cbutton type=\"button\" class=\"btn-ghost\" data-act=\"cancel\">Batalkan\u003c/button>'\n          : '\u003cbutton class=\"btn-primary tap\" data-act=\"start\" type=\"button\">' + (c.done ? \"Hitung ulang\" : \"Mulai 60 detik\") + \"\u003c/button>\") +\n        \"\u003c/div>\" + res + (th ? '\u003cp class=\"small muted\">Ambang napas cepat WHO untuk usia ' + Html.esc(Age.label(d)) + \": \" + Html.esc(th.label) + \".\u003c/p>\" : \"\"));\n    }\n    onClick(t) {\n      const a = t.dataset.act;\n      if (a === \"start\") { this.counter.start(); return true; }\n      if (a === \"tap\") { this.counter.tap(); const el = document.getElementById(\"b-count\"); if (el) el.textContent = this.counter.count; return \"keep\"; }\n      if (a === \"cancel\") { this.counter.reset(); return true; }\n      if (a === \"use-rr\") { this.app.views.checker.prefill(\"napas\", \"rr\", String(this.counter.count)); location.hash = \"#cek-napas\"; return \"keep\"; }\n      return false;\n    }\n  }\n\n  class AskView extends View {\n    constructor(app) { super(app); this.q = \"\"; this.text = \"\"; this.busy = false; this.err = \"\"; this.ctl = null; }\n    linkify(t) {\n      const short = s => { const i = s.indexOf(\" — \"); return i > 0 ? s.slice(0, i) : s; };\n      return Html.esc(t).replace(/\\[([a-z0-9_]+)\\]/g, (m, id) => { const s = this.kb.source(id); return s ? '\u003ca href=\"' + Html.esc(s.url) + '\" target=\"_blank\" rel=\"noopener\">[' + Html.esc(short(s.title)) + \"]\u003c/a>\" : m; });\n    }\n    render() {\n      if (!(this.source instanceof CloudSource)) return this.page('\u003ch1>Tanya\u003c/h1>\u003cdiv class=\"card stack-s\">\u003cp>Fitur tanya dijawab Claude dan hanya tersedia di versi online.\u003c/p>' + this.app.views.data.onlineLink() + \"\u003c/div>\");\n      return this.page(\"\u003ch1>Tanya\u003c/h1>\" +\n        '\u003cp class=\"muted\">Dijawab Claude hanya dari isi database aplikasi ini, dengan sumbernya. Bila jawabannya belum ada, Claude akan bilang begitu, dan pertanyaan Anda bisa dicatat untuk diriset.\u003c/p>' +\n        (this.source.canAsk ? \"\" : '\u003cdiv class=\"banner warn\">Fitur tanya membutuhkan izin Claude di halaman ini dan belum tersedia di tampilan ini.\u003c/div>') +\n        '\u003cform data-form=\"ask\" class=\"card stack\">\u003clabel for=\"t-q\">Pertanyaan\u003c/label>\u003ctextarea id=\"t-q\" placeholder=\"Contoh: bayi 2 minggu gumoh setelah menyusu tapi masih lapar, perlu ke dokter?\">' + Html.esc(this.q) + \"\u003c/textarea>\" +\n        '\u003cdiv class=\"row\">\u003cbutton class=\"btn-primary\" type=\"submit\"' + (this.busy || !this.source.canAsk ? \" disabled\" : \"\") + \">\" + (this.busy ? \"Menjawab…\" : \"Tanya\") + \"\u003c/button>\" + (this.busy ? '\u003cbutton type=\"button\" data-act=\"stop\">Hentikan\u003c/button>' : \"\") + \"\u003c/div>\u003c/form>\" +\n        (this.err ? '\u003cdiv class=\"banner warn\">' + Html.esc(this.err) + \"\u003c/div>\" : \"\") +\n        (this.text ? '\u003cdiv class=\"card stack-s\">\u003cp class=\"eyebrow\">Jawaban\u003c/p>\u003cdiv class=\"answer\" id=\"t-ans\">' + this.linkify(this.text) + \"\u003c/div>\" + (this.busy ? \"\" : '\u003cdiv class=\"row\">\u003cbutton type=\"button\" data-act=\"save-q\">Catat untuk diriset\u003c/button>\u003c/div>') + \"\u003c/div>\" : \"\"));\n    }\n    onInput(t) { if (t.id === \"t-q\") this.q = t.value; }\n    onSubmit(form) { if (form.dataset.form !== \"ask\") return false; this.q = form.querySelector(\"textarea\").value; this.ask(); return true; }\n    async ask() {\n      if (!this.q.trim() || this.busy) return;\n      this.busy = true; this.text = \"\"; this.err = \"\"; this.app.render();\n      this.ctl = new AbortController();\n      try {\n        const out = await this.source.ask(this.q, this.profile.ageDays, ({ text }) => { this.text = text; const el = document.getElementById(\"t-ans\"); if (el) el.innerHTML = this.linkify(text); else this.app.render(); }, this.ctl.signal);\n        this.text = out.text + (out.truncated ? \"\\n\\n(Jawaban terpotong. Coba pertanyaan yang lebih spesifik.)\" : \"\");\n      } catch (e) {\n        const c = e && e.code;\n        this.err = c === \"not_granted\" ? \"Izin untuk Claude di halaman ini ditolak, jadi fitur tanya tidak bisa dipakai di tampilan ini.\" : c === \"rate_limited\" ? \"Terlalu banyak pertanyaan dalam waktu singkat. Coba lagi beberapa saat lagi.\" : c === \"cancelled\" ? \"\" : \"Jawaban gagal dimuat. Periksa koneksi lalu coba lagi.\";\n      }\n      this.busy = false; this.app.render();\n    }\n    async onClick(t) {\n      if (t.dataset.act === \"stop\") { if (this.ctl) this.ctl.abort(); return \"keep\"; }\n      if (t.dataset.act === \"save-q\") {\n        try { await this.source.saveQuestion(this.q.trim()); Toast.show(\"Dicatat. Akan diriset pada pemeriksaan berikutnya.\"); }\n        catch (e) { Toast.show(e && e.code === \"permission_denied\" ? \"Anda tidak punya izin mencatat pertanyaan.\" : \"Gagal mencatat.\"); }\n        return \"keep\";\n      }\n      return false;\n    }\n  }\n\n  class MoreView extends View {\n    render() {\n      const items = [[\"panduan\", \"Panduan\", \"ASI, MPASI, tidur aman, tersedak, kesehatan ibu, dan lainnya\"], [\"tumbuh\", \"Perkembangan\", \"Checklist CDC per usia\"], [\"imunisasi\", \"Imunisasi\", \"Jadwal IDAI 2024\"], [\"obat\", \"Keamanan obat\", \"Yang dihindari dan dosis program resmi\"], [\"data\", \"Sumber & pembaruan data\", \"Versi, usulan, riwayat perubahan\"], [\"profil\", \"Profil anak\", \"Nama dan tanggal lahir\"]];\n      return this.page('\u003ch1>Lainnya\u003c/h1>\u003cdiv class=\"list\">' + items.map(([id, t, s]) => '\u003ca href=\"#' + id + '\">\u003cdiv>\u003cdiv class=\"t\">' + t + '\u003c/div>\u003cdiv class=\"s\">' + s + \"\u003c/div>\u003c/div>\" + Html.chev() + \"\u003c/a>\").join(\"\") + \"\u003c/div>\");\n    }\n  }\n\n  class GuideListView extends View {\n    render() {\n      return this.page(Html.back(\"lainnya\", \"Lainnya\") + '\u003ch1>Panduan\u003c/h1>\u003cdiv class=\"list\">' + this.kb.byOrder(this.kb.guides).map(g => '\u003ca href=\"#panduan-' + Html.esc(g.id) + '\">\u003cdiv class=\"t\">' + Html.esc(g.title) + \"\u003c/div>\" + Html.chev() + \"\u003c/a>\").join(\"\") + \"\u003c/div>\");\n    }\n  }\n\n  class GuideView extends View {\n    render(id) {\n      const g = this.kb.guide(id);\n      if (!g) return this.page(\"\u003cp>Panduan ini belum ada.\u003c/p>\" + Html.back(\"panduan\", \"Panduan\"));\n      return this.page(Html.back(\"panduan\", \"Panduan\") + \"\u003ch1>\" + Html.esc(g.title) + \"\u003c/h1>\" +\n        g.sections.map(s => '\u003cdiv class=\"card stack-s\">\u003ch3>' + Html.esc(s.h) + \"\u003c/h3>\" + (s.items ? '\u003cul class=\"items\">' + s.items.map(it => \"\u003cli>\" + Html.esc(it.t) + this.sources(it.src) + \"\u003c/li>\").join(\"\") + \"\u003c/ul>\" : \"\") + (s.table ? Html.table(s.table) + this.sources(s.src) : \"\") + \"\u003c/div>\").join(\"\"));\n    }\n  }\n\n  class MilestoneView extends View {\n    constructor(app) { super(app); this.tab = null; }\n    render() {\n      const ms = this.kb.milestones.slice().sort((a, b) => a.months - b.months);\n      if (!ms.length) return this.page(\"\u003cp>Data perkembangan belum ada.\u003c/p>\");\n      const d = this.profile.ageDays, ageM = d === null ? null : d / 30.4375;\n      if (!this.tab) { const cur = ageM === null ? ms[0] : ms.filter(m => m.months \u003c= ageM + 0.01).pop() || ms[0]; this.tab = cur.id; }\n      const m = ms.find(x => x.id === this.tab) || ms[0];\n      const checked = LocalStore.get(\"ab.ms\", {});\n      const names = { sosial: \"Sosial & emosi\", bahasa: \"Bahasa & komunikasi\", kognitif: \"Belajar & berpikir\", gerak: \"Gerak & fisik\" };\n      const all = Object.values(m.d).flat(), done = all.filter(t => checked[m.id + \"|\" + t]).length;\n      const isAgeTab = ageM !== null && m.months \u003c= ageM + 0.01;\n      return this.page(Html.back(\"lainnya\", \"Lainnya\") + \"\u003ch1>Perkembangan\u003c/h1>\" +\n        '\u003cp class=\"muted\">Daftar CDC 2022 berisi kemampuan yang dicapai paling sedikit 3 dari 4 anak pada usia tersebut. Bila anak belum mencapai salah satunya, sampaikan ke dokter saat kontrol.\u003c/p>' + this.sources([\"cdc_milestones\"]) +\n        '\u003cdiv class=\"tabs\" role=\"group\" aria-label=\"Usia\">' + ms.map(x => '\u003cbutton type=\"button\" data-ms=\"' + Html.esc(x.id) + '\" aria-pressed=\"' + (x.id === m.id) + '\">' + Html.esc(x.label) + \"\u003c/button>\").join(\"\") + \"\u003c/div>\" +\n        '\u003cdiv class=\"card stack-s\">\u003cdiv class=\"row\" style=\"justify-content:space-between\">\u003ch2>' + Html.esc(m.label) + '\u003c/h2>\u003cspan class=\"muted small\">' + done + \" dari \" + all.length + \" tercapai\u003c/span>\u003c/div>\" +\n        Object.keys(names).filter(k => m.d[k] && m.d[k].length).map(k => '\u003cdiv>\u003cp class=\"eyebrow\" style=\"margin-top:8px\">' + names[k] + \"\u003c/p>\" +\n          m.d[k].map((t, i) => { const id = \"ms-\" + m.id + \"-\" + k + \"-\" + i; return '\u003cdiv class=\"check\">\u003cinput type=\"checkbox\" id=\"' + id + '\" data-mscheck=\"' + Html.esc(m.id + \"|\" + t) + '\"' + (checked[m.id + \"|\" + t] ? \" checked\" : \"\") + '>\u003clabel for=\"' + id + '\">' + Html.esc(t) + \"\u003c/label>\u003c/div>\"; }).join(\"\") + \"\u003c/div>\").join(\"\") + \"\u003c/div>\" +\n        (isAgeTab && done \u003c all.length ? '\u003cdiv class=\"banner\">Ada ' + (all.length - done) + \" kemampuan yang belum dicentang. Itu belum berarti ada masalah; dokter akan menilainya dengan alat skrining resmi. Bila anak kehilangan kemampuan yang sebelumnya sudah bisa, konsultasikan lebih cepat.\u003c/div>\" : \"\") +\n        '\u003cp class=\"small muted\">Anak lahir prematur dinilai dengan usia koreksi.\u003c/p>');\n    }\n    onClick(t) { if (t.dataset.ms) { this.tab = t.dataset.ms; return true; } return false; }\n    onChange(t) { if (t.dataset.mscheck) { const c = LocalStore.get(\"ab.ms\", {}); if (t.checked) c[t.dataset.mscheck] = true; else delete c[t.dataset.mscheck]; LocalStore.set(\"ab.ms\", c); return true; } return false; }\n  }\n\n  class ImmunizationView extends View {\n    render() {\n      const im = this.kb.imunisasi;\n      if (!im) return this.page(\"\u003cp>Jadwal imunisasi belum ada.\u003c/p>\");\n      return this.page(Html.back(\"lainnya\", \"Lainnya\") + '\u003ch1>Imunisasi\u003c/h1>\u003cdiv class=\"banner warn\">' + Html.esc(im.note) + \"\u003c/div>\" +\n        '\u003cdiv class=\"card\">' + Html.table({ head: [\"Usia\", \"Vaksin\"], rows: im.rows }) + this.sources(im.src) + \"\u003c/div>\" +\n        '\u003cdiv class=\"card stack-s\">\u003ch3>Vitamin A (gratis)\u003c/h3>\u003cp>Setiap Februari dan Agustus di posyandu atau puskesmas. Kapsul biru untuk 6–11 bulan, kapsul merah untuk 12–59 bulan.\u003c/p>' + this.sources([\"kemenkes_vita\"]) + \"\u003c/div>\");\n    }\n  }\n\n  class MedicineView extends View {\n    render() {\n      const names = { hindari: \"Hindari\", dokter: \"Lewat dokter\", info: \"Info\", program: \"Program resmi\" };\n      const cls = { hindari: \"lv-3\", program: \"lv-1\" };\n      return this.page(Html.back(\"lainnya\", \"Lainnya\") + \"\u003ch1>Keamanan obat\u003c/h1>\" +\n        '\u003cp class=\"muted\">Berisi obat yang perlu dihindari pada usia tertentu dan dosis program kesehatan resmi. Dosis obat umum seperti paracetamol sengaja tidak dimuat karena bergantung berat badan dan sediaan; ikuti label, apoteker, atau dokter.\u003c/p>' +\n        this.kb.byOrder(this.kb.obat).map(o => '\u003cdiv class=\"card stack-s\">\u003cdiv class=\"row\" style=\"justify-content:space-between\">\u003ch3>' + Html.esc(o.name) + '\u003c/h3>\u003cspan class=\"lv ' + (cls[o.status] || \"lv-2\") + '\">' + Html.esc(names[o.status] || o.status) + \"\u003c/span>\u003c/div>\" +\n          '\u003cp class=\"small muted\">Usia: ' + Html.esc(o.age) + \"\u003c/p>\u003cp>\" + Html.esc(o.t) + \"\u003c/p>\" + this.sources(o.src) + \"\u003c/div>\").join(\"\"));\n    }\n  }\n\n  class ProfileView extends View {\n    render() {\n      return this.page(Html.back(\"lainnya\", \"Lainnya\") + \"\u003ch1>Profil anak\u003c/h1>\" +\n        '\u003cform data-form=\"profil\" class=\"card stack\">\u003cdiv class=\"stack-s\">\u003clabel for=\"p-nama\">Nama panggilan (opsional)\u003c/label>\u003cinput id=\"p-nama\" value=\"' + Html.esc(this.profile.name) + '\" autocomplete=\"off\">\u003c/div>' +\n        '\u003cdiv class=\"stack-s\">\u003clabel for=\"p-lahir\">Tanggal lahir\u003c/label>\u003cinput id=\"p-lahir\" type=\"date\" max=\"' + Clock.today() + '\" value=\"' + Html.esc(this.profile.birth) + '\">\u003c/div>' +\n        '\u003cbutton class=\"btn-primary\" type=\"submit\">Simpan\u003c/button>\u003c/form>\u003cp class=\"small muted\">Disimpan di perangkat ini saja, dipakai untuk menghitung usia pada setiap penilaian.\u003c/p>');\n    }\n    onSubmit(form) {\n      if (form.dataset.form !== \"profil\") return false;\n      this.profile.save(form.querySelector(\"#p-nama\").value.trim(), form.querySelector(\"#p-lahir\").value);\n      this.app.views.milestone.tab = null; Toast.show(\"Profil disimpan.\"); location.hash = \"#beranda\"; return true;\n    }\n  }\n\n  class DataView extends View {\n    onlineLink() {\n      return this.source instanceof AndroidSource ? '\u003cbutton type=\"button\" data-act=\"online\">Buka versi online\u003c/button>' : '\u003ca href=\"' + ONLINE_URL + '\" target=\"_blank\" rel=\"noopener\">Buka versi online\u003c/a>';\n    }\n    modeBlock() {\n      const src = this.source;\n      if (src instanceof CloudSource) {\n        return '\u003cdiv class=\"card stack-s\">\u003ch3>Versi offline\u003c/h3>\u003cp class=\"small\">Satu file HTML dengan tampilan yang sama dan data saat ini sudah tertanam di dalamnya. Simpan di HP, lalu buka dengan Chrome; bisa dipakai tanpa internet. Fitur Tanya dan persetujuan usulan tetap hanya di versi online.\u003c/p>' +\n          '\u003cdiv class=\"row\">\u003cbutton type=\"button\" class=\"btn-primary\" data-act=\"export-offline\"' + (src.canExportOffline ? \"\" : \" disabled\") + \">Unduh versi offline\u003c/button>\u003c/div>\u003c/div>\" +\n          '\u003cdiv class=\"card stack-s\">\u003ch3>Data untuk aplikasi Android\u003c/h3>\u003cp class=\"small\">Aplikasi Android menyimpan salinan data supaya tetap bisa dipakai tanpa internet. Setelah menyetujui usulan, unduh data terbaru, lalu di aplikasi Android buka Lainnya → Sumber & pembaruan → Impor file data.\u003c/p>' +\n          '\u003cdiv class=\"row\">\u003cbutton type=\"button\" data-act=\"export\"' + (src.canExport ? \"\" : \" disabled\") + \">Unduh data untuk APK\u003c/button>\u003c/div>\" + (src.canExport ? \"\" : '\u003cp class=\"small muted\">Unduhan tidak tersedia di tampilan ini.\u003c/p>') + \"\u003c/div>\";\n      }\n      if (src instanceof AndroidSource) {\n        return '\u003cdiv class=\"card stack\">\u003ch3>Perbarui data di perangkat ini\u003c/h3>' + (src.status ? '\u003cdiv class=\"banner\">' + Html.esc(src.status) + \"\u003c/div>\" : \"\") +\n          '\u003cdiv class=\"stack-s\">\u003clabel for=\"k-url\">Alamat file data (opsional)\u003c/label>\u003cinput id=\"k-url\" inputmode=\"url\" placeholder=\"https://raw.githubusercontent.com/…/kb.json\" value=\"' + Html.esc(src.bridge.getUrl()) + '\">\u003cp class=\"small muted\">Bila diisi, aplikasi memeriksa data baru di alamat ini setiap kali dibuka.\u003c/p>\u003c/div>' +\n          '\u003cdiv class=\"row\">\u003cbutton type=\"button\" class=\"btn-primary\" data-act=\"refresh\">Periksa pembaruan\u003c/button>\u003cbutton type=\"button\" data-act=\"import\">Impor file data\u003c/button>\u003c/div>' +\n          '\u003cp class=\"small\">Tanya dan persetujuan usulan ada di versi online. ' + this.onlineLink() + '\u003c/p>\u003cp class=\"small muted\">Data baru selalu diperiksa dulu; file yang memuat pernyataan tanpa sumber ditolak.\u003c/p>\u003c/div>';\n      }\n      return '\u003cdiv class=\"card stack-s\">\u003ch3>Versi offline\u003c/h3>' + (src.status ? '\u003cdiv class=\"banner\">' + Html.esc(src.status) + \"\u003c/div>\" : \"\") +\n        '\u003cp class=\"small\">Data ' + (src.origin === \"impor\" ? \"dari file yang Anda impor\" : \"tertanam di file ini\") + '. Untuk data terbaru, buka versi online lalu unduh ulang versi offline, atau impor file data dari sana.\u003c/p>' +\n        '\u003cdiv class=\"row\">\u003cbutton type=\"button\" data-act=\"import\">Impor file data\u003c/button>\u003c/div>\u003cp class=\"small\">' + this.onlineLink() + '\u003c/p>\u003cp class=\"small muted\">Data baru selalu diperiksa dulu; file yang memuat pernyataan tanpa sumber ditolak.\u003c/p>\u003c/div>';\n    }\n    usulan(u, actionable) {\n      const kind = u.type === \"pertanyaan\" ? \"Pertanyaan untuk diriset\" : \"Pembaruan data\";\n      const st = { disetujui: \"Disetujui\", ditolak: \"Ditolak\", diriset: \"Sudah diriset\" }[u.status] || \"Baru\";\n      return '\u003cdiv class=\"card stack-s\">\u003cdiv class=\"row\" style=\"justify-content:space-between\">\u003cspan class=\"eyebrow\">' + kind + '\u003c/span>\u003cspan class=\"small muted\">' + st + \" · \" + Html.esc(String(u.createdAt || \"\").slice(0, 10)) + \"\u003c/span>\u003c/div>\" +\n        \"\u003cp>\u003cstrong>\" + Html.esc(u.title || u.question || \"\") + \"\u003c/strong>\u003c/p>\" + (u.summary ? '\u003cp class=\"small\">' + Html.esc(u.summary) + \"\u003c/p>\" : \"\") + (u.catatan ? '\u003cp class=\"small muted\">' + Html.esc(u.catatan) + \"\u003c/p>\" : \"\") +\n        (Array.isArray(u.sources) && u.sources.length ? '\u003cp class=\"src\">Sumber: ' + u.sources.map(s => '\u003ca href=\"' + Html.esc(s.url) + '\" target=\"_blank\" rel=\"noopener\">' + Html.esc(s.title) + \"\u003c/a>\").join(\" · \") + \"\u003c/p>\" : \"\") +\n        (actionable && this.source.canApprove ? '\u003cdiv class=\"row\">' + (u.type !== \"pertanyaan\" && u.target ? '\u003cbutton class=\"btn-primary\" type=\"button\" data-approve=\"' + Html.esc(u._id) + '\">Setujui\u003c/button>' : \"\") + '\u003cbutton type=\"button\" data-reject=\"' + Html.esc(u._id) + '\">' + (u.type === \"pertanyaan\" ? \"Hapus dari antrean\" : \"Tolak\") + \"\u003c/button>\u003c/div>\" : \"\") + \"\u003c/div>\";\n    }\n    render() {\n      const kb = this.kb, m = kb.meta, cloud = this.source instanceof CloudSource;\n      const us = kb.usulan.slice().sort((a, b) => String(b.createdAt || \"\").localeCompare(String(a.createdAt || \"\")));\n      const pend = us.filter(u => u.status === \"baru\"), done = us.filter(u => u.status !== \"baru\").slice(0, 10);\n      const log = kb.changelog.slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));\n      const srcs = Object.entries(kb.sources).sort((a, b) => a[1].title.localeCompare(b[1].title));\n      return this.page(Html.back(\"lainnya\", \"Lainnya\") + \"\u003ch1>Sumber & pembaruan\u003c/h1>\" +\n        (m ? '\u003cdiv class=\"card stack-s\">\u003cp>\u003cstrong>Versi data ' + Html.esc(m.version) + '\u003c/strong>\u003c/p>\u003cp class=\"small muted\">Diverifikasi ' + Html.esc(m.verifiedDate) + \" · pemeriksaan sumber terakhir \" + Html.esc(m.lastCheck || \"-\") + '\u003c/p>\u003cp class=\"small\">' + Html.esc(m.note || \"\") + \"\u003c/p>\u003c/div>\" : \"\") +\n        this.modeBlock() +\n        '\u003cdiv class=\"card stack-s\">\u003ch3>Cara data diperbarui\u003c/h3>\u003cul class=\"items small\">\u003cli>Setiap tanggal 1, Claude memeriksa pedoman terbaru dari IDAI, Kemenkes, WHO, AAP, CDC, dan FDA, lalu menulis usulan perubahan beserta sumbernya.\u003c/li>\u003cli>Usulan tidak langsung mengubah data. Pemilik meninjau dan menyetujui; usulan yang memuat pernyataan tanpa sumber ditolak otomatis.\u003c/li>\u003cli>Pertanyaan yang belum terjawab di menu Tanya bisa dicatat untuk diriset.\u003c/li>\u003c/ul>\u003c/div>' +\n        (cloud ? '\u003cdiv class=\"stack-s\">\u003ch2>Usulan menunggu (' + pend.length + \")\u003c/h2>\" + (pend.length ? pend.map(u => this.usulan(u, true)).join(\"\") : '\u003cp class=\"muted small\">Tidak ada usulan baru.\u003c/p>') + \"\u003c/div>\" + (done.length ? '\u003cdiv class=\"stack-s\">\u003ch3>Usulan yang sudah diputuskan\u003c/h3>' + done.map(u => this.usulan(u, false)).join(\"\") + \"\u003c/div>\" : \"\") : \"\") +\n        '\u003cdiv class=\"stack-s\">\u003ch2>Riwayat perubahan\u003c/h2>\u003cdiv class=\"card stack-s\">' + (log.length ? log.map(l => \"\u003cdiv>\u003cp>\u003cstrong>\" + Html.esc(l.title) + '\u003c/strong> \u003cspan class=\"muted small\">' + Html.esc(l.date) + '\u003c/span>\u003c/p>\u003cp class=\"small\">' + Html.esc(l.text) + \"\u003c/p>\u003c/div>\").join(\"\") : '\u003cp class=\"muted small\">Belum ada.\u003c/p>') + \"\u003c/div>\u003c/div>\" +\n        '\u003cdiv class=\"stack-s\">\u003ch2>Daftar sumber (' + srcs.length + ')\u003c/h2>\u003cdiv class=\"card\">\u003cul class=\"items small\">' + srcs.map(([id, s]) => '\u003cli>\u003ca href=\"' + Html.esc(s.url) + '\" target=\"_blank\" rel=\"noopener\">' + Html.esc(s.title) + \"\u003c/a>\" + (s.type === \"sekunder\" ? '\u003cspan class=\"tag\">sekunder\u003c/span>' : \"\") + \"\u003c/li>\").join(\"\") + \"\u003c/ul>\u003c/div>\u003c/div>\");\n    }\n    async onClick(t) {\n      const src = this.source;\n      const run = async (fn, okMsg) => { try { await fn(); if (okMsg) Toast.show(okMsg); } catch (e) { Toast.show((e && e.message) || \"Gagal.\"); } };\n      if (t.dataset.approve) { const u = this.kb.usulan.find(x => x._id === t.dataset.approve); if (u) await run(() => src.approve(u), \"Disetujui dan diterapkan.\"); return \"keep\"; }\n      if (t.dataset.reject) { const u = this.kb.usulan.find(x => x._id === t.dataset.reject); if (u) await run(() => src.reject(u), \"Usulan ditolak.\"); return \"keep\"; }\n      const a = t.dataset.act;\n      if (a === \"export\") { await run(() => src.exportForApk(), \"Data diunduh.\"); return \"keep\"; }\n      if (a === \"export-offline\") { await run(() => src.exportOffline(), \"Versi offline diunduh.\"); return \"keep\"; }\n      if (a === \"online\") { src.bridge.open(ONLINE_URL); return \"keep\"; }\n      if (a === \"refresh\") { const u = document.getElementById(\"k-url\"); if (u) src.bridge.setUrl(u.value.trim()); src.status = \"Memeriksa…\"; this.app.render(); await src.refresh(false); return true; }\n      if (a === \"import\") { await src.importFile(); return true; }\n      return false;\n    }\n  }\n\n  // =============================================================\n  // Aplikasi\n  // =============================================================\n  class Router {\n    static parse() {\n      const h = (location.hash || \"#beranda\").slice(1) || \"beranda\";\n      const prefixes = [[\"cek-\", \"checker\"], [\"panduan-\", \"guide\"]];\n      for (const [p, name] of prefixes) if (h.startsWith(p)) return { name, param: h.slice(p.length), raw: h };\n      const map = { beranda: \"home\", cek: \"checkers\", napas: \"breath\", tanya: \"ask\", lainnya: \"more\", panduan: \"guides\", tumbuh: \"milestone\", imunisasi: \"immunization\", obat: \"medicine\", data: \"data\", profil: \"profile\" };\n      return { name: map[h] || \"home\", param: null, raw: h };\n    }\n  }\n\n  class App {\n    constructor() {\n      this.root = document.getElementById(\"app\");\n      this.navEl = document.getElementById(\"nav\");\n      this.kb = new KnowledgeBase();\n      this.profile = new Profile();\n      this.source = new DataSource(this.kb);\n      this.state = \"loading\";\n      this.views = {\n        home: new HomeView(this), checkers: new CheckerListView(this), checker: new CheckerView(this), breath: new BreathView(this),\n        ask: new AskView(this), more: new MoreView(this), guides: new GuideListView(this), guide: new GuideView(this),\n        milestone: new MilestoneView(this), immunization: new ImmunizationView(this), medicine: new MedicineView(this),\n        data: new DataView(this), profile: new ProfileView(this)\n      };\n      this.route = Router.parse();\n      this.bindEvents();\n    }\n    pickSource() {\n      if (window.AndroidKB) return new AndroidSource(this.kb, new AndroidBridge(window.AndroidKB));\n      if (window.claude && typeof window.claude.use === \"function\" && !StaticSource.embedded()) return new CloudSource(this.kb, window.claude);\n      return new StaticSource(this.kb);\n    }\n    start() {\n      const go = () => {\n        this.source = this.pickSource();\n        this.renderNav();\n        this.source.start(() => { this.state = this.kb.isEmpty ? \"empty\" : \"ready\"; this.render(); }, () => { this.state = \"failed\"; this.render(); });\n      };\n      this.renderNav();\n      if (window.AndroidKB || (window.claude && window.claude.use) || StaticSource.embedded()) go(); else setTimeout(go, 1500);\n    }\n    get currentView() { return this.views[this.route.name] || this.views.home; }\n    renderNav() {\n      const cloud = this.source instanceof CloudSource;\n      const ICON = App.ICON;\n      const fourth = cloud ? [\"tanya\", \"Tanya\", \"tanya\"] : [\"panduan\", \"Panduan\", \"panduan\"];\n      const items = [[\"beranda\", \"Beranda\", \"beranda\"], [\"cek\", \"Cek Gejala\", \"cek\"], [\"napas\", \"Hitung Napas\", \"napas\"], fourth, [\"lainnya\", \"Lainnya\", \"lainnya\"]];\n      const r = this.route;\n      const group = (r.name === \"checker\" || r.name === \"checkers\") ? \"cek\" : (!cloud && (r.name === \"guides\" || r.name === \"guide\")) ? \"panduan\" :\n        [\"guides\", \"guide\", \"milestone\", \"immunization\", \"medicine\", \"data\", \"profile\", \"more\"].includes(r.name) ? \"lainnya\" : r.raw;\n      this.navEl.innerHTML = items.map(([id, label, icon]) => '\u003ca href=\"#' + id + '\"' + (group === id ? ' aria-current=\"page\"' : \"\") + \">\" + ICON[icon] + \"\u003cspan>\" + label + \"\u003c/span>\u003c/a>\").join(\"\");\n    }\n    stateScreen() {\n      const v = this.views.home;\n      if (this.state === \"failed\") return v.page(this.source instanceof CloudSource || this.source.constructor === DataSource\n        ? '\u003cdiv class=\"card stack-s\">\u003ch2>Database belum terbaca\u003c/h2>\u003cp class=\"muted\">Halaman ini membutuhkan akun claude.ai yang sudah masuk dan akses ke artifak ini. Buka ulang halaman setelah masuk.\u003c/p>\u003c/div>'\n        : '\u003cdiv class=\"card stack-s\">\u003ch2>Data belum terbaca\u003c/h2>\u003cp class=\"muted\">File data tidak ditemukan atau tidak lolos pemeriksaan sumber.\u003c/p>\u003c/div>');\n      if (this.state === \"empty\") return v.page('\u003cdiv class=\"card stack-s\">\u003ch2>Database masih kosong\u003c/h2>\u003cp class=\"muted\">Basis pengetahuan belum diisi. Setelah diisi, isinya muncul di sini otomatis.\u003c/p>\u003c/div>');\n      return null;\n    }\n    render() {\n      this.renderNav();\n      if (this.state === \"loading\") return;\n      const screen = this.stateScreen();\n      const active = document.activeElement, focusId = active && active.id, sel = active && active.selectionStart;\n      this.root.innerHTML = screen || this.currentView.render(this.route.param);\n      if (focusId) { const el = document.getElementById(focusId); if (el && (el.tagName === \"INPUT\" || el.tagName === \"TEXTAREA\")) { el.focus(); try { el.setSelectionRange(sel, sel); } catch (e) { /* jenis input tanpa seleksi */ } } }\n    }\n    bindEvents() {\n      window.addEventListener(\"hashchange\", () => { const prev = this.route.raw; this.route = Router.parse(); if (this.route.raw !== prev) window.scrollTo(0, 0); this.render(); });\n      document.addEventListener(\"click\", async e => {\n        const t = e.target.closest(\"button, a\");\n        if (!t || !this.root.contains(t)) return;\n        const res = await this.currentView.onClick(t);\n        if (res === true) this.render();\n      });\n      document.addEventListener(\"input\", e => this.currentView.onInput(e.target));\n      document.addEventListener(\"change\", e => { const v = this.currentView; if (v.onChange && v.onChange(e.target)) this.render(); });\n      document.addEventListener(\"submit\", e => { e.preventDefault(); if (this.currentView.onSubmit(e.target)) this.render(); });\n    }\n  }\n  App.ICON = {\n    beranda: '\u003csvg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\u003cpath d=\"M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z\"/>\u003c/svg>',\n    cek: '\u003csvg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\u003cpath d=\"M9 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-3\"/>\u003crect x=\"9\" y=\"3\" width=\"6\" height=\"4\" rx=\"1\"/>\u003cpath d=\"M9 13l2 2 4-4\"/>\u003c/svg>',\n    napas: '\u003csvg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\u003ccircle cx=\"12\" cy=\"13\" r=\"8\"/>\u003cpath d=\"M12 9v4l3 2M9 2h6\"/>\u003c/svg>',\n    tanya: '\u003csvg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\u003cpath d=\"M4 5h16v11H9l-5 4z\"/>\u003cpath d=\"M10 9.5a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.2M12 14.5v.01\"/>\u003c/svg>',\n    panduan: '\u003csvg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\u003cpath d=\"M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z\"/>\u003cpath d=\"M4 19V5M8 7h7\"/>\u003c/svg>',\n    lainnya: '\u003csvg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\u003cpath d=\"M4 6h16M4 12h16M4 18h16\"/>\u003c/svg>'\n  };\n\n  const app = new App();\n  window.__app = app;\n  app.start();\n})();\n\u003c/script>\n\u003c/body>\u003c/html>"</script>
+
+<script>
+/* Mesin penilaian Asisten Bayi (berorientasi objek).
+   Dipakai di halaman web, aplikasi Android (WebView), dan tes Node. */
+(function (root, factory) {
+  if (typeof module === "object" && module.exports) module.exports = factory();
+  else root.Engine = factory();
+})(typeof self !== "undefined" ? self : this, function () {
+  "use strict";
+
+  /** Empat tingkat triase + catatan. */
+  class Level {
+    constructor(value, key, name, action) { this.value = value; this.key = key; this.name = name; this.action = action; Object.freeze(this); }
+    static of(v) { return Level.ALL[v] || Level.ALL[1]; }
+  }
+  Level.ALL = {
+    0: new Level(0, "info", "Catatan", ""),
+    1: new Level(1, "umum", "Umum", "Bisa dirawat di rumah sambil dipantau."),
+    2: new Level(2, "pantau", "Pantau", "Perhatikan beberapa jam ke depan."),
+    3: new Level(3, "periksa", "Periksa hari ini", "Bawa ke dokter, puskesmas, atau bidan hari ini."),
+    4: new Level(4, "igd", "Segera ke IGD", "Bawa ke IGD atau fasilitas kesehatan terdekat sekarang.")
+  };
+
+  /** Menilai satu kondisi aturan terhadap jawaban dan konteks (usia). */
+  class ConditionEvaluator {
+    constructor(answers, ctx) { this.answers = answers || {}; this.ctx = ctx || {}; }
+    static compare(a, op, b) {
+      switch (op) { case ">": return a > b; case ">=": return a >= b; case "<": return a < b; case "<=": return a <= b; case "==": return a === b; default: return false; }
+    }
+    static toNumber(v) {
+      if (v === null || v === undefined || v === "") return NaN;
+      return typeof v === "number" ? v : parseFloat(String(v).replace(",", "."));
+    }
+    test(c) {
+      if (!c || typeof c !== "object") return false;
+      const a = this.answers;
+      if ("yes" in c) return a[c.yes] === "ya";
+      if ("no" in c) return a[c.no] === "tidak";
+      if ("eq" in c) return a[c.eq[0]] === c.eq[1];
+      if ("num" in c) { const n = ConditionEvaluator.toNumber(a[c.num[0]]); return Number.isFinite(n) && ConditionEvaluator.compare(n, c.num[1], c.num[2]); }
+      if ("age" in c) { const d = this.ctx.ageDays; return typeof d === "number" && Number.isFinite(d) && ConditionEvaluator.compare(d, c.age[0], c.age[1]); }
+      if ("all" in c) return c.all.every(x => this.test(x));
+      if ("any" in c) return c.any.some(x => this.test(x));
+      if ("not" in c) return !this.test(c.not);
+      if ("count" in c) return c.count.of.filter(x => this.test(x)).length >= c.count.min;
+      return false;
+    }
+    /** Id pertanyaan yang dirujuk sebuah kondisi. */
+    static refs(c, out) {
+      out = out || [];
+      if (!c || typeof c !== "object") return out;
+      if ("yes" in c) out.push(c.yes);
+      else if ("no" in c) out.push(c.no);
+      else if ("eq" in c) out.push(c.eq[0]);
+      else if ("num" in c) out.push(c.num[0]);
+      else if ("all" in c) c.all.forEach(x => ConditionEvaluator.refs(x, out));
+      else if ("any" in c) c.any.forEach(x => ConditionEvaluator.refs(x, out));
+      else if ("not" in c) ConditionEvaluator.refs(c.not, out);
+      else if ("count" in c) c.count.of.forEach(x => ConditionEvaluator.refs(x, out));
+      return out;
+    }
+  }
+
+  /** Hasil penilaian yang siap ditampilkan. */
+  class Assessment {
+    constructor(props) { Object.assign(this, props); Object.freeze(this); }
+    get levelInfo() { return Level.of(this.level); }
+    get isUrgent() { return this.level >= 4; }
+  }
+
+  /** Penilai gejala untuk satu definisi checker dari basis pengetahuan. */
+  class SymptomChecker {
+    constructor(def) { this.def = def; }
+    get id() { return this.def.id; }
+    get title() { return this.def.title; }
+    get dangerIds() { return this.def.danger || []; }
+    visibleQuestions(answers, ctx) {
+      const ev = new ConditionEvaluator(answers, ctx);
+      return (this.def.questions || []).filter(q => !q.showIf || ev.test(q.showIf));
+    }
+    /** Pertanyaan tanda bahaya (ditanyakan bersama di langkah pertama) dan sisanya (satu per layar). */
+    split(answers, ctx) {
+      const vis = this.visibleQuestions(answers, ctx);
+      const d = new Set(this.dangerIds);
+      return { danger: vis.filter(q => d.has(q.id)), rest: vis.filter(q => !d.has(q.id)) };
+    }
+    assess(answers, ctx) {
+      const visible = new Set(this.visibleQuestions(answers, ctx).map(q => q.id));
+      const clean = {};
+      Object.keys(answers || {}).forEach(k => { if (visible.has(k) && answers[k] !== undefined && answers[k] !== "") clean[k] = answers[k]; });
+      const ev = new ConditionEvaluator(clean, ctx);
+      const def = this.def;
+      const matched = (def.rules || []).filter(r => ev.test(r.when));
+      const graded = matched.filter(r => r.level > 0).sort((a, b) => b.level - a.level);
+      const notes = matched.filter(r => r.level === 0);
+      const fallback = def.default || { level: 1, title: "Umum", text: "", src: [] };
+      const level = graded.length ? graded[0].level : fallback.level;
+
+      let differentials = (def.differentials || []).filter(d => d.when && ev.test(d.when));
+      if (level <= 2) differentials = (def.differentials || []).filter(d => d.baseline).concat(differentials.filter(d => !d.baseline));
+
+      const src = new Set();
+      const add = l => (l || []).forEach(s => src.add(s));
+      if (!graded.length) add(fallback.src);
+      graded.forEach(r => add(r.src)); notes.forEach(r => add(r.src)); differentials.forEach(d => add(d.src)); (def.care || []).forEach(c => add(c.src));
+
+      return new Assessment({
+        level,
+        headline: graded.length ? Level.of(level).name : (fallback.title || Level.of(level).name),
+        summary: graded.length ? null : fallback.text,
+        summarySrc: graded.length ? [] : (fallback.src || []),
+        reasons: graded, notes, differentials,
+        care: def.care || [], escalate: def.escalate || [],
+        sources: Array.from(src),
+        answered: Object.keys(clean).length
+      });
+    }
+  }
+
+  /** Perhitungan usia. */
+  class Age {
+    static days(birth, today) {
+      if (!birth) return null;
+      const b = new Date(birth + "T00:00:00");
+      const t = today ? new Date(today + "T00:00:00") : new Date();
+      if (isNaN(b)) return null;
+      const tt = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+      const d = Math.round((tt - b) / 86400000);
+      return d >= 0 ? d : null;
+    }
+    static label(days) {
+      if (days === null || days === undefined) return "";
+      if (days < 31) return days + " hari";
+      const months = Math.floor(days / 30.4375);
+      if (months < 24) return months + " bulan";
+      const y = Math.floor(months / 12), m = months % 12;
+      return y + " tahun" + (m ? " " + m + " bulan" : "");
+    }
+    static monthsSince(dateStr, today) {
+      const a = new Date(dateStr + "T00:00:00"), b = today ? new Date(today + "T00:00:00") : new Date();
+      if (isNaN(a)) return Infinity;
+      return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+    }
+  }
+
+  /** Penjaga anti-halusinasi: setiap pernyataan wajib bersumber terdaftar. */
+  class KnowledgeValidator {
+    constructor(kb) { this.kb = kb || {}; this.errors = []; }
+    static honestEmpty(t) { return /belum (punya|diverifikasi|ada)|sengaja tidak|tidak memuat|belum dihitung/i.test(t || ""); }
+    checkSrc(where, list, allowEmpty) {
+      const sources = this.kb.sources || {};
+      if (!Array.isArray(list)) { this.errors.push(where + ": src bukan array"); return; }
+      if (!list.length && !allowEmpty) this.errors.push(where + ": tanpa sumber");
+      list.forEach(s => { if (!sources[s]) this.errors.push(where + ": sumber tidak dikenal '" + s + "'"); });
+    }
+    validate() {
+      const kb = this.kb, H = KnowledgeValidator.honestEmpty;
+      (kb.checkers || []).forEach(c => {
+        const qids = new Set((c.questions || []).map(q => q.id));
+        (c.danger || []).forEach(q => { if (!qids.has(q)) this.errors.push("checker " + c.id + ": tanda bahaya tidak ada '" + q + "'"); });
+        (c.rules || []).forEach(r => {
+          const w = "checker " + c.id + " rule " + r.id;
+          this.checkSrc(w, r.src, H(r.text));
+          if (![0, 1, 2, 3, 4].includes(r.level)) this.errors.push(w + ": level tidak valid");
+          ConditionEvaluator.refs(r.when).forEach(q => { if (!qids.has(q)) this.errors.push(w + ": pertanyaan tidak ada '" + q + "'"); });
+        });
+        this.checkSrc("checker " + c.id + " default", (c.default || {}).src, false);
+        (c.differentials || []).forEach(d => this.checkSrc("checker " + c.id + " diferensial " + d.name, d.src, false));
+        (c.care || []).forEach((x, i) => this.checkSrc("checker " + c.id + " care " + i, x.src, H(x.t)));
+      });
+      (kb.guides || []).forEach(g => (g.sections || []).forEach(s => {
+        if (s.items) s.items.forEach((it, i) => this.checkSrc("panduan " + g.id + " / " + s.h + " #" + i, it.src, false));
+        if (s.table) this.checkSrc("panduan " + g.id + " / " + s.h + " tabel", s.src, false);
+      }));
+      (kb.obat || []).forEach(o => this.checkSrc("obat " + o.id, o.src, H(o.t)));
+      if (kb.imunisasi) this.checkSrc("imunisasi", kb.imunisasi.src, false);
+      if (!kb.meta || !kb.meta.verifiedDate) this.errors.push("meta: verifiedDate kosong");
+      return this.errors;
+    }
+    static validate(kb) { return new KnowledgeValidator(kb).validate(); }
+  }
+
+  return { Level, ConditionEvaluator, Assessment, SymptomChecker, Age, KnowledgeValidator };
+});
+
+</script>
+<script>
+(function () {
+  "use strict";
+  const { Level, SymptomChecker, Age, KnowledgeValidator } = window.Engine;
+  const ONLINE_URL = "https://claude.ai/artifact/2DjnViTVkzraEi3o7Qmwqr";
+
+  // =============================================================
+  // Utilitas
+  // =============================================================
+  class Html {
+    static esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+    static chev() { return '<span class="chev" aria-hidden="true">›</span>'; }
+    static levelChip(v) { return '<span class="lv lv-' + v + '">' + Html.esc(Level.of(v).name) + "</span>"; }
+    static table(t) {
+      const e = Html.esc;
+      return '<div class="tbl"><table><thead><tr>' + t.head.map(x => "<th>" + e(x) + "</th>").join("") + "</tr></thead><tbody>" +
+        t.rows.map(r => "<tr>" + r.map((x, i) => i === 0 ? "<td><strong>" + e(x) + "</strong></td>" : "<td>" + e(x) + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>";
+    }
+    static back(href, label) { return '<a href="#' + href + '" class="small">‹ ' + Html.esc(label) + "</a>"; }
+  }
+
+  class Clock {
+    static today() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  }
+
+  /** Penyimpanan lokal untuk kenyamanan per perangkat; aman bila diblokir. */
+  class LocalStore {
+    static get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+    static set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* abaikan */ } }
+  }
+
+  class Toast {
+    static show(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg; t.hidden = false;
+      clearTimeout(Toast.timer); Toast.timer = setTimeout(() => { t.hidden = true; }, 2800);
+    }
+  }
+
+  // =============================================================
+  // Model
+  // =============================================================
+  class Profile {
+    constructor() { const p = LocalStore.get("ab.profile", {}); this.name = p.nama || ""; this.birth = p.lahir || ""; }
+    save(name, birth) { this.name = name; this.birth = birth; LocalStore.set("ab.profile", { nama: name, lahir: birth }); }
+    get ageDays() { return Age.days(this.birth); }
+    get hasAge() { return this.ageDays !== null; }
+    get label() { return this.hasAge ? (this.name ? this.name + " · " : "") + Age.label(this.ageDays) : "Atur usia anak"; }
+  }
+
+  /** Basis pengetahuan yang sedang aktif, dari sumber data mana pun. */
+  class KnowledgeBase {
+    constructor() { this.clear(); }
+    clear() { this.sources = {}; this.checkers = []; this.guides = []; this.milestones = []; this.obat = []; this.changelog = []; this.usulan = []; this.meta = null; this.imunisasi = null; }
+    load(kb) {
+      this.sources = kb.sources || {}; this.checkers = kb.checkers || []; this.guides = kb.guides || []; this.milestones = kb.milestones || [];
+      this.obat = kb.obat || []; this.changelog = kb.changelog || []; this.meta = kb.meta || null; this.imunisasi = kb.imunisasi || null;
+    }
+    get isEmpty() { return !this.checkers.length; }
+    get isStale() { return !!this.meta && Age.monthsSince(this.meta.verifiedDate) >= (this.meta.reviewMonths || 12); }
+    byOrder(list) { return list.slice().sort((a, b) => (a.order || 99) - (b.order || 99)); }
+    checker(id) { const d = this.checkers.find(c => c.id === id); return d ? new SymptomChecker(d) : null; }
+    guide(id) { return this.guides.find(g => g.id === id) || null; }
+    source(id) { return this.sources[id] || null; }
+    snapshot() {
+      const strip = o => { const c = { ...o }; delete c._id; return c; };
+      return { sources: this.sources, checkers: this.checkers.map(strip), guides: this.guides.map(strip), milestones: this.milestones.map(strip), obat: this.obat.map(strip), imunisasi: this.imunisasi, meta: this.meta, changelog: this.changelog.map(strip) };
+    }
+    static parse(text) {
+      let kb;
+      try { kb = JSON.parse(text); } catch (e) { return { error: "File bukan JSON yang valid." }; }
+      if (!kb || !Array.isArray(kb.checkers) || !kb.meta) return { error: "Isi file bukan data Asisten Bayi." };
+      const errs = KnowledgeValidator.validate(kb);
+      if (errs.length) return { error: "Ditolak karena ada pernyataan tanpa sumber: " + errs[0] };
+      return { kb };
+    }
+  }
+
+  /** Satu sesi menjawab satu penilai: langkah tanda bahaya, lalu satu pertanyaan per layar. */
+  class CheckerSession {
+    constructor(checker, profile) { this.checker = checker; this.profile = profile; this.answers = {}; this.step = null; this.skippedByUrgent = false; this.reset(); }
+    get ctx() { return { ageDays: this.profile.ageDays }; }
+    get parts() { return this.checker.split(this.answers, this.ctx); }
+    reset() { this.answers = {}; this.skippedByUrgent = false; this.step = this.parts.danger.length ? "danger" : 0; }
+    get assessment() { return this.checker.assess(this.answers, this.ctx); }
+    get questions() { return this.parts.rest; }
+    get total() { return this.questions.length + (this.parts.danger.length ? 1 : 0); }
+    get position() { if (this.step === "danger") return 1; if (this.step === "result") return this.total; return this.step + 1 + (this.parts.danger.length ? 1 : 0); }
+    get current() { return typeof this.step === "number" ? this.questions[this.step] : null; }
+    toggleDanger(qid) { this.answers[qid] = this.answers[qid] === "ya" ? undefined : "ya"; }
+    get dangerSelected() { return this.parts.danger.filter(q => this.answers[q.id] === "ya").length; }
+    confirmDanger() {
+      this.parts.danger.forEach(q => { if (this.answers[q.id] !== "ya") this.answers[q.id] = "tidak"; });
+      if (this.assessment.isUrgent) { this.skippedByUrgent = this.questions.length > 0; this.step = "result"; return; }
+      this.step = this.questions.length ? 0 : "result";
+    }
+    answer(qid, value) {
+      this.answers[qid] = value;
+      if (this.assessment.isUrgent) { this.skippedByUrgent = this.step !== "result" && typeof this.step === "number" && this.step < this.questions.length - 1; this.step = "result"; return; }
+      this.next();
+    }
+    next() {
+      if (typeof this.step !== "number") return;
+      const qs = this.questions;
+      const i = qs.indexOf(this.current);
+      this.step = i + 1 < qs.length ? i + 1 : "result";
+    }
+    back() {
+      if (this.step === "result") { this.step = this.questions.length ? this.questions.length - 1 : (this.parts.danger.length ? "danger" : 0); return; }
+      if (typeof this.step === "number") { this.step = this.step > 0 ? this.step - 1 : (this.parts.danger.length ? "danger" : 0); }
+    }
+    goTo(qid) {
+      if (this.parts.danger.some(q => q.id === qid)) { this.step = "danger"; return; }
+      const i = this.questions.findIndex(q => q.id === qid);
+      if (i >= 0) this.step = i;
+    }
+    get reviewRows() {
+      const all = this.checker.visibleQuestions(this.answers, this.ctx);
+      return all.filter(q => this.answers[q.id] !== undefined && this.answers[q.id] !== "").map(q => ({ q, label: CheckerSession.answerLabel(q, this.answers[q.id]) }));
+    }
+    static answerLabel(q, v) {
+      if (q.type === "yn") return v === "ya" ? "Ya" : v === "tidak" ? "Tidak" : "Tidak tahu";
+      if (q.type === "choice") { const o = q.options.find(x => x.v === v); return o ? o.label : v; }
+      return v + (q.unit ? " " + q.unit : "");
+    }
+  }
+
+  /** Penghitung napas 60 detik. Ambang WHO per usia. */
+  class BreathCounter {
+    constructor(onTick, onDone) { this.onTick = onTick; this.onDone = onDone; this.reset(); }
+    reset() { clearInterval(this.timer); this.running = false; this.left = 60; this.count = 0; this.done = false; }
+    start() {
+      this.reset(); this.running = true;
+      const t0 = Date.now();
+      this.timer = setInterval(() => {
+        this.left = Math.max(0, 60 - Math.floor((Date.now() - t0) / 1000));
+        if (this.left <= 0) { clearInterval(this.timer); this.running = false; this.done = true; this.onDone(); } else this.onTick();
+      }, 250);
+    }
+    tap() { if (this.running) this.count++; }
+    static threshold(days) {
+      if (days === null) return null;
+      if (days <= 28) return { min: 61, label: "lebih dari 60×/menit", src: ["who_newborn"], level: 4 };
+      if (days < 60) return null;
+      if (days < 365) return { min: 50, label: "50×/menit atau lebih", src: ["who_imci_pneu"], level: 3 };
+      if (days <= 1825) return { min: 40, label: "40×/menit atau lebih", src: ["who_imci_pneu"], level: 3 };
+      return null;
+    }
+  }
+
+  // =============================================================
+  // Sumber data
+  // =============================================================
+  class DataSource {
+    constructor(kb) { this.kb = kb; }
+    get mode() { return "static"; }
+    get canAsk() { return false; }
+    get canApprove() { return false; }
+    get canExport() { return false; }
+    get canUpdateLocal() { return false; }
+    start(onReady, onFail) { onFail(); }
+  }
+
+  /** Versi online: database artifak claude.ai, tanya Claude, persetujuan usulan. */
+  class CloudSource extends DataSource {
+    constructor(kb, claude) { super(kb); this.claude = claude; this.db = null; this.sample = null; this.downloads = null; this.editor = false; }
+    get mode() { return "db"; }
+    get canAsk() { return !!this.sample; }
+    get canApprove() { return this.editor; }
+    get canExport() { return !!this.downloads; }
+    async start(onReady, onFail) {
+      const [db, user, sample, downloads] = await Promise.all(["db", "user", "sample", "downloads"].map(n => this.claude.use(n)));
+      this.db = db; this.sample = sample; this.downloads = downloads;
+      this.editor = user ? await user.canEdit().catch(() => false) : false;
+      if (!db) { onFail(); return; }
+      const kb = this.kb, pending = new Set(["sources", "checkers", "guides", "milestones", "obat", "changelog", "usulan", "meta", "imunisasi"]);
+      let ready = false;
+      const timer = setTimeout(() => { if (!ready) onFail(); }, 10000);
+      const settle = key => { pending.delete(key); if (!pending.size && !ready) { ready = true; clearTimeout(timer); } if (ready) onReady(); };
+      const fail = () => { clearTimeout(timer); onFail(); };
+      const coll = (name, apply) => db.collection(name).onSnapshot(s => { apply(s.docs.map(d => ({ ...d.data(), _id: d.id }))); settle(name); }, fail);
+      coll("sources", docs => { kb.sources = Object.fromEntries(docs.map(d => { const { _id, ...r } = d; return [_id, r]; })); });
+      coll("checkers", docs => { kb.checkers = docs; });
+      coll("guides", docs => { kb.guides = docs; });
+      coll("milestones", docs => { kb.milestones = docs; });
+      coll("obat", docs => { kb.obat = docs; });
+      coll("changelog", docs => { kb.changelog = docs; });
+      coll("usulan", docs => { kb.usulan = docs; });
+      db.doc("kb/meta").onSnapshot(s => { kb.meta = s.exists ? s.data() : null; settle("meta"); }, fail);
+      db.doc("kb/imunisasi").onSnapshot(s => { kb.imunisasi = s.exists ? s.data() : null; settle("imunisasi"); }, fail);
+    }
+    async ask(question, ageDays, onText, signal) {
+      const prompt = new AskPrompt(this.kb, ageDays).build(question);
+      return this.sample(prompt, { signal, cache: false, onText });
+    }
+    async approve(u) {
+      const coll = u.target && u.target.collection, id = u.target && u.target.id;
+      if (!["checkers", "guides", "milestones", "obat", "kb", "sources"].includes(coll) || !u.patch) throw new Error("Target usulan tidak dikenali.");
+      const trial = JSON.parse(JSON.stringify(this.kb.snapshot()));
+      Object.assign(trial.sources, u.newSources || {});
+      const put = (arr) => { const i = arr.findIndex(x => x.id === id); if (i >= 0) arr[i] = u.patch; else arr.push(u.patch); };
+      if (coll === "sources") trial.sources[id] = u.patch;
+      else if (coll === "kb" && id === "imunisasi") trial.imunisasi = u.patch;
+      else if (trial[coll]) put(trial[coll]);
+      const errs = KnowledgeValidator.validate(trial);
+      if (errs.length) throw new Error("Ditolak otomatis: " + errs[0]);
+      for (const [sid, s] of Object.entries(u.newSources || {})) await this.db.doc("sources/" + sid).set(s);
+      await this.db.doc(coll + "/" + id).set(u.patch);
+      const d = Clock.today(), stamp = d.replace(/-/g, ".");
+      const v = (this.kb.meta && this.kb.meta.version) || "";
+      const seq = v.startsWith(stamp) ? parseInt(v.split("-")[1] || "0", 10) + 1 : 1;
+      await this.db.doc("kb/meta").update({ version: stamp + "-" + seq, verifiedDate: d });
+      await this.db.doc("changelog/" + d + "-" + Date.now()).set({ date: d, title: u.title || "Pembaruan data", text: u.summary || "", by: "Disetujui pemilik", usulan: u._id });
+      await this.db.doc("usulan/" + u._id).update({ status: "disetujui", decidedAt: new Date().toISOString() });
+    }
+    async reject(u) { await this.db.doc("usulan/" + u._id).update({ status: "ditolak", decidedAt: new Date().toISOString() }); }
+    async saveQuestion(q) { await this.db.collection("usulan").add({ type: "pertanyaan", question: q, title: q.slice(0, 140), status: "baru", createdAt: new Date().toISOString() }); }
+    get canExportOffline() { return !!this.downloads && !!document.getElementById("offline-tpl"); }
+    async exportOffline() {
+      const snap = this.kb.snapshot();
+      const errs = KnowledgeValidator.validate(snap);
+      if (errs.length) throw new Error("Data tidak lolos pemeriksaan: " + errs[0]);
+      const tpl = JSON.parse(document.getElementById("offline-tpl").textContent);
+      const kbText = JSON.stringify(snap).replace(/</g, "\\u003c");
+      const html = tpl.replace("/*KB_" + "EMBED*/", () => kbText);
+      await this.downloads.save({ filename: "asisten-bayi-offline-" + snap.meta.version + ".html", data: html });
+    }
+    async exportForApk() {
+      const snap = this.kb.snapshot();
+      const errs = KnowledgeValidator.validate(snap);
+      if (errs.length) throw new Error("Data tidak lolos pemeriksaan: " + errs[0]);
+      await this.downloads.save({ filename: "asisten-bayi-data-" + snap.meta.version + ".json", data: JSON.stringify(snap) });
+    }
+  }
+
+  /** Jembatan ke kode Java di aplikasi Android. */
+  class AndroidBridge {
+    constructor(native) { this.native = native; this.seq = 0; this.cbs = {}; window.__androidCb = (id, ok, text) => { const f = this.cbs[id]; delete this.cbs[id]; if (f) f(ok, text); }; }
+    call(method, arg) { return new Promise(resolve => { const id = ++this.seq; this.cbs[id] = (ok, text) => resolve({ ok, text }); if (arg === undefined) this.native[method](id); else this.native[method](arg, id); }); }
+    getKb() { return this.native.getKb(); }
+    save(text) { return this.native.save(text); }
+    getUrl() { return this.native.getUrl() || ""; }
+    setUrl(u) { this.native.setUrl(u); }
+    open(url) { this.native.openUrl(url); }
+    fetch(url) { return this.call("fetchText", url); }
+    pickFile() { return this.call("pickFile"); }
+  }
+
+  /** Aplikasi Android: data tersimpan di perangkat, bisa dipakai tanpa internet. */
+  class AndroidSource extends DataSource {
+    constructor(kb, bridge) { super(kb); this.bridge = bridge; this.status = ""; }
+    get mode() { return "android"; }
+    get canUpdateLocal() { return true; }
+    start(onReady, onFail) {
+      const r = KnowledgeBase.parse(this.bridge.getKb() || "");
+      if (r.error) { onFail(); return; }
+      this.kb.load(r.kb); onReady();
+      this.refresh(true).then(changed => { if (changed) onReady(); });
+    }
+    accept(text, fromUrl) {
+      const r = KnowledgeBase.parse(text);
+      if (r.error) { this.status = r.error; return false; }
+      const cur = this.kb.meta ? String(this.kb.meta.version) : "";
+      if (fromUrl && cur && String(r.kb.meta.version) <= cur) { this.status = "Data sudah terbaru (versi " + cur + ")."; return false; }
+      if (!this.bridge.save(text)) { this.status = "Gagal menyimpan data di perangkat."; return false; }
+      this.kb.load(r.kb); this.status = "Data diperbarui ke versi " + r.kb.meta.version + "."; return true;
+    }
+    async refresh(silent) {
+      const url = this.bridge.getUrl();
+      if (!url) { if (!silent) this.status = "Alamat file data belum diisi. Gunakan Impor file data, atau isi alamatnya."; return false; }
+      const res = await this.bridge.fetch(url);
+      if (!res.ok) { if (!silent) this.status = "Tidak bisa mengambil data: " + res.text; return false; }
+      const before = this.status, changed = this.accept(res.text, true);
+      if (silent && !changed) this.status = before;
+      return changed;
+    }
+    async importFile() { const res = await this.bridge.pickFile(); if (!res.ok) { if (res.text) this.status = res.text; return false; } return this.accept(res.text, false); }
+  }
+
+  /** File lokal / peramban biasa: data tertanam di file, bisa diganti dengan impor file data. */
+  class StaticSource extends DataSource {
+    constructor(kb) { super(kb); this.status = ""; this.origin = ""; }
+    get canUpdateLocal() { return true; }
+    static embedded() { const el = document.getElementById("kb-embed"); return el ? el.textContent.trim() : ""; }
+    static stored() { try { return localStorage.getItem("ab.kb") || ""; } catch (e) { return ""; } }
+    start(onReady, onFail) {
+      const pick = (...texts) => {
+        let best = null;
+        texts.forEach(([t, origin]) => { if (!t) return; const r = KnowledgeBase.parse(t); if (!r.error && (!best || String(r.kb.meta.version) > String(best.kb.meta.version))) best = { kb: r.kb, origin }; });
+        return best;
+      };
+      const finish = best => { if (!best) { onFail(); return; } this.kb.load(best.kb); this.origin = best.origin; onReady(); };
+      const local = pick([StaticSource.embedded(), "tertanam"], [StaticSource.stored(), "impor"]);
+      if (local) { finish(local); return; }
+      fetch("kb.json").then(r => (r.ok ? r.text() : "")).then(t => finish(pick([t, "kb.json"]))).catch(onFail);
+    }
+    importFile() {
+      return new Promise(resolve => {
+        const inp = document.createElement("input");
+        inp.type = "file"; inp.accept = ".json,application/json";
+        inp.onchange = () => {
+          const f = inp.files && inp.files[0];
+          if (!f) { resolve(false); return; }
+          const rd = new FileReader();
+          rd.onload = () => {
+            const r = KnowledgeBase.parse(String(rd.result));
+            if (r.error) { this.status = r.error; resolve(false); return; }
+            try { localStorage.setItem("ab.kb", String(rd.result)); } catch (e) { this.status = "Data terbaca, tetapi peramban ini tidak mengizinkan penyimpanan. Data hanya berlaku sampai halaman ditutup."; }
+            this.kb.load(r.kb); this.origin = "impor";
+            if (!this.status) this.status = "Data diperbarui ke versi " + r.kb.meta.version + ".";
+            resolve(true);
+          };
+          rd.onerror = () => { this.status = "File tidak bisa dibaca."; resolve(false); };
+          rd.readAsText(f);
+        };
+        inp.click();
+      });
+    }
+  }
+
+  /** Prompt "Tanya": Claude hanya boleh menjawab dari database. */
+  class AskPrompt {
+    constructor(kb, ageDays) { this.kb = kb; this.ageDays = ageDays; }
+    database() {
+      const kb = this.kb;
+      return {
+        sources: Object.fromEntries(Object.entries(kb.sources).map(([k, v]) => [k, (v.type === "sekunder" ? "[sekunder] " : "") + v.title])),
+        penilai_gejala: kb.checkers.map(c => ({ id: c.id, judul: c.title, aturan: c.rules.map(r => ({ tingkat: Level.of(r.level).name, teks: r.text, src: r.src })), default: c.default, kemungkinan: c.differentials, perawatan: c.care, naik_tingkat: c.escalate })),
+        panduan: kb.guides.map(g => ({ judul: g.title, bagian: g.sections })),
+        obat: kb.obat, imunisasi: kb.imunisasi,
+        perkembangan: kb.milestones.map(m => ({ usia: m.label, kemampuan: m.d }))
+      };
+    }
+    build(question) {
+      const d = this.ageDays;
+      return [
+        "Anda adalah asisten kesehatan bayi dan anak untuk orang tua di Indonesia. Jawab dalam Bahasa Indonesia yang tenang, jelas, dan sederhana.",
+        "ATURAN WAJIB:",
+        "1. Jawab HANYA dari DATABASE di bawah, jangan memakai pengetahuan lain. Bila tidak ada di database, tulis persis: \"Belum ada di database terverifikasi aplikasi ini.\" lalu sarankan konsultasi tenaga kesehatan bila menyangkut gejala.",
+        "2. Setiap pernyataan fakta diberi kode sumber dalam kurung siku sesuai kunci sources, misalnya [who_newborn]. Jangan mengarang kode.",
+        "3. Kalimat pertama adalah pesan utama: tingkat (Umum, Pantau, Periksa hari ini, atau Segera ke IGD) dan apa yang harus dilakukan, sesuai aturan penilai di database. Ikuti jumlah tanda sesuai kriteria; satu tanda yang belum memenuhi kriteria cukup disebut Pantau.",
+        "4. Sebut kemungkinan dari yang paling sering, memakai frekuensi alami seperti \"3 dari 10 bayi\". Kondisi langka hanya disebut bila ciri pembedanya ada pada cerita pengguna, selalu dengan angka kejadiannya.",
+        "5. Jangan memberi vonis pasti; sebut pemeriksaan yang memastikan bila ada di database. Jangan memberi dosis obat selain yang tertulis di database.",
+        "6. Jangan menakut-nakuti; tanpa kata dramatis. Maksimal sekitar 180 kata, kalimat pendek, tanpa tabel.",
+        "Usia anak menurut profil: " + (d === null ? "tidak diketahui" : Age.label(d) + " (" + d + " hari)") + ". Tanggal hari ini: " + Clock.today() + ".",
+        "DATABASE (JSON):", JSON.stringify(this.database()),
+        "PERTANYAAN ORANG TUA:", question.trim()
+      ].join("\n");
+    }
+  }
+
+  // =============================================================
+  // Tampilan
+  // =============================================================
+  class View {
+    constructor(app) { this.app = app; }
+    get kb() { return this.app.kb; }
+    get profile() { return this.app.profile; }
+    get source() { return this.app.source; }
+    header() { return '<div class="top"><span class="brand">Asisten Bayi</span><a class="child-chip" href="#profil">' + Html.esc(this.profile.label) + "</a></div>"; }
+    page(inner) { return '<div class="stack">' + this.header() + inner + "</div>"; }
+    sources(ids) {
+      const list = (ids || []).map(id => { const s = this.kb.source(id); return s ? s : null; }).filter(Boolean);
+      if (!list.length) return "";
+      const short = t => { const i = t.indexOf(" — "); return i > 0 ? t.slice(0, i) : t; };
+      return '<p class="src">Sumber: ' + list.map(s => '<a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">' + Html.esc(short(s.title)) + "</a>" + (s.type === "sekunder" ? '<span class="tag">sekunder</span>' : "")).join(" · ") + "</p>";
+    }
+    render() { return ""; }
+    onClick() { return false; }
+    onInput() {}
+    onSubmit() {}
+  }
+
+  class HomeView extends View {
+    render() {
+      const kb = this.kb, d = this.profile.ageDays, m = kb.meta;
+      const pick = d !== null && d <= 28 ? ["neonatus", "gumoh", "kuning", "demam"] : ["gumoh", "demam", "diare", "napas"];
+      const pending = kb.usulan.filter(u => u.status === "baru").length;
+      const items = pick.map(id => kb.checkers.find(c => c.id === id)).filter(Boolean);
+      const keyText = { 1: "Pola yang umum, tanpa tanda bahaya.", 2: "Satu tanda belum memenuhi kriteria. Perhatikan beberapa jam ke depan.", 3: "Kriteria rujukan terpenuhi. Periksakan hari ini.", 4: "Tanda gawat menurut kriteria resmi. Ke IGD sekarang." };
+      return this.page(
+        '<div class="stack-s"><h1>' + (this.profile.hasAge ? "Ada keluhan apa hari ini?" : "Selamat datang") + "</h1>" +
+        '<p class="muted">Jawab beberapa pertanyaan singkat, lalu lihat apa yang perlu dilakukan. Setiap hasil menyebut sumbernya: WHO, IDAI, Kemenkes, atau AAP. Hasilnya berupa kemungkinan, bukan vonis.</p></div>' +
+        (this.profile.hasAge ? "" : '<a class="btn btn-primary" href="#profil" style="text-align:center;text-decoration:none">Isi tanggal lahir anak</a>') +
+        (kb.isStale ? '<div class="banner warn">Data terakhir diverifikasi ' + Html.esc(m.verifiedDate) + ". Sebagian fakta mungkin perlu dicek ulang.</div>" : "") +
+        (pending && this.source.canApprove ? '<a class="banner" href="#data" style="text-decoration:none;color:inherit">' + pending + " usulan pembaruan data menunggu persetujuan Anda ›</a>" : "") +
+        '<div class="stack-s"><p class="eyebrow">Cek gejala</p><div class="list">' +
+        items.map(c => '<a href="#cek-' + Html.esc(c.id) + '"><div><div class="t">' + Html.esc(c.title) + '</div><div class="s">' + Html.esc(c.short) + "</div></div>" + Html.chev() + "</a>").join("") +
+        '<a href="#cek"><div><div class="t">Semua keluhan</div></div>' + Html.chev() + "</a></div></div>" +
+        '<div class="stack-s"><p class="eyebrow">Arti hasil</p><div class="card levels-key">' + [1, 2, 3, 4].map(l => Html.levelChip(l) + '<span class="small">' + keyText[l] + "</span>").join("") + "</div></div>" +
+        (m ? '<p class="small muted">Data versi ' + Html.esc(m.version) + " · diverifikasi " + Html.esc(m.verifiedDate) + ' · <a href="#data">sumber & pembaruan</a></p>' : ""));
+    }
+  }
+
+  class CheckerListView extends View {
+    render() {
+      return this.page('<h1>Cek gejala</h1><p class="muted">Pilih keluhan yang paling sesuai.</p><div class="list">' +
+        this.kb.byOrder(this.kb.checkers).map(c => '<a href="#cek-' + Html.esc(c.id) + '"><div><div class="t">' + Html.esc(c.title) + '</div><div class="s">' + Html.esc(c.short) + "</div></div>" + Html.chev() + "</a>").join("") + "</div>");
+    }
+  }
+
+  class CheckerView extends View {
+    constructor(app) { super(app); this.sessions = {}; this.id = null; }
+    session(id) {
+      const checker = this.kb.checker(id);
+      if (!checker) return null;
+      let s = this.sessions[id];
+      if (!s || s.checker.def !== checker.def) { const old = s; s = this.sessions[id] = new CheckerSession(checker, this.profile); if (old) { s.answers = old.answers; s.step = old.step; } }
+      return s;
+    }
+    render(id) {
+      this.id = id;
+      const s = this.session(id);
+      if (!s) return this.page('<p>Keluhan ini belum ada di database.</p>' + Html.back("cek", "Semua keluhan"));
+      const def = s.checker.def;
+      let body = Html.back("cek", "Semua keluhan") + "<h1>" + Html.esc(def.title) + "</h1>";
+      if (def.needsAge && !this.profile.hasAge) body += '<div class="banner warn">Usia anak belum diisi, padahal beberapa kriteria bergantung pada usia. <a href="#profil">Isi tanggal lahir</a></div>';
+      if (s.step === "result") body += this.result(s);
+      else if (s.step === "danger") body += this.progress(s) + this.dangerStep(s);
+      else body += this.progress(s) + this.questionStep(s);
+      return this.page(body);
+    }
+    progress(s) {
+      const pct = Math.round((s.position - 1) / Math.max(1, s.total) * 100);
+      return '<div class="progress"><span class="small muted">Langkah ' + s.position + " dari " + s.total + '</span><div class="bar" aria-hidden="true"><span style="width:' + pct + '%"></span></div></div>';
+    }
+    dangerStep(s) {
+      const qs = s.parts.danger, n = s.dangerSelected;
+      return '<div class="card stack"><div class="stack-s"><p class="qbig">Pertama, adakah salah satu tanda ini?</p><p class="small muted">Ketuk yang ada. Tanda-tanda ini dicek lebih dulu karena masing-masing sudah cukup untuk segera mencari pertolongan.</p></div>' +
+        '<div class="answers">' + qs.map(q => '<button type="button" class="toggle" data-danger="' + Html.esc(q.id) + '" aria-pressed="' + (s.answers[q.id] === "ya") + '"><span class="box" aria-hidden="true"></span><span>' + Html.esc(q.text) + "</span></button>").join("") + "</div>" +
+        '<button type="button" class="btn-primary" data-act="danger-ok">' + (n ? "Lihat hasil" : "Tidak ada, lanjut") + "</button></div>";
+    }
+    questionStep(s) {
+      const q = s.current;
+      if (!q) return "";
+      const v = s.answers[q.id];
+      let ctl;
+      if (q.type === "yn") {
+        const opts = [["ya", "Ya"], ["tidak", "Tidak"]].concat(q.allowUnknown ? [["tdk-tahu", "Tidak tahu"]] : []);
+        ctl = '<div class="answers">' + opts.map(([val, l]) => '<button type="button" data-ans="' + Html.esc(q.id) + '" data-v="' + val + '" aria-pressed="' + (v === val) + '">' + l + "</button>").join("") + "</div>";
+      } else if (q.type === "choice") {
+        ctl = '<div class="answers">' + q.options.map(o => '<button type="button" data-ans="' + Html.esc(q.id) + '" data-v="' + Html.esc(o.v) + '" aria-pressed="' + (v === o.v) + '">' + Html.esc(o.label) + "</button>").join("") + "</div>";
+      } else {
+        ctl = '<form class="stack-s" data-form="num"><div class="num-in"><input id="num-' + Html.esc(q.id) + '" inputmode="decimal" value="' + Html.esc(v || "") + '" aria-label="' + Html.esc(q.text) + '"><span class="muted">' + Html.esc(q.unit || "") + '</span></div><div class="row"><button class="btn-primary" type="submit">Lanjut</button>' + (q.optional ? '<button type="button" data-act="skip">Lewati</button>' : "") + "</div></form>";
+      }
+      return '<div class="card stack"><label class="qbig"' + (q.type === "number" ? ' for="num-' + Html.esc(q.id) + '"' : "") + ">" + Html.esc(q.text) + "</label>" + (q.help ? '<p class="small muted">' + Html.esc(q.help) + "</p>" : "") + ctl + "</div>" +
+        '<div class="navrow"><button type="button" class="btn-ghost" data-act="back">‹ Kembali</button>' + (q.type === "yn" ? '<button type="button" class="btn-ghost" data-act="skip">Lewati</button>' : "") + "</div>";
+    }
+    result(s) {
+      const r = s.assessment, lv = r.levelInfo;
+      const main = r.summary || (r.reasons[0] && r.reasons[0].text) || "";
+      const mainSrc = r.summary ? r.summarySrc : (r.reasons[0] ? r.reasons[0].src : []);
+      // Pesan utama di atas (CDC Clear Communication Index): tingkat, tindakan, lalu alasannya.
+      let h = '<div class="result r-' + r.level + '" aria-live="polite"><div class="stack-s">' + Html.levelChip(r.level) + "<h2>" + Html.esc(lv.action) + "</h2>" +
+        (r.summary && r.headline !== lv.name ? '<p class="eyebrow">' + Html.esc(r.headline) + "</p>" : "") +
+        '<p class="main-msg">' + Html.esc(main) + "</p>" + this.sources(mainSrc) + "</div></div>";
+      if (s.skippedByUrgent) h += '<p class="small muted">Pertanyaan lain dilewati karena sudah ada tanda yang perlu segera ditangani.</p>';
+      const more = r.reasons.slice(1);
+      if (more.length) h += '<div class="card stack-s"><h3>Alasan lain</h3>' + more.map(x => "<div><p>" + Html.esc(x.text) + "</p>" + this.sources(x.src) + "</div>").join("") + "</div>";
+      r.notes.forEach(n => { h += '<div class="banner"><p>' + Html.esc(n.text) + "</p>" + this.sources(n.src) + "</div>"; });
+      if (!r.isUrgent) {
+        if (r.differentials.length) h += '<div class="card stack-s"><h3>Kemungkinan, dari yang paling sering</h3>' +
+          r.differentials.map(d => '<div class="diff"><p class="diff-h"><strong>' + Html.esc(d.name) + '</strong><span class="freq">' + Html.esc(d.freq) + "</span></p><p class=\"small\">" + Html.esc(d.features) + "</p>" + this.sources(d.src) + "</div>").join("") + "</div>";
+        if (r.care.length) h += '<div class="card stack-s"><h3>Yang bisa dilakukan sekarang</h3><ul class="items">' + r.care.map(x => "<li>" + Html.esc(x.t) + this.sources(x.src) + "</li>").join("") + "</ul></div>";
+        if (r.escalate.length) h += '<div class="card stack-s"><h3>Periksakan bila kemudian muncul</h3><ul class="items">' + r.escalate.map(x => "<li>" + Html.esc(x) + "</li>").join("") + "</ul></div>";
+      }
+      const rows = s.reviewRows;
+      h += '<div class="card"><details class="review"><summary>Jawaban Anda (' + rows.length + ")</summary>" +
+        rows.map(x => '<div class="review-row"><div><p class="small">' + Html.esc(x.q.text) + '</p><p class="small"><strong>' + Html.esc(x.label) + '</strong></p></div><button type="button" data-goto="' + Html.esc(x.q.id) + '">Ubah</button></div>').join("") + "</details></div>";
+      h += '<div class="navrow"><button type="button" class="btn-ghost" data-act="back">‹ Kembali</button><button type="button" data-act="restart">Mulai ulang</button></div>';
+      h += '<p class="small muted">Hasil ini berupa kemungkinan berdasarkan kriteria resmi, bukan vonis.' + (r.level <= 2 ? " Bila Anda tetap khawatir, periksakan anak meski hasilnya hijau atau kuning." : "") + "</p>";
+      return h;
+    }
+    onClick(t) {
+      const s = this.id && this.sessions[this.id];
+      if (!s) return false;
+      if (t.dataset.danger) { s.toggleDanger(t.dataset.danger); return true; }
+      if (t.dataset.ans) { s.answer(t.dataset.ans, t.dataset.v); window.scrollTo(0, 0); return true; }
+      if (t.dataset.goto) { s.goTo(t.dataset.goto); return true; }
+      const act = t.dataset.act;
+      if (act === "danger-ok") { s.confirmDanger(); window.scrollTo(0, 0); return true; }
+      if (act === "back") { s.back(); return true; }
+      if (act === "skip") { s.next(); return true; }
+      if (act === "restart") { s.reset(); return true; }
+      return false;
+    }
+    onSubmit(form) {
+      const s = this.id && this.sessions[this.id];
+      if (!s || form.dataset.form !== "num" || !s.current) return false;
+      const val = form.querySelector("input").value.trim();
+      if (val === "") { s.next(); return true; }
+      s.answer(s.current.id, val); return true;
+    }
+    prefill(id, qid, value) { const s = this.session(id); if (s) s.answers[qid] = value; }
+  }
+
+  class BreathView extends View {
+    constructor(app) {
+      super(app);
+      this.counter = new BreathCounter(() => this.tick(), () => this.app.render());
+    }
+    tick() {
+      const l = document.getElementById("b-left"); if (l) l.textContent = this.counter.left + " detik";
+      const fg = document.querySelector(".ring .c-fg");
+      if (fg) { const C = 2 * Math.PI * 52; fg.setAttribute("stroke-dashoffset", (C - C * (this.counter.left / 60)).toFixed(1)); }
+    }
+    render() {
+      const c = this.counter, d = this.profile.ageDays, th = BreathCounter.threshold(d);
+      const C = 2 * Math.PI * 52, off = C * (c.left / 60);
+      let res = "";
+      if (c.done) {
+        const fast = th && c.count >= th.min;
+        res = '<div class="result r-' + (fast ? th.level : 1) + '"><div class="stack-s"><h2>' + c.count + "×/menit</h2>" +
+          (th ? "<p>" + (fast ? "Di atas ambang napas cepat WHO untuk usia ini (" + Html.esc(th.label) + ")." : "Di bawah ambang napas cepat WHO untuk usia ini (" + Html.esc(th.label) + ").") + "</p>" + this.sources(th.src)
+            : '<p class="muted">Aplikasi belum punya ambang terverifikasi untuk usia ini' + (d === null ? " (usia belum diisi)" : "") + ".</p>") +
+          '<button type="button" class="btn-primary" data-act="use-rr">Lanjut ke penilaian batuk & napas</button></div></div>';
+      }
+      return this.page("<h1>Hitung napas</h1>" +
+        '<p class="muted">Hitung saat anak tenang atau tidur, tidak sedang menangis. Satu kali perut atau dada naik-turun = satu napas. Ketuk tombol besar setiap satu napas selama 60 detik.</p>' +
+        '<div class="card counter"><div class="ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="c-bg" cx="60" cy="60" r="52"/><circle class="c-fg" cx="60" cy="60" r="52" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + (C - off).toFixed(1) + '"/></svg>' +
+        '<div class="mid"><span class="big" id="b-count" aria-live="polite">' + c.count + '</span><span class="muted small" id="b-left">' + (c.running ? c.left + " detik" : c.done ? "selesai" : "60 detik") + "</span></div></div>" +
+        (c.running ? '<button class="btn-primary tap" data-act="tap" type="button">Napas</button><button type="button" class="btn-ghost" data-act="cancel">Batalkan</button>'
+          : '<button class="btn-primary tap" data-act="start" type="button">' + (c.done ? "Hitung ulang" : "Mulai 60 detik") + "</button>") +
+        "</div>" + res + (th ? '<p class="small muted">Ambang napas cepat WHO untuk usia ' + Html.esc(Age.label(d)) + ": " + Html.esc(th.label) + ".</p>" : ""));
+    }
+    onClick(t) {
+      const a = t.dataset.act;
+      if (a === "start") { this.counter.start(); return true; }
+      if (a === "tap") { this.counter.tap(); const el = document.getElementById("b-count"); if (el) el.textContent = this.counter.count; return "keep"; }
+      if (a === "cancel") { this.counter.reset(); return true; }
+      if (a === "use-rr") { this.app.views.checker.prefill("napas", "rr", String(this.counter.count)); location.hash = "#cek-napas"; return "keep"; }
+      return false;
+    }
+  }
+
+  class AskView extends View {
+    constructor(app) { super(app); this.q = ""; this.text = ""; this.busy = false; this.err = ""; this.ctl = null; }
+    linkify(t) {
+      const short = s => { const i = s.indexOf(" — "); return i > 0 ? s.slice(0, i) : s; };
+      return Html.esc(t).replace(/\[([a-z0-9_]+)\]/g, (m, id) => { const s = this.kb.source(id); return s ? '<a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">[' + Html.esc(short(s.title)) + "]</a>" : m; });
+    }
+    render() {
+      if (!(this.source instanceof CloudSource)) return this.page('<h1>Tanya</h1><div class="card stack-s"><p>Fitur tanya dijawab Claude dan hanya tersedia di versi online.</p>' + this.app.views.data.onlineLink() + "</div>");
+      return this.page("<h1>Tanya</h1>" +
+        '<p class="muted">Dijawab Claude hanya dari isi database aplikasi ini, dengan sumbernya. Bila jawabannya belum ada, Claude akan bilang begitu, dan pertanyaan Anda bisa dicatat untuk diriset.</p>' +
+        (this.source.canAsk ? "" : '<div class="banner warn">Fitur tanya membutuhkan izin Claude di halaman ini dan belum tersedia di tampilan ini.</div>') +
+        '<form data-form="ask" class="card stack"><label for="t-q">Pertanyaan</label><textarea id="t-q" placeholder="Contoh: bayi 2 minggu gumoh setelah menyusu tapi masih lapar, perlu ke dokter?">' + Html.esc(this.q) + "</textarea>" +
+        '<div class="row"><button class="btn-primary" type="submit"' + (this.busy || !this.source.canAsk ? " disabled" : "") + ">" + (this.busy ? "Menjawab…" : "Tanya") + "</button>" + (this.busy ? '<button type="button" data-act="stop">Hentikan</button>' : "") + "</div></form>" +
+        (this.err ? '<div class="banner warn">' + Html.esc(this.err) + "</div>" : "") +
+        (this.text ? '<div class="card stack-s"><p class="eyebrow">Jawaban</p><div class="answer" id="t-ans">' + this.linkify(this.text) + "</div>" + (this.busy ? "" : '<div class="row"><button type="button" data-act="save-q">Catat untuk diriset</button></div>') + "</div>" : ""));
+    }
+    onInput(t) { if (t.id === "t-q") this.q = t.value; }
+    onSubmit(form) { if (form.dataset.form !== "ask") return false; this.q = form.querySelector("textarea").value; this.ask(); return true; }
+    async ask() {
+      if (!this.q.trim() || this.busy) return;
+      this.busy = true; this.text = ""; this.err = ""; this.app.render();
+      this.ctl = new AbortController();
+      try {
+        const out = await this.source.ask(this.q, this.profile.ageDays, ({ text }) => { this.text = text; const el = document.getElementById("t-ans"); if (el) el.innerHTML = this.linkify(text); else this.app.render(); }, this.ctl.signal);
+        this.text = out.text + (out.truncated ? "\n\n(Jawaban terpotong. Coba pertanyaan yang lebih spesifik.)" : "");
+      } catch (e) {
+        const c = e && e.code;
+        this.err = c === "not_granted" ? "Izin untuk Claude di halaman ini ditolak, jadi fitur tanya tidak bisa dipakai di tampilan ini." : c === "rate_limited" ? "Terlalu banyak pertanyaan dalam waktu singkat. Coba lagi beberapa saat lagi." : c === "cancelled" ? "" : "Jawaban gagal dimuat. Periksa koneksi lalu coba lagi.";
+      }
+      this.busy = false; this.app.render();
+    }
+    async onClick(t) {
+      if (t.dataset.act === "stop") { if (this.ctl) this.ctl.abort(); return "keep"; }
+      if (t.dataset.act === "save-q") {
+        try { await this.source.saveQuestion(this.q.trim()); Toast.show("Dicatat. Akan diriset pada pemeriksaan berikutnya."); }
+        catch (e) { Toast.show(e && e.code === "permission_denied" ? "Anda tidak punya izin mencatat pertanyaan." : "Gagal mencatat."); }
+        return "keep";
+      }
+      return false;
+    }
+  }
+
+  class MoreView extends View {
+    render() {
+      const items = [["panduan", "Panduan", "ASI, MPASI, tidur aman, tersedak, kesehatan ibu, dan lainnya"], ["tumbuh", "Perkembangan", "Checklist CDC per usia"], ["imunisasi", "Imunisasi", "Jadwal IDAI 2024"], ["obat", "Keamanan obat", "Yang dihindari dan dosis program resmi"], ["data", "Sumber & pembaruan data", "Versi, usulan, riwayat perubahan"], ["profil", "Profil anak", "Nama dan tanggal lahir"]];
+      return this.page('<h1>Lainnya</h1><div class="list">' + items.map(([id, t, s]) => '<a href="#' + id + '"><div><div class="t">' + t + '</div><div class="s">' + s + "</div></div>" + Html.chev() + "</a>").join("") + "</div>");
+    }
+  }
+
+  class GuideListView extends View {
+    render() {
+      return this.page(Html.back("lainnya", "Lainnya") + '<h1>Panduan</h1><div class="list">' + this.kb.byOrder(this.kb.guides).map(g => '<a href="#panduan-' + Html.esc(g.id) + '"><div class="t">' + Html.esc(g.title) + "</div>" + Html.chev() + "</a>").join("") + "</div>");
+    }
+  }
+
+  class GuideView extends View {
+    render(id) {
+      const g = this.kb.guide(id);
+      if (!g) return this.page("<p>Panduan ini belum ada.</p>" + Html.back("panduan", "Panduan"));
+      return this.page(Html.back("panduan", "Panduan") + "<h1>" + Html.esc(g.title) + "</h1>" +
+        g.sections.map(s => '<div class="card stack-s"><h3>' + Html.esc(s.h) + "</h3>" + (s.items ? '<ul class="items">' + s.items.map(it => "<li>" + Html.esc(it.t) + this.sources(it.src) + "</li>").join("") + "</ul>" : "") + (s.table ? Html.table(s.table) + this.sources(s.src) : "") + "</div>").join(""));
+    }
+  }
+
+  class MilestoneView extends View {
+    constructor(app) { super(app); this.tab = null; }
+    render() {
+      const ms = this.kb.milestones.slice().sort((a, b) => a.months - b.months);
+      if (!ms.length) return this.page("<p>Data perkembangan belum ada.</p>");
+      const d = this.profile.ageDays, ageM = d === null ? null : d / 30.4375;
+      if (!this.tab) { const cur = ageM === null ? ms[0] : ms.filter(m => m.months <= ageM + 0.01).pop() || ms[0]; this.tab = cur.id; }
+      const m = ms.find(x => x.id === this.tab) || ms[0];
+      const checked = LocalStore.get("ab.ms", {});
+      const names = { sosial: "Sosial & emosi", bahasa: "Bahasa & komunikasi", kognitif: "Belajar & berpikir", gerak: "Gerak & fisik" };
+      const all = Object.values(m.d).flat(), done = all.filter(t => checked[m.id + "|" + t]).length;
+      const isAgeTab = ageM !== null && m.months <= ageM + 0.01;
+      return this.page(Html.back("lainnya", "Lainnya") + "<h1>Perkembangan</h1>" +
+        '<p class="muted">Daftar CDC 2022 berisi kemampuan yang dicapai paling sedikit 3 dari 4 anak pada usia tersebut. Bila anak belum mencapai salah satunya, sampaikan ke dokter saat kontrol.</p>' + this.sources(["cdc_milestones"]) +
+        '<div class="tabs" role="group" aria-label="Usia">' + ms.map(x => '<button type="button" data-ms="' + Html.esc(x.id) + '" aria-pressed="' + (x.id === m.id) + '">' + Html.esc(x.label) + "</button>").join("") + "</div>" +
+        '<div class="card stack-s"><div class="row" style="justify-content:space-between"><h2>' + Html.esc(m.label) + '</h2><span class="muted small">' + done + " dari " + all.length + " tercapai</span></div>" +
+        Object.keys(names).filter(k => m.d[k] && m.d[k].length).map(k => '<div><p class="eyebrow" style="margin-top:8px">' + names[k] + "</p>" +
+          m.d[k].map((t, i) => { const id = "ms-" + m.id + "-" + k + "-" + i; return '<div class="check"><input type="checkbox" id="' + id + '" data-mscheck="' + Html.esc(m.id + "|" + t) + '"' + (checked[m.id + "|" + t] ? " checked" : "") + '><label for="' + id + '">' + Html.esc(t) + "</label></div>"; }).join("") + "</div>").join("") + "</div>" +
+        (isAgeTab && done < all.length ? '<div class="banner">Ada ' + (all.length - done) + " kemampuan yang belum dicentang. Itu belum berarti ada masalah; dokter akan menilainya dengan alat skrining resmi. Bila anak kehilangan kemampuan yang sebelumnya sudah bisa, konsultasikan lebih cepat.</div>" : "") +
+        '<p class="small muted">Anak lahir prematur dinilai dengan usia koreksi.</p>');
+    }
+    onClick(t) { if (t.dataset.ms) { this.tab = t.dataset.ms; return true; } return false; }
+    onChange(t) { if (t.dataset.mscheck) { const c = LocalStore.get("ab.ms", {}); if (t.checked) c[t.dataset.mscheck] = true; else delete c[t.dataset.mscheck]; LocalStore.set("ab.ms", c); return true; } return false; }
+  }
+
+  class ImmunizationView extends View {
+    render() {
+      const im = this.kb.imunisasi;
+      if (!im) return this.page("<p>Jadwal imunisasi belum ada.</p>");
+      return this.page(Html.back("lainnya", "Lainnya") + '<h1>Imunisasi</h1><div class="banner warn">' + Html.esc(im.note) + "</div>" +
+        '<div class="card">' + Html.table({ head: ["Usia", "Vaksin"], rows: im.rows }) + this.sources(im.src) + "</div>" +
+        '<div class="card stack-s"><h3>Vitamin A (gratis)</h3><p>Setiap Februari dan Agustus di posyandu atau puskesmas. Kapsul biru untuk 6–11 bulan, kapsul merah untuk 12–59 bulan.</p>' + this.sources(["kemenkes_vita"]) + "</div>");
+    }
+  }
+
+  class MedicineView extends View {
+    render() {
+      const names = { hindari: "Hindari", dokter: "Lewat dokter", info: "Info", program: "Program resmi" };
+      const cls = { hindari: "lv-3", program: "lv-1" };
+      return this.page(Html.back("lainnya", "Lainnya") + "<h1>Keamanan obat</h1>" +
+        '<p class="muted">Berisi obat yang perlu dihindari pada usia tertentu dan dosis program kesehatan resmi. Dosis obat umum seperti paracetamol sengaja tidak dimuat karena bergantung berat badan dan sediaan; ikuti label, apoteker, atau dokter.</p>' +
+        this.kb.byOrder(this.kb.obat).map(o => '<div class="card stack-s"><div class="row" style="justify-content:space-between"><h3>' + Html.esc(o.name) + '</h3><span class="lv ' + (cls[o.status] || "lv-2") + '">' + Html.esc(names[o.status] || o.status) + "</span></div>" +
+          '<p class="small muted">Usia: ' + Html.esc(o.age) + "</p><p>" + Html.esc(o.t) + "</p>" + this.sources(o.src) + "</div>").join(""));
+    }
+  }
+
+  class ProfileView extends View {
+    render() {
+      return this.page(Html.back("lainnya", "Lainnya") + "<h1>Profil anak</h1>" +
+        '<form data-form="profil" class="card stack"><div class="stack-s"><label for="p-nama">Nama panggilan (opsional)</label><input id="p-nama" value="' + Html.esc(this.profile.name) + '" autocomplete="off"></div>' +
+        '<div class="stack-s"><label for="p-lahir">Tanggal lahir</label><input id="p-lahir" type="date" max="' + Clock.today() + '" value="' + Html.esc(this.profile.birth) + '"></div>' +
+        '<button class="btn-primary" type="submit">Simpan</button></form><p class="small muted">Disimpan di perangkat ini saja, dipakai untuk menghitung usia pada setiap penilaian.</p>');
+    }
+    onSubmit(form) {
+      if (form.dataset.form !== "profil") return false;
+      this.profile.save(form.querySelector("#p-nama").value.trim(), form.querySelector("#p-lahir").value);
+      this.app.views.milestone.tab = null; Toast.show("Profil disimpan."); location.hash = "#beranda"; return true;
+    }
+  }
+
+  class DataView extends View {
+    onlineLink() {
+      return this.source instanceof AndroidSource ? '<button type="button" data-act="online">Buka versi online</button>' : '<a href="' + ONLINE_URL + '" target="_blank" rel="noopener">Buka versi online</a>';
+    }
+    modeBlock() {
+      const src = this.source;
+      if (src instanceof CloudSource) {
+        return '<div class="card stack-s"><h3>Versi offline</h3><p class="small">Satu file HTML dengan tampilan yang sama dan data saat ini sudah tertanam di dalamnya. Simpan di HP, lalu buka dengan Chrome; bisa dipakai tanpa internet. Fitur Tanya dan persetujuan usulan tetap hanya di versi online.</p>' +
+          '<div class="row"><button type="button" class="btn-primary" data-act="export-offline"' + (src.canExportOffline ? "" : " disabled") + ">Unduh versi offline</button></div></div>" +
+          '<div class="card stack-s"><h3>Data untuk aplikasi Android</h3><p class="small">Aplikasi Android menyimpan salinan data supaya tetap bisa dipakai tanpa internet. Setelah menyetujui usulan, unduh data terbaru, lalu di aplikasi Android buka Lainnya → Sumber & pembaruan → Impor file data.</p>' +
+          '<div class="row"><button type="button" data-act="export"' + (src.canExport ? "" : " disabled") + ">Unduh data untuk APK</button></div>" + (src.canExport ? "" : '<p class="small muted">Unduhan tidak tersedia di tampilan ini.</p>') + "</div>";
+      }
+      if (src instanceof AndroidSource) {
+        return '<div class="card stack"><h3>Perbarui data di perangkat ini</h3>' + (src.status ? '<div class="banner">' + Html.esc(src.status) + "</div>" : "") +
+          '<div class="stack-s"><label for="k-url">Alamat file data (opsional)</label><input id="k-url" inputmode="url" placeholder="https://raw.githubusercontent.com/…/kb.json" value="' + Html.esc(src.bridge.getUrl()) + '"><p class="small muted">Bila diisi, aplikasi memeriksa data baru di alamat ini setiap kali dibuka.</p></div>' +
+          '<div class="row"><button type="button" class="btn-primary" data-act="refresh">Periksa pembaruan</button><button type="button" data-act="import">Impor file data</button></div>' +
+          '<p class="small">Tanya dan persetujuan usulan ada di versi online. ' + this.onlineLink() + '</p><p class="small muted">Data baru selalu diperiksa dulu; file yang memuat pernyataan tanpa sumber ditolak.</p></div>';
+      }
+      return '<div class="card stack-s"><h3>Versi offline</h3>' + (src.status ? '<div class="banner">' + Html.esc(src.status) + "</div>" : "") +
+        '<p class="small">Data ' + (src.origin === "impor" ? "dari file yang Anda impor" : "tertanam di file ini") + '. Untuk data terbaru, buka versi online lalu unduh ulang versi offline, atau impor file data dari sana.</p>' +
+        '<div class="row"><button type="button" data-act="import">Impor file data</button></div><p class="small">' + this.onlineLink() + '</p><p class="small muted">Data baru selalu diperiksa dulu; file yang memuat pernyataan tanpa sumber ditolak.</p></div>';
+    }
+    usulan(u, actionable) {
+      const kind = u.type === "pertanyaan" ? "Pertanyaan untuk diriset" : "Pembaruan data";
+      const st = { disetujui: "Disetujui", ditolak: "Ditolak", diriset: "Sudah diriset" }[u.status] || "Baru";
+      return '<div class="card stack-s"><div class="row" style="justify-content:space-between"><span class="eyebrow">' + kind + '</span><span class="small muted">' + st + " · " + Html.esc(String(u.createdAt || "").slice(0, 10)) + "</span></div>" +
+        "<p><strong>" + Html.esc(u.title || u.question || "") + "</strong></p>" + (u.summary ? '<p class="small">' + Html.esc(u.summary) + "</p>" : "") + (u.catatan ? '<p class="small muted">' + Html.esc(u.catatan) + "</p>" : "") +
+        (Array.isArray(u.sources) && u.sources.length ? '<p class="src">Sumber: ' + u.sources.map(s => '<a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">' + Html.esc(s.title) + "</a>").join(" · ") + "</p>" : "") +
+        (actionable && this.source.canApprove ? '<div class="row">' + (u.type !== "pertanyaan" && u.target ? '<button class="btn-primary" type="button" data-approve="' + Html.esc(u._id) + '">Setujui</button>' : "") + '<button type="button" data-reject="' + Html.esc(u._id) + '">' + (u.type === "pertanyaan" ? "Hapus dari antrean" : "Tolak") + "</button></div>" : "") + "</div>";
+    }
+    render() {
+      const kb = this.kb, m = kb.meta, cloud = this.source instanceof CloudSource;
+      const us = kb.usulan.slice().sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+      const pend = us.filter(u => u.status === "baru"), done = us.filter(u => u.status !== "baru").slice(0, 10);
+      const log = kb.changelog.slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      const srcs = Object.entries(kb.sources).sort((a, b) => a[1].title.localeCompare(b[1].title));
+      return this.page(Html.back("lainnya", "Lainnya") + "<h1>Sumber & pembaruan</h1>" +
+        (m ? '<div class="card stack-s"><p><strong>Versi data ' + Html.esc(m.version) + '</strong></p><p class="small muted">Diverifikasi ' + Html.esc(m.verifiedDate) + " · pemeriksaan sumber terakhir " + Html.esc(m.lastCheck || "-") + '</p><p class="small">' + Html.esc(m.note || "") + "</p></div>" : "") +
+        this.modeBlock() +
+        '<div class="card stack-s"><h3>Cara data diperbarui</h3><ul class="items small"><li>Setiap tanggal 1, Claude memeriksa pedoman terbaru dari IDAI, Kemenkes, WHO, AAP, CDC, dan FDA, lalu menulis usulan perubahan beserta sumbernya.</li><li>Usulan tidak langsung mengubah data. Pemilik meninjau dan menyetujui; usulan yang memuat pernyataan tanpa sumber ditolak otomatis.</li><li>Pertanyaan yang belum terjawab di menu Tanya bisa dicatat untuk diriset.</li></ul></div>' +
+        (cloud ? '<div class="stack-s"><h2>Usulan menunggu (' + pend.length + ")</h2>" + (pend.length ? pend.map(u => this.usulan(u, true)).join("") : '<p class="muted small">Tidak ada usulan baru.</p>') + "</div>" + (done.length ? '<div class="stack-s"><h3>Usulan yang sudah diputuskan</h3>' + done.map(u => this.usulan(u, false)).join("") + "</div>" : "") : "") +
+        '<div class="stack-s"><h2>Riwayat perubahan</h2><div class="card stack-s">' + (log.length ? log.map(l => "<div><p><strong>" + Html.esc(l.title) + '</strong> <span class="muted small">' + Html.esc(l.date) + '</span></p><p class="small">' + Html.esc(l.text) + "</p></div>").join("") : '<p class="muted small">Belum ada.</p>') + "</div></div>" +
+        '<div class="stack-s"><h2>Daftar sumber (' + srcs.length + ')</h2><div class="card"><ul class="items small">' + srcs.map(([id, s]) => '<li><a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">' + Html.esc(s.title) + "</a>" + (s.type === "sekunder" ? '<span class="tag">sekunder</span>' : "") + "</li>").join("") + "</ul></div></div>");
+    }
+    async onClick(t) {
+      const src = this.source;
+      const run = async (fn, okMsg) => { try { await fn(); if (okMsg) Toast.show(okMsg); } catch (e) { Toast.show((e && e.message) || "Gagal."); } };
+      if (t.dataset.approve) { const u = this.kb.usulan.find(x => x._id === t.dataset.approve); if (u) await run(() => src.approve(u), "Disetujui dan diterapkan."); return "keep"; }
+      if (t.dataset.reject) { const u = this.kb.usulan.find(x => x._id === t.dataset.reject); if (u) await run(() => src.reject(u), "Usulan ditolak."); return "keep"; }
+      const a = t.dataset.act;
+      if (a === "export") { await run(() => src.exportForApk(), "Data diunduh."); return "keep"; }
+      if (a === "export-offline") { await run(() => src.exportOffline(), "Versi offline diunduh."); return "keep"; }
+      if (a === "online") { src.bridge.open(ONLINE_URL); return "keep"; }
+      if (a === "refresh") { const u = document.getElementById("k-url"); if (u) src.bridge.setUrl(u.value.trim()); src.status = "Memeriksa…"; this.app.render(); await src.refresh(false); return true; }
+      if (a === "import") { await src.importFile(); return true; }
+      return false;
+    }
+  }
+
+  // =============================================================
+  // Aplikasi
+  // =============================================================
+  class Router {
+    static parse() {
+      const h = (location.hash || "#beranda").slice(1) || "beranda";
+      const prefixes = [["cek-", "checker"], ["panduan-", "guide"]];
+      for (const [p, name] of prefixes) if (h.startsWith(p)) return { name, param: h.slice(p.length), raw: h };
+      const map = { beranda: "home", cek: "checkers", napas: "breath", tanya: "ask", lainnya: "more", panduan: "guides", tumbuh: "milestone", imunisasi: "immunization", obat: "medicine", data: "data", profil: "profile" };
+      return { name: map[h] || "home", param: null, raw: h };
+    }
+  }
+
+  class App {
+    constructor() {
+      this.root = document.getElementById("app");
+      this.navEl = document.getElementById("nav");
+      this.kb = new KnowledgeBase();
+      this.profile = new Profile();
+      this.source = new DataSource(this.kb);
+      this.state = "loading";
+      this.views = {
+        home: new HomeView(this), checkers: new CheckerListView(this), checker: new CheckerView(this), breath: new BreathView(this),
+        ask: new AskView(this), more: new MoreView(this), guides: new GuideListView(this), guide: new GuideView(this),
+        milestone: new MilestoneView(this), immunization: new ImmunizationView(this), medicine: new MedicineView(this),
+        data: new DataView(this), profile: new ProfileView(this)
+      };
+      this.route = Router.parse();
+      this.bindEvents();
+    }
+    pickSource() {
+      if (window.AndroidKB) return new AndroidSource(this.kb, new AndroidBridge(window.AndroidKB));
+      if (window.claude && typeof window.claude.use === "function" && !StaticSource.embedded()) return new CloudSource(this.kb, window.claude);
+      return new StaticSource(this.kb);
+    }
+    start() {
+      const go = () => {
+        this.source = this.pickSource();
+        this.renderNav();
+        this.source.start(() => { this.state = this.kb.isEmpty ? "empty" : "ready"; this.render(); }, () => { this.state = "failed"; this.render(); });
+      };
+      this.renderNav();
+      if (window.AndroidKB || (window.claude && window.claude.use) || StaticSource.embedded()) go(); else setTimeout(go, 1500);
+    }
+    get currentView() { return this.views[this.route.name] || this.views.home; }
+    renderNav() {
+      const cloud = this.source instanceof CloudSource;
+      const ICON = App.ICON;
+      const fourth = cloud ? ["tanya", "Tanya", "tanya"] : ["panduan", "Panduan", "panduan"];
+      const items = [["beranda", "Beranda", "beranda"], ["cek", "Cek Gejala", "cek"], ["napas", "Hitung Napas", "napas"], fourth, ["lainnya", "Lainnya", "lainnya"]];
+      const r = this.route;
+      const group = (r.name === "checker" || r.name === "checkers") ? "cek" : (!cloud && (r.name === "guides" || r.name === "guide")) ? "panduan" :
+        ["guides", "guide", "milestone", "immunization", "medicine", "data", "profile", "more"].includes(r.name) ? "lainnya" : r.raw;
+      this.navEl.innerHTML = items.map(([id, label, icon]) => '<a href="#' + id + '"' + (group === id ? ' aria-current="page"' : "") + ">" + ICON[icon] + "<span>" + label + "</span></a>").join("");
+    }
+    stateScreen() {
+      const v = this.views.home;
+      if (this.state === "failed") return v.page(this.source instanceof CloudSource || this.source.constructor === DataSource
+        ? '<div class="card stack-s"><h2>Database belum terbaca</h2><p class="muted">Halaman ini membutuhkan akun claude.ai yang sudah masuk dan akses ke artifak ini. Buka ulang halaman setelah masuk.</p></div>'
+        : '<div class="card stack-s"><h2>Data belum terbaca</h2><p class="muted">File data tidak ditemukan atau tidak lolos pemeriksaan sumber.</p></div>');
+      if (this.state === "empty") return v.page('<div class="card stack-s"><h2>Database masih kosong</h2><p class="muted">Basis pengetahuan belum diisi. Setelah diisi, isinya muncul di sini otomatis.</p></div>');
+      return null;
+    }
+    render() {
+      this.renderNav();
+      if (this.state === "loading") return;
+      const screen = this.stateScreen();
+      const active = document.activeElement, focusId = active && active.id, sel = active && active.selectionStart;
+      this.root.innerHTML = screen || this.currentView.render(this.route.param);
+      if (focusId) { const el = document.getElementById(focusId); if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) { el.focus(); try { el.setSelectionRange(sel, sel); } catch (e) { /* jenis input tanpa seleksi */ } } }
+    }
+    bindEvents() {
+      window.addEventListener("hashchange", () => { const prev = this.route.raw; this.route = Router.parse(); if (this.route.raw !== prev) window.scrollTo(0, 0); this.render(); });
+      document.addEventListener("click", async e => {
+        const t = e.target.closest("button, a");
+        if (!t || !this.root.contains(t)) return;
+        const res = await this.currentView.onClick(t);
+        if (res === true) this.render();
+      });
+      document.addEventListener("input", e => this.currentView.onInput(e.target));
+      document.addEventListener("change", e => { const v = this.currentView; if (v.onChange && v.onChange(e.target)) this.render(); });
+      document.addEventListener("submit", e => { e.preventDefault(); if (this.currentView.onSubmit(e.target)) this.render(); });
+    }
+  }
+  App.ICON = {
+    beranda: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>',
+    cek: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-3"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 13l2 2 4-4"/></svg>',
+    napas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>',
+    tanya: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M10 9.5a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.2M12 14.5v.01"/></svg>',
+    panduan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg>',
+    lainnya: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>'
+  };
+
+  const app = new App();
+  window.__app = app;
+  app.start();
+})();
+</script>

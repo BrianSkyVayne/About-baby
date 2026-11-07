@@ -1,0 +1,40 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Uji mesin penilaian dan validasi sumber
+        run: node --test test/engine.test.js
+
+      - name: Susun data dan halaman
+        run: |
+          node src/build-kb.js
+          node src/build-page.js
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build APK debug
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: asisten-bayi-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
