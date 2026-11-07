@@ -1,0 +1,835 @@
+<div class="wrap" id="app">
+  <div class="stack">
+    <div class="top"><span class="brand">Asisten Bayi</span></div>
+    <div class="card stack-s">
+      <div class="skeleton" style="width:60%"></div>
+      <div class="skeleton" style="width:90%"></div>
+      <div class="skeleton" style="width:75%"></div>
+      <p class="muted small">Membuka database pengetahuan…</p>
+    </div>
+  </div>
+</div>
+<nav class="bottom" aria-label="Menu utama"><div class="inner" id="nav"></div></nav>
+<div class="toast" id="toast" hidden></div>
+<!--KB_EMBED_TAG-->
+<!--OFFLINE_TPL-->
+
+<script>
+/*ENGINE*/
+</script>
+<script>
+(function () {
+  "use strict";
+  const { Level, SymptomChecker, Age, KnowledgeValidator } = window.Engine;
+  const ONLINE_URL = "https://claude.ai/artifact/2DjnViTVkzraEi3o7Qmwqr";
+
+  // =============================================================
+  // Utilitas
+  // =============================================================
+  class Html {
+    static esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+    static chev() { return '<span class="chev" aria-hidden="true">›</span>'; }
+    static levelChip(v) { return '<span class="lv lv-' + v + '">' + Html.esc(Level.of(v).name) + "</span>"; }
+    static table(t) {
+      const e = Html.esc;
+      return '<div class="tbl"><table><thead><tr>' + t.head.map(x => "<th>" + e(x) + "</th>").join("") + "</tr></thead><tbody>" +
+        t.rows.map(r => "<tr>" + r.map((x, i) => i === 0 ? "<td><strong>" + e(x) + "</strong></td>" : "<td>" + e(x) + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>";
+    }
+    static back(href, label) { return '<a href="#' + href + '" class="small">‹ ' + Html.esc(label) + "</a>"; }
+  }
+
+  class Clock {
+    static today() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  }
+
+  /** Penyimpanan lokal untuk kenyamanan per perangkat; aman bila diblokir. */
+  class LocalStore {
+    static get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+    static set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* abaikan */ } }
+  }
+
+  class Toast {
+    static show(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg; t.hidden = false;
+      clearTimeout(Toast.timer); Toast.timer = setTimeout(() => { t.hidden = true; }, 2800);
+    }
+  }
+
+  // =============================================================
+  // Model
+  // =============================================================
+  class Profile {
+    constructor() { const p = LocalStore.get("ab.profile", {}); this.name = p.nama || ""; this.birth = p.lahir || ""; }
+    save(name, birth) { this.name = name; this.birth = birth; LocalStore.set("ab.profile", { nama: name, lahir: birth }); }
+    get ageDays() { return Age.days(this.birth); }
+    get hasAge() { return this.ageDays !== null; }
+    get label() { return this.hasAge ? (this.name ? this.name + " · " : "") + Age.label(this.ageDays) : "Atur usia anak"; }
+  }
+
+  /** Basis pengetahuan yang sedang aktif, dari sumber data mana pun. */
+  class KnowledgeBase {
+    constructor() { this.clear(); }
+    clear() { this.sources = {}; this.checkers = []; this.guides = []; this.milestones = []; this.obat = []; this.changelog = []; this.usulan = []; this.meta = null; this.imunisasi = null; }
+    load(kb) {
+      this.sources = kb.sources || {}; this.checkers = kb.checkers || []; this.guides = kb.guides || []; this.milestones = kb.milestones || [];
+      this.obat = kb.obat || []; this.changelog = kb.changelog || []; this.meta = kb.meta || null; this.imunisasi = kb.imunisasi || null;
+    }
+    get isEmpty() { return !this.checkers.length; }
+    get isStale() { return !!this.meta && Age.monthsSince(this.meta.verifiedDate) >= (this.meta.reviewMonths || 12); }
+    byOrder(list) { return list.slice().sort((a, b) => (a.order || 99) - (b.order || 99)); }
+    checker(id) { const d = this.checkers.find(c => c.id === id); return d ? new SymptomChecker(d) : null; }
+    guide(id) { return this.guides.find(g => g.id === id) || null; }
+    source(id) { return this.sources[id] || null; }
+    snapshot() {
+      const strip = o => { const c = { ...o }; delete c._id; return c; };
+      return { sources: this.sources, checkers: this.checkers.map(strip), guides: this.guides.map(strip), milestones: this.milestones.map(strip), obat: this.obat.map(strip), imunisasi: this.imunisasi, meta: this.meta, changelog: this.changelog.map(strip) };
+    }
+    static parse(text) {
+      let kb;
+      try { kb = JSON.parse(text); } catch (e) { return { error: "File bukan JSON yang valid." }; }
+      if (!kb || !Array.isArray(kb.checkers) || !kb.meta) return { error: "Isi file bukan data Asisten Bayi." };
+      const errs = KnowledgeValidator.validate(kb);
+      if (errs.length) return { error: "Ditolak karena ada pernyataan tanpa sumber: " + errs[0] };
+      return { kb };
+    }
+  }
+
+  /** Satu sesi menjawab satu penilai: langkah tanda bahaya, lalu satu pertanyaan per layar. */
+  class CheckerSession {
+    constructor(checker, profile) { this.checker = checker; this.profile = profile; this.answers = {}; this.step = null; this.skippedByUrgent = false; this.reset(); }
+    get ctx() { return { ageDays: this.profile.ageDays }; }
+    get parts() { return this.checker.split(this.answers, this.ctx); }
+    reset() { this.answers = {}; this.skippedByUrgent = false; this.step = this.parts.danger.length ? "danger" : 0; }
+    get assessment() { return this.checker.assess(this.answers, this.ctx); }
+    get questions() { return this.parts.rest; }
+    get total() { return this.questions.length + (this.parts.danger.length ? 1 : 0); }
+    get position() { if (this.step === "danger") return 1; if (this.step === "result") return this.total; return this.step + 1 + (this.parts.danger.length ? 1 : 0); }
+    get current() { return typeof this.step === "number" ? this.questions[this.step] : null; }
+    toggleDanger(qid) { this.answers[qid] = this.answers[qid] === "ya" ? undefined : "ya"; }
+    get dangerSelected() { return this.parts.danger.filter(q => this.answers[q.id] === "ya").length; }
+    confirmDanger() {
+      this.parts.danger.forEach(q => { if (this.answers[q.id] !== "ya") this.answers[q.id] = "tidak"; });
+      if (this.assessment.isUrgent) { this.skippedByUrgent = this.questions.length > 0; this.step = "result"; return; }
+      this.step = this.questions.length ? 0 : "result";
+    }
+    answer(qid, value) {
+      this.answers[qid] = value;
+      if (this.assessment.isUrgent) { this.skippedByUrgent = this.step !== "result" && typeof this.step === "number" && this.step < this.questions.length - 1; this.step = "result"; return; }
+      this.next();
+    }
+    next() {
+      if (typeof this.step !== "number") return;
+      const qs = this.questions;
+      const i = qs.indexOf(this.current);
+      this.step = i + 1 < qs.length ? i + 1 : "result";
+    }
+    back() {
+      if (this.step === "result") { this.step = this.questions.length ? this.questions.length - 1 : (this.parts.danger.length ? "danger" : 0); return; }
+      if (typeof this.step === "number") { this.step = this.step > 0 ? this.step - 1 : (this.parts.danger.length ? "danger" : 0); }
+    }
+    goTo(qid) {
+      if (this.parts.danger.some(q => q.id === qid)) { this.step = "danger"; return; }
+      const i = this.questions.findIndex(q => q.id === qid);
+      if (i >= 0) this.step = i;
+    }
+    get reviewRows() {
+      const all = this.checker.visibleQuestions(this.answers, this.ctx);
+      return all.filter(q => this.answers[q.id] !== undefined && this.answers[q.id] !== "").map(q => ({ q, label: CheckerSession.answerLabel(q, this.answers[q.id]) }));
+    }
+    static answerLabel(q, v) {
+      if (q.type === "yn") return v === "ya" ? "Ya" : v === "tidak" ? "Tidak" : "Tidak tahu";
+      if (q.type === "choice") { const o = q.options.find(x => x.v === v); return o ? o.label : v; }
+      return v + (q.unit ? " " + q.unit : "");
+    }
+  }
+
+  /** Penghitung napas 60 detik. Ambang WHO per usia. */
+  class BreathCounter {
+    constructor(onTick, onDone) { this.onTick = onTick; this.onDone = onDone; this.reset(); }
+    reset() { clearInterval(this.timer); this.running = false; this.left = 60; this.count = 0; this.done = false; }
+    start() {
+      this.reset(); this.running = true;
+      const t0 = Date.now();
+      this.timer = setInterval(() => {
+        this.left = Math.max(0, 60 - Math.floor((Date.now() - t0) / 1000));
+        if (this.left <= 0) { clearInterval(this.timer); this.running = false; this.done = true; this.onDone(); } else this.onTick();
+      }, 250);
+    }
+    tap() { if (this.running) this.count++; }
+    static threshold(days) {
+      if (days === null) return null;
+      if (days <= 28) return { min: 61, label: "lebih dari 60×/menit", src: ["who_newborn"], level: 4 };
+      if (days < 60) return null;
+      if (days < 365) return { min: 50, label: "50×/menit atau lebih", src: ["who_imci_pneu"], level: 3 };
+      if (days <= 1825) return { min: 40, label: "40×/menit atau lebih", src: ["who_imci_pneu"], level: 3 };
+      return null;
+    }
+  }
+
+  // =============================================================
+  // Sumber data
+  // =============================================================
+  class DataSource {
+    constructor(kb) { this.kb = kb; }
+    get mode() { return "static"; }
+    get canAsk() { return false; }
+    get canApprove() { return false; }
+    get canExport() { return false; }
+    get canUpdateLocal() { return false; }
+    start(onReady, onFail) { onFail(); }
+  }
+
+  /** Versi online: database artifak claude.ai, tanya Claude, persetujuan usulan. */
+  class CloudSource extends DataSource {
+    constructor(kb, claude) { super(kb); this.claude = claude; this.db = null; this.sample = null; this.downloads = null; this.editor = false; }
+    get mode() { return "db"; }
+    get canAsk() { return !!this.sample; }
+    get canApprove() { return this.editor; }
+    get canExport() { return !!this.downloads; }
+    async start(onReady, onFail) {
+      const [db, user, sample, downloads] = await Promise.all(["db", "user", "sample", "downloads"].map(n => this.claude.use(n)));
+      this.db = db; this.sample = sample; this.downloads = downloads;
+      this.editor = user ? await user.canEdit().catch(() => false) : false;
+      if (!db) { onFail(); return; }
+      const kb = this.kb, pending = new Set(["sources", "checkers", "guides", "milestones", "obat", "changelog", "usulan", "meta", "imunisasi"]);
+      let ready = false;
+      const timer = setTimeout(() => { if (!ready) onFail(); }, 10000);
+      const settle = key => { pending.delete(key); if (!pending.size && !ready) { ready = true; clearTimeout(timer); } if (ready) onReady(); };
+      const fail = () => { clearTimeout(timer); onFail(); };
+      const coll = (name, apply) => db.collection(name).onSnapshot(s => { apply(s.docs.map(d => ({ ...d.data(), _id: d.id }))); settle(name); }, fail);
+      coll("sources", docs => { kb.sources = Object.fromEntries(docs.map(d => { const { _id, ...r } = d; return [_id, r]; })); });
+      coll("checkers", docs => { kb.checkers = docs; });
+      coll("guides", docs => { kb.guides = docs; });
+      coll("milestones", docs => { kb.milestones = docs; });
+      coll("obat", docs => { kb.obat = docs; });
+      coll("changelog", docs => { kb.changelog = docs; });
+      coll("usulan", docs => { kb.usulan = docs; });
+      db.doc("kb/meta").onSnapshot(s => { kb.meta = s.exists ? s.data() : null; settle("meta"); }, fail);
+      db.doc("kb/imunisasi").onSnapshot(s => { kb.imunisasi = s.exists ? s.data() : null; settle("imunisasi"); }, fail);
+    }
+    async ask(question, ageDays, onText, signal) {
+      const prompt = new AskPrompt(this.kb, ageDays).build(question);
+      return this.sample(prompt, { signal, cache: false, onText });
+    }
+    async approve(u) {
+      const coll = u.target && u.target.collection, id = u.target && u.target.id;
+      if (!["checkers", "guides", "milestones", "obat", "kb", "sources"].includes(coll) || !u.patch) throw new Error("Target usulan tidak dikenali.");
+      const trial = JSON.parse(JSON.stringify(this.kb.snapshot()));
+      Object.assign(trial.sources, u.newSources || {});
+      const put = (arr) => { const i = arr.findIndex(x => x.id === id); if (i >= 0) arr[i] = u.patch; else arr.push(u.patch); };
+      if (coll === "sources") trial.sources[id] = u.patch;
+      else if (coll === "kb" && id === "imunisasi") trial.imunisasi = u.patch;
+      else if (trial[coll]) put(trial[coll]);
+      const errs = KnowledgeValidator.validate(trial);
+      if (errs.length) throw new Error("Ditolak otomatis: " + errs[0]);
+      for (const [sid, s] of Object.entries(u.newSources || {})) await this.db.doc("sources/" + sid).set(s);
+      await this.db.doc(coll + "/" + id).set(u.patch);
+      const d = Clock.today(), stamp = d.replace(/-/g, ".");
+      const v = (this.kb.meta && this.kb.meta.version) || "";
+      const seq = v.startsWith(stamp) ? parseInt(v.split("-")[1] || "0", 10) + 1 : 1;
+      await this.db.doc("kb/meta").update({ version: stamp + "-" + seq, verifiedDate: d });
+      await this.db.doc("changelog/" + d + "-" + Date.now()).set({ date: d, title: u.title || "Pembaruan data", text: u.summary || "", by: "Disetujui pemilik", usulan: u._id });
+      await this.db.doc("usulan/" + u._id).update({ status: "disetujui", decidedAt: new Date().toISOString() });
+    }
+    async reject(u) { await this.db.doc("usulan/" + u._id).update({ status: "ditolak", decidedAt: new Date().toISOString() }); }
+    async saveQuestion(q) { await this.db.collection("usulan").add({ type: "pertanyaan", question: q, title: q.slice(0, 140), status: "baru", createdAt: new Date().toISOString() }); }
+    get canExportOffline() { return !!this.downloads && !!document.getElementById("offline-tpl"); }
+    async exportOffline() {
+      const snap = this.kb.snapshot();
+      const errs = KnowledgeValidator.validate(snap);
+      if (errs.length) throw new Error("Data tidak lolos pemeriksaan: " + errs[0]);
+      const tpl = JSON.parse(document.getElementById("offline-tpl").textContent);
+      const kbText = JSON.stringify(snap).replace(/</g, "\\u003c");
+      const html = tpl.replace("/*KB_" + "EMBED*/", () => kbText);
+      await this.downloads.save({ filename: "asisten-bayi-offline-" + snap.meta.version + ".html", data: html });
+    }
+    async exportForApk() {
+      const snap = this.kb.snapshot();
+      const errs = KnowledgeValidator.validate(snap);
+      if (errs.length) throw new Error("Data tidak lolos pemeriksaan: " + errs[0]);
+      await this.downloads.save({ filename: "asisten-bayi-data-" + snap.meta.version + ".json", data: JSON.stringify(snap) });
+    }
+  }
+
+  /** Jembatan ke kode Java di aplikasi Android. */
+  class AndroidBridge {
+    constructor(native) { this.native = native; this.seq = 0; this.cbs = {}; window.__androidCb = (id, ok, text) => { const f = this.cbs[id]; delete this.cbs[id]; if (f) f(ok, text); }; }
+    call(method, arg) { return new Promise(resolve => { const id = ++this.seq; this.cbs[id] = (ok, text) => resolve({ ok, text }); if (arg === undefined) this.native[method](id); else this.native[method](arg, id); }); }
+    getKb() { return this.native.getKb(); }
+    save(text) { return this.native.save(text); }
+    getUrl() { return this.native.getUrl() || ""; }
+    setUrl(u) { this.native.setUrl(u); }
+    open(url) { this.native.openUrl(url); }
+    fetch(url) { return this.call("fetchText", url); }
+    pickFile() { return this.call("pickFile"); }
+  }
+
+  /** Aplikasi Android: data tersimpan di perangkat, bisa dipakai tanpa internet. */
+  class AndroidSource extends DataSource {
+    constructor(kb, bridge) { super(kb); this.bridge = bridge; this.status = ""; }
+    get mode() { return "android"; }
+    get canUpdateLocal() { return true; }
+    start(onReady, onFail) {
+      const r = KnowledgeBase.parse(this.bridge.getKb() || "");
+      if (r.error) { onFail(); return; }
+      this.kb.load(r.kb); onReady();
+      this.refresh(true).then(changed => { if (changed) onReady(); });
+    }
+    accept(text, fromUrl) {
+      const r = KnowledgeBase.parse(text);
+      if (r.error) { this.status = r.error; return false; }
+      const cur = this.kb.meta ? String(this.kb.meta.version) : "";
+      if (fromUrl && cur && String(r.kb.meta.version) <= cur) { this.status = "Data sudah terbaru (versi " + cur + ")."; return false; }
+      if (!this.bridge.save(text)) { this.status = "Gagal menyimpan data di perangkat."; return false; }
+      this.kb.load(r.kb); this.status = "Data diperbarui ke versi " + r.kb.meta.version + "."; return true;
+    }
+    async refresh(silent) {
+      const url = this.bridge.getUrl();
+      if (!url) { if (!silent) this.status = "Alamat file data belum diisi. Gunakan Impor file data, atau isi alamatnya."; return false; }
+      const res = await this.bridge.fetch(url);
+      if (!res.ok) { if (!silent) this.status = "Tidak bisa mengambil data: " + res.text; return false; }
+      const before = this.status, changed = this.accept(res.text, true);
+      if (silent && !changed) this.status = before;
+      return changed;
+    }
+    async importFile() { const res = await this.bridge.pickFile(); if (!res.ok) { if (res.text) this.status = res.text; return false; } return this.accept(res.text, false); }
+  }
+
+  /** File lokal / peramban biasa: data tertanam di file, bisa diganti dengan impor file data. */
+  class StaticSource extends DataSource {
+    constructor(kb) { super(kb); this.status = ""; this.origin = ""; }
+    get canUpdateLocal() { return true; }
+    static embedded() { const el = document.getElementById("kb-embed"); return el ? el.textContent.trim() : ""; }
+    static stored() { try { return localStorage.getItem("ab.kb") || ""; } catch (e) { return ""; } }
+    start(onReady, onFail) {
+      const pick = (...texts) => {
+        let best = null;
+        texts.forEach(([t, origin]) => { if (!t) return; const r = KnowledgeBase.parse(t); if (!r.error && (!best || String(r.kb.meta.version) > String(best.kb.meta.version))) best = { kb: r.kb, origin }; });
+        return best;
+      };
+      const finish = best => { if (!best) { onFail(); return; } this.kb.load(best.kb); this.origin = best.origin; onReady(); };
+      const local = pick([StaticSource.embedded(), "tertanam"], [StaticSource.stored(), "impor"]);
+      if (local) { finish(local); return; }
+      fetch("kb.json").then(r => (r.ok ? r.text() : "")).then(t => finish(pick([t, "kb.json"]))).catch(onFail);
+    }
+    importFile() {
+      return new Promise(resolve => {
+        const inp = document.createElement("input");
+        inp.type = "file"; inp.accept = ".json,application/json";
+        inp.onchange = () => {
+          const f = inp.files && inp.files[0];
+          if (!f) { resolve(false); return; }
+          const rd = new FileReader();
+          rd.onload = () => {
+            const r = KnowledgeBase.parse(String(rd.result));
+            if (r.error) { this.status = r.error; resolve(false); return; }
+            try { localStorage.setItem("ab.kb", String(rd.result)); } catch (e) { this.status = "Data terbaca, tetapi peramban ini tidak mengizinkan penyimpanan. Data hanya berlaku sampai halaman ditutup."; }
+            this.kb.load(r.kb); this.origin = "impor";
+            if (!this.status) this.status = "Data diperbarui ke versi " + r.kb.meta.version + ".";
+            resolve(true);
+          };
+          rd.onerror = () => { this.status = "File tidak bisa dibaca."; resolve(false); };
+          rd.readAsText(f);
+        };
+        inp.click();
+      });
+    }
+  }
+
+  /** Prompt "Tanya": Claude hanya boleh menjawab dari database. */
+  class AskPrompt {
+    constructor(kb, ageDays) { this.kb = kb; this.ageDays = ageDays; }
+    database() {
+      const kb = this.kb;
+      return {
+        sources: Object.fromEntries(Object.entries(kb.sources).map(([k, v]) => [k, (v.type === "sekunder" ? "[sekunder] " : "") + v.title])),
+        penilai_gejala: kb.checkers.map(c => ({ id: c.id, judul: c.title, aturan: c.rules.map(r => ({ tingkat: Level.of(r.level).name, teks: r.text, src: r.src })), default: c.default, kemungkinan: c.differentials, perawatan: c.care, naik_tingkat: c.escalate })),
+        panduan: kb.guides.map(g => ({ judul: g.title, bagian: g.sections })),
+        obat: kb.obat, imunisasi: kb.imunisasi,
+        perkembangan: kb.milestones.map(m => ({ usia: m.label, kemampuan: m.d }))
+      };
+    }
+    build(question) {
+      const d = this.ageDays;
+      return [
+        "Anda adalah asisten kesehatan bayi dan anak untuk orang tua di Indonesia. Jawab dalam Bahasa Indonesia yang tenang, jelas, dan sederhana.",
+        "ATURAN WAJIB:",
+        "1. Jawab HANYA dari DATABASE di bawah, jangan memakai pengetahuan lain. Bila tidak ada di database, tulis persis: \"Belum ada di database terverifikasi aplikasi ini.\" lalu sarankan konsultasi tenaga kesehatan bila menyangkut gejala.",
+        "2. Setiap pernyataan fakta diberi kode sumber dalam kurung siku sesuai kunci sources, misalnya [who_newborn]. Jangan mengarang kode.",
+        "3. Kalimat pertama adalah pesan utama: tingkat (Umum, Pantau, Periksa hari ini, atau Segera ke IGD) dan apa yang harus dilakukan, sesuai aturan penilai di database. Ikuti jumlah tanda sesuai kriteria; satu tanda yang belum memenuhi kriteria cukup disebut Pantau.",
+        "4. Sebut kemungkinan dari yang paling sering, memakai frekuensi alami seperti \"3 dari 10 bayi\". Kondisi langka hanya disebut bila ciri pembedanya ada pada cerita pengguna, selalu dengan angka kejadiannya.",
+        "5. Jangan memberi vonis pasti; sebut pemeriksaan yang memastikan bila ada di database. Jangan memberi dosis obat selain yang tertulis di database.",
+        "6. Jangan menakut-nakuti; tanpa kata dramatis. Maksimal sekitar 180 kata, kalimat pendek, tanpa tabel.",
+        "Usia anak menurut profil: " + (d === null ? "tidak diketahui" : Age.label(d) + " (" + d + " hari)") + ". Tanggal hari ini: " + Clock.today() + ".",
+        "DATABASE (JSON):", JSON.stringify(this.database()),
+        "PERTANYAAN ORANG TUA:", question.trim()
+      ].join("\n");
+    }
+  }
+
+  // =============================================================
+  // Tampilan
+  // =============================================================
+  class View {
+    constructor(app) { this.app = app; }
+    get kb() { return this.app.kb; }
+    get profile() { return this.app.profile; }
+    get source() { return this.app.source; }
+    header() { return '<div class="top"><span class="brand">Asisten Bayi</span><a class="child-chip" href="#profil">' + Html.esc(this.profile.label) + "</a></div>"; }
+    page(inner) { return '<div class="stack">' + this.header() + inner + "</div>"; }
+    sources(ids) {
+      const list = (ids || []).map(id => { const s = this.kb.source(id); return s ? s : null; }).filter(Boolean);
+      if (!list.length) return "";
+      const short = t => { const i = t.indexOf(" — "); return i > 0 ? t.slice(0, i) : t; };
+      return '<p class="src">Sumber: ' + list.map(s => '<a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">' + Html.esc(short(s.title)) + "</a>" + (s.type === "sekunder" ? '<span class="tag">sekunder</span>' : "")).join(" · ") + "</p>";
+    }
+    render() { return ""; }
+    onClick() { return false; }
+    onInput() {}
+    onSubmit() {}
+  }
+
+  class HomeView extends View {
+    render() {
+      const kb = this.kb, d = this.profile.ageDays, m = kb.meta;
+      const pick = d !== null && d <= 28 ? ["neonatus", "gumoh", "kuning", "demam"] : ["gumoh", "demam", "diare", "napas"];
+      const pending = kb.usulan.filter(u => u.status === "baru").length;
+      const items = pick.map(id => kb.checkers.find(c => c.id === id)).filter(Boolean);
+      const keyText = { 1: "Pola yang umum, tanpa tanda bahaya.", 2: "Satu tanda belum memenuhi kriteria. Perhatikan beberapa jam ke depan.", 3: "Kriteria rujukan terpenuhi. Periksakan hari ini.", 4: "Tanda gawat menurut kriteria resmi. Ke IGD sekarang." };
+      return this.page(
+        '<div class="stack-s"><h1>' + (this.profile.hasAge ? "Ada keluhan apa hari ini?" : "Selamat datang") + "</h1>" +
+        '<p class="muted">Jawab beberapa pertanyaan singkat, lalu lihat apa yang perlu dilakukan. Setiap hasil menyebut sumbernya: WHO, IDAI, Kemenkes, atau AAP. Hasilnya berupa kemungkinan, bukan vonis.</p></div>' +
+        (this.profile.hasAge ? "" : '<a class="btn btn-primary" href="#profil" style="text-align:center;text-decoration:none">Isi tanggal lahir anak</a>') +
+        (kb.isStale ? '<div class="banner warn">Data terakhir diverifikasi ' + Html.esc(m.verifiedDate) + ". Sebagian fakta mungkin perlu dicek ulang.</div>" : "") +
+        (pending && this.source.canApprove ? '<a class="banner" href="#data" style="text-decoration:none;color:inherit">' + pending + " usulan pembaruan data menunggu persetujuan Anda ›</a>" : "") +
+        '<div class="stack-s"><p class="eyebrow">Cek gejala</p><div class="list">' +
+        items.map(c => '<a href="#cek-' + Html.esc(c.id) + '"><div><div class="t">' + Html.esc(c.title) + '</div><div class="s">' + Html.esc(c.short) + "</div></div>" + Html.chev() + "</a>").join("") +
+        '<a href="#cek"><div><div class="t">Semua keluhan</div></div>' + Html.chev() + "</a></div></div>" +
+        '<div class="stack-s"><p class="eyebrow">Arti hasil</p><div class="card levels-key">' + [1, 2, 3, 4].map(l => Html.levelChip(l) + '<span class="small">' + keyText[l] + "</span>").join("") + "</div></div>" +
+        (m ? '<p class="small muted">Data versi ' + Html.esc(m.version) + " · diverifikasi " + Html.esc(m.verifiedDate) + ' · <a href="#data">sumber & pembaruan</a></p>' : ""));
+    }
+  }
+
+  class CheckerListView extends View {
+    render() {
+      return this.page('<h1>Cek gejala</h1><p class="muted">Pilih keluhan yang paling sesuai.</p><div class="list">' +
+        this.kb.byOrder(this.kb.checkers).map(c => '<a href="#cek-' + Html.esc(c.id) + '"><div><div class="t">' + Html.esc(c.title) + '</div><div class="s">' + Html.esc(c.short) + "</div></div>" + Html.chev() + "</a>").join("") + "</div>");
+    }
+  }
+
+  class CheckerView extends View {
+    constructor(app) { super(app); this.sessions = {}; this.id = null; }
+    session(id) {
+      const checker = this.kb.checker(id);
+      if (!checker) return null;
+      let s = this.sessions[id];
+      if (!s || s.checker.def !== checker.def) { const old = s; s = this.sessions[id] = new CheckerSession(checker, this.profile); if (old) { s.answers = old.answers; s.step = old.step; } }
+      return s;
+    }
+    render(id) {
+      this.id = id;
+      const s = this.session(id);
+      if (!s) return this.page('<p>Keluhan ini belum ada di database.</p>' + Html.back("cek", "Semua keluhan"));
+      const def = s.checker.def;
+      let body = Html.back("cek", "Semua keluhan") + "<h1>" + Html.esc(def.title) + "</h1>";
+      if (def.needsAge && !this.profile.hasAge) body += '<div class="banner warn">Usia anak belum diisi, padahal beberapa kriteria bergantung pada usia. <a href="#profil">Isi tanggal lahir</a></div>';
+      if (s.step === "result") body += this.result(s);
+      else if (s.step === "danger") body += this.progress(s) + this.dangerStep(s);
+      else body += this.progress(s) + this.questionStep(s);
+      return this.page(body);
+    }
+    progress(s) {
+      const pct = Math.round((s.position - 1) / Math.max(1, s.total) * 100);
+      return '<div class="progress"><span class="small muted">Langkah ' + s.position + " dari " + s.total + '</span><div class="bar" aria-hidden="true"><span style="width:' + pct + '%"></span></div></div>';
+    }
+    dangerStep(s) {
+      const qs = s.parts.danger, n = s.dangerSelected;
+      return '<div class="card stack"><div class="stack-s"><p class="qbig">Pertama, adakah salah satu tanda ini?</p><p class="small muted">Ketuk yang ada. Tanda-tanda ini dicek lebih dulu karena masing-masing sudah cukup untuk segera mencari pertolongan.</p></div>' +
+        '<div class="answers">' + qs.map(q => '<button type="button" class="toggle" data-danger="' + Html.esc(q.id) + '" aria-pressed="' + (s.answers[q.id] === "ya") + '"><span class="box" aria-hidden="true"></span><span>' + Html.esc(q.text) + "</span></button>").join("") + "</div>" +
+        '<button type="button" class="btn-primary" data-act="danger-ok">' + (n ? "Lihat hasil" : "Tidak ada, lanjut") + "</button></div>";
+    }
+    questionStep(s) {
+      const q = s.current;
+      if (!q) return "";
+      const v = s.answers[q.id];
+      let ctl;
+      if (q.type === "yn") {
+        const opts = [["ya", "Ya"], ["tidak", "Tidak"]].concat(q.allowUnknown ? [["tdk-tahu", "Tidak tahu"]] : []);
+        ctl = '<div class="answers">' + opts.map(([val, l]) => '<button type="button" data-ans="' + Html.esc(q.id) + '" data-v="' + val + '" aria-pressed="' + (v === val) + '">' + l + "</button>").join("") + "</div>";
+      } else if (q.type === "choice") {
+        ctl = '<div class="answers">' + q.options.map(o => '<button type="button" data-ans="' + Html.esc(q.id) + '" data-v="' + Html.esc(o.v) + '" aria-pressed="' + (v === o.v) + '">' + Html.esc(o.label) + "</button>").join("") + "</div>";
+      } else {
+        ctl = '<form class="stack-s" data-form="num"><div class="num-in"><input id="num-' + Html.esc(q.id) + '" inputmode="decimal" value="' + Html.esc(v || "") + '" aria-label="' + Html.esc(q.text) + '"><span class="muted">' + Html.esc(q.unit || "") + '</span></div><div class="row"><button class="btn-primary" type="submit">Lanjut</button>' + (q.optional ? '<button type="button" data-act="skip">Lewati</button>' : "") + "</div></form>";
+      }
+      return '<div class="card stack"><label class="qbig"' + (q.type === "number" ? ' for="num-' + Html.esc(q.id) + '"' : "") + ">" + Html.esc(q.text) + "</label>" + (q.help ? '<p class="small muted">' + Html.esc(q.help) + "</p>" : "") + ctl + "</div>" +
+        '<div class="navrow"><button type="button" class="btn-ghost" data-act="back">‹ Kembali</button>' + (q.type === "yn" ? '<button type="button" class="btn-ghost" data-act="skip">Lewati</button>' : "") + "</div>";
+    }
+    result(s) {
+      const r = s.assessment, lv = r.levelInfo;
+      const main = r.summary || (r.reasons[0] && r.reasons[0].text) || "";
+      const mainSrc = r.summary ? r.summarySrc : (r.reasons[0] ? r.reasons[0].src : []);
+      // Pesan utama di atas (CDC Clear Communication Index): tingkat, tindakan, lalu alasannya.
+      let h = '<div class="result r-' + r.level + '" aria-live="polite"><div class="stack-s">' + Html.levelChip(r.level) + "<h2>" + Html.esc(lv.action) + "</h2>" +
+        (r.summary && r.headline !== lv.name ? '<p class="eyebrow">' + Html.esc(r.headline) + "</p>" : "") +
+        '<p class="main-msg">' + Html.esc(main) + "</p>" + this.sources(mainSrc) + "</div></div>";
+      if (s.skippedByUrgent) h += '<p class="small muted">Pertanyaan lain dilewati karena sudah ada tanda yang perlu segera ditangani.</p>';
+      const more = r.reasons.slice(1);
+      if (more.length) h += '<div class="card stack-s"><h3>Alasan lain</h3>' + more.map(x => "<div><p>" + Html.esc(x.text) + "</p>" + this.sources(x.src) + "</div>").join("") + "</div>";
+      r.notes.forEach(n => { h += '<div class="banner"><p>' + Html.esc(n.text) + "</p>" + this.sources(n.src) + "</div>"; });
+      if (!r.isUrgent) {
+        if (r.differentials.length) h += '<div class="card stack-s"><h3>Kemungkinan, dari yang paling sering</h3>' +
+          r.differentials.map(d => '<div class="diff"><p class="diff-h"><strong>' + Html.esc(d.name) + '</strong><span class="freq">' + Html.esc(d.freq) + "</span></p><p class=\"small\">" + Html.esc(d.features) + "</p>" + this.sources(d.src) + "</div>").join("") + "</div>";
+        if (r.care.length) h += '<div class="card stack-s"><h3>Yang bisa dilakukan sekarang</h3><ul class="items">' + r.care.map(x => "<li>" + Html.esc(x.t) + this.sources(x.src) + "</li>").join("") + "</ul></div>";
+        if (r.escalate.length) h += '<div class="card stack-s"><h3>Periksakan bila kemudian muncul</h3><ul class="items">' + r.escalate.map(x => "<li>" + Html.esc(x) + "</li>").join("") + "</ul></div>";
+      }
+      const rows = s.reviewRows;
+      h += '<div class="card"><details class="review"><summary>Jawaban Anda (' + rows.length + ")</summary>" +
+        rows.map(x => '<div class="review-row"><div><p class="small">' + Html.esc(x.q.text) + '</p><p class="small"><strong>' + Html.esc(x.label) + '</strong></p></div><button type="button" data-goto="' + Html.esc(x.q.id) + '">Ubah</button></div>').join("") + "</details></div>";
+      h += '<div class="navrow"><button type="button" class="btn-ghost" data-act="back">‹ Kembali</button><button type="button" data-act="restart">Mulai ulang</button></div>';
+      h += '<p class="small muted">Hasil ini berupa kemungkinan berdasarkan kriteria resmi, bukan vonis.' + (r.level <= 2 ? " Bila Anda tetap khawatir, periksakan anak meski hasilnya hijau atau kuning." : "") + "</p>";
+      return h;
+    }
+    onClick(t) {
+      const s = this.id && this.sessions[this.id];
+      if (!s) return false;
+      if (t.dataset.danger) { s.toggleDanger(t.dataset.danger); return true; }
+      if (t.dataset.ans) { s.answer(t.dataset.ans, t.dataset.v); window.scrollTo(0, 0); return true; }
+      if (t.dataset.goto) { s.goTo(t.dataset.goto); return true; }
+      const act = t.dataset.act;
+      if (act === "danger-ok") { s.confirmDanger(); window.scrollTo(0, 0); return true; }
+      if (act === "back") { s.back(); return true; }
+      if (act === "skip") { s.next(); return true; }
+      if (act === "restart") { s.reset(); return true; }
+      return false;
+    }
+    onSubmit(form) {
+      const s = this.id && this.sessions[this.id];
+      if (!s || form.dataset.form !== "num" || !s.current) return false;
+      const val = form.querySelector("input").value.trim();
+      if (val === "") { s.next(); return true; }
+      s.answer(s.current.id, val); return true;
+    }
+    prefill(id, qid, value) { const s = this.session(id); if (s) s.answers[qid] = value; }
+  }
+
+  class BreathView extends View {
+    constructor(app) {
+      super(app);
+      this.counter = new BreathCounter(() => this.tick(), () => this.app.render());
+    }
+    tick() {
+      const l = document.getElementById("b-left"); if (l) l.textContent = this.counter.left + " detik";
+      const fg = document.querySelector(".ring .c-fg");
+      if (fg) { const C = 2 * Math.PI * 52; fg.setAttribute("stroke-dashoffset", (C - C * (this.counter.left / 60)).toFixed(1)); }
+    }
+    render() {
+      const c = this.counter, d = this.profile.ageDays, th = BreathCounter.threshold(d);
+      const C = 2 * Math.PI * 52, off = C * (c.left / 60);
+      let res = "";
+      if (c.done) {
+        const fast = th && c.count >= th.min;
+        res = '<div class="result r-' + (fast ? th.level : 1) + '"><div class="stack-s"><h2>' + c.count + "×/menit</h2>" +
+          (th ? "<p>" + (fast ? "Di atas ambang napas cepat WHO untuk usia ini (" + Html.esc(th.label) + ")." : "Di bawah ambang napas cepat WHO untuk usia ini (" + Html.esc(th.label) + ").") + "</p>" + this.sources(th.src)
+            : '<p class="muted">Aplikasi belum punya ambang terverifikasi untuk usia ini' + (d === null ? " (usia belum diisi)" : "") + ".</p>") +
+          '<button type="button" class="btn-primary" data-act="use-rr">Lanjut ke penilaian batuk & napas</button></div></div>';
+      }
+      return this.page("<h1>Hitung napas</h1>" +
+        '<p class="muted">Hitung saat anak tenang atau tidur, tidak sedang menangis. Satu kali perut atau dada naik-turun = satu napas. Ketuk tombol besar setiap satu napas selama 60 detik.</p>' +
+        '<div class="card counter"><div class="ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="c-bg" cx="60" cy="60" r="52"/><circle class="c-fg" cx="60" cy="60" r="52" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + (C - off).toFixed(1) + '"/></svg>' +
+        '<div class="mid"><span class="big" id="b-count" aria-live="polite">' + c.count + '</span><span class="muted small" id="b-left">' + (c.running ? c.left + " detik" : c.done ? "selesai" : "60 detik") + "</span></div></div>" +
+        (c.running ? '<button class="btn-primary tap" data-act="tap" type="button">Napas</button><button type="button" class="btn-ghost" data-act="cancel">Batalkan</button>'
+          : '<button class="btn-primary tap" data-act="start" type="button">' + (c.done ? "Hitung ulang" : "Mulai 60 detik") + "</button>") +
+        "</div>" + res + (th ? '<p class="small muted">Ambang napas cepat WHO untuk usia ' + Html.esc(Age.label(d)) + ": " + Html.esc(th.label) + ".</p>" : ""));
+    }
+    onClick(t) {
+      const a = t.dataset.act;
+      if (a === "start") { this.counter.start(); return true; }
+      if (a === "tap") { this.counter.tap(); const el = document.getElementById("b-count"); if (el) el.textContent = this.counter.count; return "keep"; }
+      if (a === "cancel") { this.counter.reset(); return true; }
+      if (a === "use-rr") { this.app.views.checker.prefill("napas", "rr", String(this.counter.count)); location.hash = "#cek-napas"; return "keep"; }
+      return false;
+    }
+  }
+
+  class AskView extends View {
+    constructor(app) { super(app); this.q = ""; this.text = ""; this.busy = false; this.err = ""; this.ctl = null; }
+    linkify(t) {
+      const short = s => { const i = s.indexOf(" — "); return i > 0 ? s.slice(0, i) : s; };
+      return Html.esc(t).replace(/\[([a-z0-9_]+)\]/g, (m, id) => { const s = this.kb.source(id); return s ? '<a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">[' + Html.esc(short(s.title)) + "]</a>" : m; });
+    }
+    render() {
+      if (!(this.source instanceof CloudSource)) return this.page('<h1>Tanya</h1><div class="card stack-s"><p>Fitur tanya dijawab Claude dan hanya tersedia di versi online.</p>' + this.app.views.data.onlineLink() + "</div>");
+      return this.page("<h1>Tanya</h1>" +
+        '<p class="muted">Dijawab Claude hanya dari isi database aplikasi ini, dengan sumbernya. Bila jawabannya belum ada, Claude akan bilang begitu, dan pertanyaan Anda bisa dicatat untuk diriset.</p>' +
+        (this.source.canAsk ? "" : '<div class="banner warn">Fitur tanya membutuhkan izin Claude di halaman ini dan belum tersedia di tampilan ini.</div>') +
+        '<form data-form="ask" class="card stack"><label for="t-q">Pertanyaan</label><textarea id="t-q" placeholder="Contoh: bayi 2 minggu gumoh setelah menyusu tapi masih lapar, perlu ke dokter?">' + Html.esc(this.q) + "</textarea>" +
+        '<div class="row"><button class="btn-primary" type="submit"' + (this.busy || !this.source.canAsk ? " disabled" : "") + ">" + (this.busy ? "Menjawab…" : "Tanya") + "</button>" + (this.busy ? '<button type="button" data-act="stop">Hentikan</button>' : "") + "</div></form>" +
+        (this.err ? '<div class="banner warn">' + Html.esc(this.err) + "</div>" : "") +
+        (this.text ? '<div class="card stack-s"><p class="eyebrow">Jawaban</p><div class="answer" id="t-ans">' + this.linkify(this.text) + "</div>" + (this.busy ? "" : '<div class="row"><button type="button" data-act="save-q">Catat untuk diriset</button></div>') + "</div>" : ""));
+    }
+    onInput(t) { if (t.id === "t-q") this.q = t.value; }
+    onSubmit(form) { if (form.dataset.form !== "ask") return false; this.q = form.querySelector("textarea").value; this.ask(); return true; }
+    async ask() {
+      if (!this.q.trim() || this.busy) return;
+      this.busy = true; this.text = ""; this.err = ""; this.app.render();
+      this.ctl = new AbortController();
+      try {
+        const out = await this.source.ask(this.q, this.profile.ageDays, ({ text }) => { this.text = text; const el = document.getElementById("t-ans"); if (el) el.innerHTML = this.linkify(text); else this.app.render(); }, this.ctl.signal);
+        this.text = out.text + (out.truncated ? "\n\n(Jawaban terpotong. Coba pertanyaan yang lebih spesifik.)" : "");
+      } catch (e) {
+        const c = e && e.code;
+        this.err = c === "not_granted" ? "Izin untuk Claude di halaman ini ditolak, jadi fitur tanya tidak bisa dipakai di tampilan ini." : c === "rate_limited" ? "Terlalu banyak pertanyaan dalam waktu singkat. Coba lagi beberapa saat lagi." : c === "cancelled" ? "" : "Jawaban gagal dimuat. Periksa koneksi lalu coba lagi.";
+      }
+      this.busy = false; this.app.render();
+    }
+    async onClick(t) {
+      if (t.dataset.act === "stop") { if (this.ctl) this.ctl.abort(); return "keep"; }
+      if (t.dataset.act === "save-q") {
+        try { await this.source.saveQuestion(this.q.trim()); Toast.show("Dicatat. Akan diriset pada pemeriksaan berikutnya."); }
+        catch (e) { Toast.show(e && e.code === "permission_denied" ? "Anda tidak punya izin mencatat pertanyaan." : "Gagal mencatat."); }
+        return "keep";
+      }
+      return false;
+    }
+  }
+
+  class MoreView extends View {
+    render() {
+      const items = [["panduan", "Panduan", "ASI, MPASI, tidur aman, tersedak, kesehatan ibu, dan lainnya"], ["tumbuh", "Perkembangan", "Checklist CDC per usia"], ["imunisasi", "Imunisasi", "Jadwal IDAI 2024"], ["obat", "Keamanan obat", "Yang dihindari dan dosis program resmi"], ["data", "Sumber & pembaruan data", "Versi, usulan, riwayat perubahan"], ["profil", "Profil anak", "Nama dan tanggal lahir"]];
+      return this.page('<h1>Lainnya</h1><div class="list">' + items.map(([id, t, s]) => '<a href="#' + id + '"><div><div class="t">' + t + '</div><div class="s">' + s + "</div></div>" + Html.chev() + "</a>").join("") + "</div>");
+    }
+  }
+
+  class GuideListView extends View {
+    render() {
+      return this.page(Html.back("lainnya", "Lainnya") + '<h1>Panduan</h1><div class="list">' + this.kb.byOrder(this.kb.guides).map(g => '<a href="#panduan-' + Html.esc(g.id) + '"><div class="t">' + Html.esc(g.title) + "</div>" + Html.chev() + "</a>").join("") + "</div>");
+    }
+  }
+
+  class GuideView extends View {
+    render(id) {
+      const g = this.kb.guide(id);
+      if (!g) return this.page("<p>Panduan ini belum ada.</p>" + Html.back("panduan", "Panduan"));
+      return this.page(Html.back("panduan", "Panduan") + "<h1>" + Html.esc(g.title) + "</h1>" +
+        g.sections.map(s => '<div class="card stack-s"><h3>' + Html.esc(s.h) + "</h3>" + (s.items ? '<ul class="items">' + s.items.map(it => "<li>" + Html.esc(it.t) + this.sources(it.src) + "</li>").join("") + "</ul>" : "") + (s.table ? Html.table(s.table) + this.sources(s.src) : "") + "</div>").join(""));
+    }
+  }
+
+  class MilestoneView extends View {
+    constructor(app) { super(app); this.tab = null; }
+    render() {
+      const ms = this.kb.milestones.slice().sort((a, b) => a.months - b.months);
+      if (!ms.length) return this.page("<p>Data perkembangan belum ada.</p>");
+      const d = this.profile.ageDays, ageM = d === null ? null : d / 30.4375;
+      if (!this.tab) { const cur = ageM === null ? ms[0] : ms.filter(m => m.months <= ageM + 0.01).pop() || ms[0]; this.tab = cur.id; }
+      const m = ms.find(x => x.id === this.tab) || ms[0];
+      const checked = LocalStore.get("ab.ms", {});
+      const names = { sosial: "Sosial & emosi", bahasa: "Bahasa & komunikasi", kognitif: "Belajar & berpikir", gerak: "Gerak & fisik" };
+      const all = Object.values(m.d).flat(), done = all.filter(t => checked[m.id + "|" + t]).length;
+      const isAgeTab = ageM !== null && m.months <= ageM + 0.01;
+      return this.page(Html.back("lainnya", "Lainnya") + "<h1>Perkembangan</h1>" +
+        '<p class="muted">Daftar CDC 2022 berisi kemampuan yang dicapai paling sedikit 3 dari 4 anak pada usia tersebut. Bila anak belum mencapai salah satunya, sampaikan ke dokter saat kontrol.</p>' + this.sources(["cdc_milestones"]) +
+        '<div class="tabs" role="group" aria-label="Usia">' + ms.map(x => '<button type="button" data-ms="' + Html.esc(x.id) + '" aria-pressed="' + (x.id === m.id) + '">' + Html.esc(x.label) + "</button>").join("") + "</div>" +
+        '<div class="card stack-s"><div class="row" style="justify-content:space-between"><h2>' + Html.esc(m.label) + '</h2><span class="muted small">' + done + " dari " + all.length + " tercapai</span></div>" +
+        Object.keys(names).filter(k => m.d[k] && m.d[k].length).map(k => '<div><p class="eyebrow" style="margin-top:8px">' + names[k] + "</p>" +
+          m.d[k].map((t, i) => { const id = "ms-" + m.id + "-" + k + "-" + i; return '<div class="check"><input type="checkbox" id="' + id + '" data-mscheck="' + Html.esc(m.id + "|" + t) + '"' + (checked[m.id + "|" + t] ? " checked" : "") + '><label for="' + id + '">' + Html.esc(t) + "</label></div>"; }).join("") + "</div>").join("") + "</div>" +
+        (isAgeTab && done < all.length ? '<div class="banner">Ada ' + (all.length - done) + " kemampuan yang belum dicentang. Itu belum berarti ada masalah; dokter akan menilainya dengan alat skrining resmi. Bila anak kehilangan kemampuan yang sebelumnya sudah bisa, konsultasikan lebih cepat.</div>" : "") +
+        '<p class="small muted">Anak lahir prematur dinilai dengan usia koreksi.</p>');
+    }
+    onClick(t) { if (t.dataset.ms) { this.tab = t.dataset.ms; return true; } return false; }
+    onChange(t) { if (t.dataset.mscheck) { const c = LocalStore.get("ab.ms", {}); if (t.checked) c[t.dataset.mscheck] = true; else delete c[t.dataset.mscheck]; LocalStore.set("ab.ms", c); return true; } return false; }
+  }
+
+  class ImmunizationView extends View {
+    render() {
+      const im = this.kb.imunisasi;
+      if (!im) return this.page("<p>Jadwal imunisasi belum ada.</p>");
+      return this.page(Html.back("lainnya", "Lainnya") + '<h1>Imunisasi</h1><div class="banner warn">' + Html.esc(im.note) + "</div>" +
+        '<div class="card">' + Html.table({ head: ["Usia", "Vaksin"], rows: im.rows }) + this.sources(im.src) + "</div>" +
+        '<div class="card stack-s"><h3>Vitamin A (gratis)</h3><p>Setiap Februari dan Agustus di posyandu atau puskesmas. Kapsul biru untuk 6–11 bulan, kapsul merah untuk 12–59 bulan.</p>' + this.sources(["kemenkes_vita"]) + "</div>");
+    }
+  }
+
+  class MedicineView extends View {
+    render() {
+      const names = { hindari: "Hindari", dokter: "Lewat dokter", info: "Info", program: "Program resmi" };
+      const cls = { hindari: "lv-3", program: "lv-1" };
+      return this.page(Html.back("lainnya", "Lainnya") + "<h1>Keamanan obat</h1>" +
+        '<p class="muted">Berisi obat yang perlu dihindari pada usia tertentu dan dosis program kesehatan resmi. Dosis obat umum seperti paracetamol sengaja tidak dimuat karena bergantung berat badan dan sediaan; ikuti label, apoteker, atau dokter.</p>' +
+        this.kb.byOrder(this.kb.obat).map(o => '<div class="card stack-s"><div class="row" style="justify-content:space-between"><h3>' + Html.esc(o.name) + '</h3><span class="lv ' + (cls[o.status] || "lv-2") + '">' + Html.esc(names[o.status] || o.status) + "</span></div>" +
+          '<p class="small muted">Usia: ' + Html.esc(o.age) + "</p><p>" + Html.esc(o.t) + "</p>" + this.sources(o.src) + "</div>").join(""));
+    }
+  }
+
+  class ProfileView extends View {
+    render() {
+      return this.page(Html.back("lainnya", "Lainnya") + "<h1>Profil anak</h1>" +
+        '<form data-form="profil" class="card stack"><div class="stack-s"><label for="p-nama">Nama panggilan (opsional)</label><input id="p-nama" value="' + Html.esc(this.profile.name) + '" autocomplete="off"></div>' +
+        '<div class="stack-s"><label for="p-lahir">Tanggal lahir</label><input id="p-lahir" type="date" max="' + Clock.today() + '" value="' + Html.esc(this.profile.birth) + '"></div>' +
+        '<button class="btn-primary" type="submit">Simpan</button></form><p class="small muted">Disimpan di perangkat ini saja, dipakai untuk menghitung usia pada setiap penilaian.</p>');
+    }
+    onSubmit(form) {
+      if (form.dataset.form !== "profil") return false;
+      this.profile.save(form.querySelector("#p-nama").value.trim(), form.querySelector("#p-lahir").value);
+      this.app.views.milestone.tab = null; Toast.show("Profil disimpan."); location.hash = "#beranda"; return true;
+    }
+  }
+
+  class DataView extends View {
+    onlineLink() {
+      return this.source instanceof AndroidSource ? '<button type="button" data-act="online">Buka versi online</button>' : '<a href="' + ONLINE_URL + '" target="_blank" rel="noopener">Buka versi online</a>';
+    }
+    modeBlock() {
+      const src = this.source;
+      if (src instanceof CloudSource) {
+        return '<div class="card stack-s"><h3>Versi offline</h3><p class="small">Satu file HTML dengan tampilan yang sama dan data saat ini sudah tertanam di dalamnya. Simpan di HP, lalu buka dengan Chrome; bisa dipakai tanpa internet. Fitur Tanya dan persetujuan usulan tetap hanya di versi online.</p>' +
+          '<div class="row"><button type="button" class="btn-primary" data-act="export-offline"' + (src.canExportOffline ? "" : " disabled") + ">Unduh versi offline</button></div></div>" +
+          '<div class="card stack-s"><h3>Data untuk aplikasi Android</h3><p class="small">Aplikasi Android menyimpan salinan data supaya tetap bisa dipakai tanpa internet. Setelah menyetujui usulan, unduh data terbaru, lalu di aplikasi Android buka Lainnya → Sumber & pembaruan → Impor file data.</p>' +
+          '<div class="row"><button type="button" data-act="export"' + (src.canExport ? "" : " disabled") + ">Unduh data untuk APK</button></div>" + (src.canExport ? "" : '<p class="small muted">Unduhan tidak tersedia di tampilan ini.</p>') + "</div>";
+      }
+      if (src instanceof AndroidSource) {
+        return '<div class="card stack"><h3>Perbarui data di perangkat ini</h3>' + (src.status ? '<div class="banner">' + Html.esc(src.status) + "</div>" : "") +
+          '<div class="stack-s"><label for="k-url">Alamat file data (opsional)</label><input id="k-url" inputmode="url" placeholder="https://raw.githubusercontent.com/…/kb.json" value="' + Html.esc(src.bridge.getUrl()) + '"><p class="small muted">Bila diisi, aplikasi memeriksa data baru di alamat ini setiap kali dibuka.</p></div>' +
+          '<div class="row"><button type="button" class="btn-primary" data-act="refresh">Periksa pembaruan</button><button type="button" data-act="import">Impor file data</button></div>' +
+          '<p class="small">Tanya dan persetujuan usulan ada di versi online. ' + this.onlineLink() + '</p><p class="small muted">Data baru selalu diperiksa dulu; file yang memuat pernyataan tanpa sumber ditolak.</p></div>';
+      }
+      return '<div class="card stack-s"><h3>Versi offline</h3>' + (src.status ? '<div class="banner">' + Html.esc(src.status) + "</div>" : "") +
+        '<p class="small">Data ' + (src.origin === "impor" ? "dari file yang Anda impor" : "tertanam di file ini") + '. Untuk data terbaru, buka versi online lalu unduh ulang versi offline, atau impor file data dari sana.</p>' +
+        '<div class="row"><button type="button" data-act="import">Impor file data</button></div><p class="small">' + this.onlineLink() + '</p><p class="small muted">Data baru selalu diperiksa dulu; file yang memuat pernyataan tanpa sumber ditolak.</p></div>';
+    }
+    usulan(u, actionable) {
+      const kind = u.type === "pertanyaan" ? "Pertanyaan untuk diriset" : "Pembaruan data";
+      const st = { disetujui: "Disetujui", ditolak: "Ditolak", diriset: "Sudah diriset" }[u.status] || "Baru";
+      return '<div class="card stack-s"><div class="row" style="justify-content:space-between"><span class="eyebrow">' + kind + '</span><span class="small muted">' + st + " · " + Html.esc(String(u.createdAt || "").slice(0, 10)) + "</span></div>" +
+        "<p><strong>" + Html.esc(u.title || u.question || "") + "</strong></p>" + (u.summary ? '<p class="small">' + Html.esc(u.summary) + "</p>" : "") + (u.catatan ? '<p class="small muted">' + Html.esc(u.catatan) + "</p>" : "") +
+        (Array.isArray(u.sources) && u.sources.length ? '<p class="src">Sumber: ' + u.sources.map(s => '<a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">' + Html.esc(s.title) + "</a>").join(" · ") + "</p>" : "") +
+        (actionable && this.source.canApprove ? '<div class="row">' + (u.type !== "pertanyaan" && u.target ? '<button class="btn-primary" type="button" data-approve="' + Html.esc(u._id) + '">Setujui</button>' : "") + '<button type="button" data-reject="' + Html.esc(u._id) + '">' + (u.type === "pertanyaan" ? "Hapus dari antrean" : "Tolak") + "</button></div>" : "") + "</div>";
+    }
+    render() {
+      const kb = this.kb, m = kb.meta, cloud = this.source instanceof CloudSource;
+      const us = kb.usulan.slice().sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+      const pend = us.filter(u => u.status === "baru"), done = us.filter(u => u.status !== "baru").slice(0, 10);
+      const log = kb.changelog.slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      const srcs = Object.entries(kb.sources).sort((a, b) => a[1].title.localeCompare(b[1].title));
+      return this.page(Html.back("lainnya", "Lainnya") + "<h1>Sumber & pembaruan</h1>" +
+        (m ? '<div class="card stack-s"><p><strong>Versi data ' + Html.esc(m.version) + '</strong></p><p class="small muted">Diverifikasi ' + Html.esc(m.verifiedDate) + " · pemeriksaan sumber terakhir " + Html.esc(m.lastCheck || "-") + '</p><p class="small">' + Html.esc(m.note || "") + "</p></div>" : "") +
+        this.modeBlock() +
+        '<div class="card stack-s"><h3>Cara data diperbarui</h3><ul class="items small"><li>Setiap tanggal 1, Claude memeriksa pedoman terbaru dari IDAI, Kemenkes, WHO, AAP, CDC, dan FDA, lalu menulis usulan perubahan beserta sumbernya.</li><li>Usulan tidak langsung mengubah data. Pemilik meninjau dan menyetujui; usulan yang memuat pernyataan tanpa sumber ditolak otomatis.</li><li>Pertanyaan yang belum terjawab di menu Tanya bisa dicatat untuk diriset.</li></ul></div>' +
+        (cloud ? '<div class="stack-s"><h2>Usulan menunggu (' + pend.length + ")</h2>" + (pend.length ? pend.map(u => this.usulan(u, true)).join("") : '<p class="muted small">Tidak ada usulan baru.</p>') + "</div>" + (done.length ? '<div class="stack-s"><h3>Usulan yang sudah diputuskan</h3>' + done.map(u => this.usulan(u, false)).join("") + "</div>" : "") : "") +
+        '<div class="stack-s"><h2>Riwayat perubahan</h2><div class="card stack-s">' + (log.length ? log.map(l => "<div><p><strong>" + Html.esc(l.title) + '</strong> <span class="muted small">' + Html.esc(l.date) + '</span></p><p class="small">' + Html.esc(l.text) + "</p></div>").join("") : '<p class="muted small">Belum ada.</p>') + "</div></div>" +
+        '<div class="stack-s"><h2>Daftar sumber (' + srcs.length + ')</h2><div class="card"><ul class="items small">' + srcs.map(([id, s]) => '<li><a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">' + Html.esc(s.title) + "</a>" + (s.type === "sekunder" ? '<span class="tag">sekunder</span>' : "") + "</li>").join("") + "</ul></div></div>");
+    }
+    async onClick(t) {
+      const src = this.source;
+      const run = async (fn, okMsg) => { try { await fn(); if (okMsg) Toast.show(okMsg); } catch (e) { Toast.show((e && e.message) || "Gagal."); } };
+      if (t.dataset.approve) { const u = this.kb.usulan.find(x => x._id === t.dataset.approve); if (u) await run(() => src.approve(u), "Disetujui dan diterapkan."); return "keep"; }
+      if (t.dataset.reject) { const u = this.kb.usulan.find(x => x._id === t.dataset.reject); if (u) await run(() => src.reject(u), "Usulan ditolak."); return "keep"; }
+      const a = t.dataset.act;
+      if (a === "export") { await run(() => src.exportForApk(), "Data diunduh."); return "keep"; }
+      if (a === "export-offline") { await run(() => src.exportOffline(), "Versi offline diunduh."); return "keep"; }
+      if (a === "online") { src.bridge.open(ONLINE_URL); return "keep"; }
+      if (a === "refresh") { const u = document.getElementById("k-url"); if (u) src.bridge.setUrl(u.value.trim()); src.status = "Memeriksa…"; this.app.render(); await src.refresh(false); return true; }
+      if (a === "import") { await src.importFile(); return true; }
+      return false;
+    }
+  }
+
+  // =============================================================
+  // Aplikasi
+  // =============================================================
+  class Router {
+    static parse() {
+      const h = (location.hash || "#beranda").slice(1) || "beranda";
+      const prefixes = [["cek-", "checker"], ["panduan-", "guide"]];
+      for (const [p, name] of prefixes) if (h.startsWith(p)) return { name, param: h.slice(p.length), raw: h };
+      const map = { beranda: "home", cek: "checkers", napas: "breath", tanya: "ask", lainnya: "more", panduan: "guides", tumbuh: "milestone", imunisasi: "immunization", obat: "medicine", data: "data", profil: "profile" };
+      return { name: map[h] || "home", param: null, raw: h };
+    }
+  }
+
+  class App {
+    constructor() {
+      this.root = document.getElementById("app");
+      this.navEl = document.getElementById("nav");
+      this.kb = new KnowledgeBase();
+      this.profile = new Profile();
+      this.source = new DataSource(this.kb);
+      this.state = "loading";
+      this.views = {
+        home: new HomeView(this), checkers: new CheckerListView(this), checker: new CheckerView(this), breath: new BreathView(this),
+        ask: new AskView(this), more: new MoreView(this), guides: new GuideListView(this), guide: new GuideView(this),
+        milestone: new MilestoneView(this), immunization: new ImmunizationView(this), medicine: new MedicineView(this),
+        data: new DataView(this), profile: new ProfileView(this)
+      };
+      this.route = Router.parse();
+      this.bindEvents();
+    }
+    pickSource() {
+      if (window.AndroidKB) return new AndroidSource(this.kb, new AndroidBridge(window.AndroidKB));
+      if (window.claude && typeof window.claude.use === "function" && !StaticSource.embedded()) return new CloudSource(this.kb, window.claude);
+      return new StaticSource(this.kb);
+    }
+    start() {
+      const go = () => {
+        this.source = this.pickSource();
+        this.renderNav();
+        this.source.start(() => { this.state = this.kb.isEmpty ? "empty" : "ready"; this.render(); }, () => { this.state = "failed"; this.render(); });
+      };
+      this.renderNav();
+      if (window.AndroidKB || (window.claude && window.claude.use) || StaticSource.embedded()) go(); else setTimeout(go, 1500);
+    }
+    get currentView() { return this.views[this.route.name] || this.views.home; }
+    renderNav() {
+      const cloud = this.source instanceof CloudSource;
+      const ICON = App.ICON;
+      const fourth = cloud ? ["tanya", "Tanya", "tanya"] : ["panduan", "Panduan", "panduan"];
+      const items = [["beranda", "Beranda", "beranda"], ["cek", "Cek Gejala", "cek"], ["napas", "Hitung Napas", "napas"], fourth, ["lainnya", "Lainnya", "lainnya"]];
+      const r = this.route;
+      const group = (r.name === "checker" || r.name === "checkers") ? "cek" : (!cloud && (r.name === "guides" || r.name === "guide")) ? "panduan" :
+        ["guides", "guide", "milestone", "immunization", "medicine", "data", "profile", "more"].includes(r.name) ? "lainnya" : r.raw;
+      this.navEl.innerHTML = items.map(([id, label, icon]) => '<a href="#' + id + '"' + (group === id ? ' aria-current="page"' : "") + ">" + ICON[icon] + "<span>" + label + "</span></a>").join("");
+    }
+    stateScreen() {
+      const v = this.views.home;
+      if (this.state === "failed") return v.page(this.source instanceof CloudSource || this.source.constructor === DataSource
+        ? '<div class="card stack-s"><h2>Database belum terbaca</h2><p class="muted">Halaman ini membutuhkan akun claude.ai yang sudah masuk dan akses ke artifak ini. Buka ulang halaman setelah masuk.</p></div>'
+        : '<div class="card stack-s"><h2>Data belum terbaca</h2><p class="muted">File data tidak ditemukan atau tidak lolos pemeriksaan sumber.</p></div>');
+      if (this.state === "empty") return v.page('<div class="card stack-s"><h2>Database masih kosong</h2><p class="muted">Basis pengetahuan belum diisi. Setelah diisi, isinya muncul di sini otomatis.</p></div>');
+      return null;
+    }
+    render() {
+      this.renderNav();
+      if (this.state === "loading") return;
+      const screen = this.stateScreen();
+      const active = document.activeElement, focusId = active && active.id, sel = active && active.selectionStart;
+      this.root.innerHTML = screen || this.currentView.render(this.route.param);
+      if (focusId) { const el = document.getElementById(focusId); if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) { el.focus(); try { el.setSelectionRange(sel, sel); } catch (e) { /* jenis input tanpa seleksi */ } } }
+    }
+    bindEvents() {
+      window.addEventListener("hashchange", () => { const prev = this.route.raw; this.route = Router.parse(); if (this.route.raw !== prev) window.scrollTo(0, 0); this.render(); });
+      document.addEventListener("click", async e => {
+        const t = e.target.closest("button, a");
+        if (!t || !this.root.contains(t)) return;
+        const res = await this.currentView.onClick(t);
+        if (res === true) this.render();
+      });
+      document.addEventListener("input", e => this.currentView.onInput(e.target));
+      document.addEventListener("change", e => { const v = this.currentView; if (v.onChange && v.onChange(e.target)) this.render(); });
+      document.addEventListener("submit", e => { e.preventDefault(); if (this.currentView.onSubmit(e.target)) this.render(); });
+    }
+  }
+  App.ICON = {
+    beranda: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>',
+    cek: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-3"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 13l2 2 4-4"/></svg>',
+    napas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>',
+    tanya: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M10 9.5a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.2M12 14.5v.01"/></svg>',
+    panduan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg>',
+    lainnya: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>'
+  };
+
+  const app = new App();
+  window.__app = app;
+  app.start();
+})();
+</script>
