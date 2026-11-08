@@ -135,7 +135,7 @@ const guides = [
       { t: "Skrining autisme (misalnya M-CHAT-R) di usia 18 dan 24 bulan untuk semua anak.", src: ["cdc_autism"] }
     ] }
   ] },
-  { id: "lapar", order: 13, title: "Tanda lapar & kenyang", aliases: ["tanda lapar", "tanda kenyang", "masih lapar", "masih haus", "bayi lapar", "bayi kenyang", "ngemut tangan", "emut tangan", "isap tangan", "tangan dimasukin mulut", "ngenyot tangan", "nyusu terus", "kapan berhenti nyusu", "overfeeding"], examples: ["bayi ngemut tangan berarti lapar ya", "gimana tau bayi udah kenyang", "abis nyusu masih emut tangan, kasih lagi?", "bayi nyusu terus tiap nangis", "bayi masih haus padahal udah gumoh", "abis nyusu emut tangan disusuin lagi malah nyembur", "contoh gambar tanda bayi lapar", "video tanda bayi kenyang"], sections: [
+  { id: "lapar", order: 13, title: "Tanda lapar & kenyang", aliases: ["tanda lapar", "tanda kenyang", "nyari puting", "cari puting", "mencari puting", "buka mulut", "masih lapar", "masih haus", "bayi lapar", "bayi kenyang", "ngemut tangan", "emut tangan", "isap tangan", "tangan dimasukin mulut", "ngenyot tangan", "nyusu terus", "kapan berhenti nyusu", "overfeeding"], examples: ["bayi ngemut tangan berarti lapar ya", "gimana tau bayi udah kenyang", "abis nyusu masih emut tangan, kasih lagi?", "bayi nyusu terus tiap nangis", "bayi masih haus padahal udah gumoh", "abis nyusu emut tangan disusuin lagi malah nyembur", "contoh gambar tanda bayi lapar", "video tanda bayi kenyang"], sections: [
     { h: "Tanda lapar (0–5 bulan)", items: [
       { t: "Tanda awal: mengecap atau menjilat bibir, menjulurkan lidah, membuka mulut, menoleh mencari payudara atau botol (rooting), berulang memasukkan tangan ke mulut, tangan mengepal, mulai gelisah.", src: ["aap_cues", "cdc_cues"] },
       { t: "Menangis adalah tanda lapar yang sudah terlambat. Susui saat tanda awal muncul.", src: ["aap_cues"] }
@@ -198,7 +198,7 @@ const milestones = [
     bahasa: ["Bersuara \"mamama\", \"bababa\"", "Mengangkat tangan minta digendong"],
     kognitif: ["Mencari benda yang jatuh dari pandangan", "Membenturkan dua benda"],
     gerak: ["Duduk sendiri dari berbaring", "Memindahkan benda dari satu tangan ke tangan lain", "Menarik makanan dengan jari", "Duduk tanpa sandaran"] } },
-  { id: "m12", months: 12, label: "12 bulan", d: {
+  { id: "m12", months: 12, label: "12 bulan", aliases: ["belum bisa jalan", "belum jalan", "telat jalan"], d: {
     sosial: ["Bermain \"pok ame-ame\" dengan Anda"],
     bahasa: ["Melambai dadah", "Memanggil \"mama\", \"papa\", atau sebutan khusus", "Paham kata \"jangan\""],
     kognitif: ["Memasukkan benda ke wadah", "Mencari benda yang Anda sembunyikan"],
@@ -294,7 +294,7 @@ const mitos = [
 ];
 
 const meta = {
-  version: "2026.11.08-7",
+  version: "2026.11.08-8",
   verifiedDate: "2026-11-07",
   lastCheck: "2026-11-07",
   reviewMonths: 12,

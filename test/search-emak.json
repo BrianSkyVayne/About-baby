@@ -178,10 +178,10 @@
  {
   "q": "anakku nelen kancing gimana",
   "expect": "guide:tersedak",
-  "danger": false,
+  "danger": true,
   "synthetic": true,
   "set": "emak-holdout-2026-11-08",
-  "note": "alarm dibiarkan: kancing bisa berarti baterai kancing"
+  "note": "danger:true disengaja — kancing bisa berarti baterai kancing (tertelan = IGD); aturan keracunan"
  },
  {
   "q": "bayi 10 bulan boleh nonton hp ga",
