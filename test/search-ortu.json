@@ -177,9 +177,10 @@
  {
   "q": "anak kena air panas melepuh",
   "expect": "guide:aman",
-  "danger": false,
+  "danger": true,
   "synthetic": true,
-  "set": "ortu-buru2-2026-11-08"
+  "set": "ortu-buru2-2026-11-08",
+  "note": "luka bakar: aturan lukabakar bersumber NHS Burns and scalds (pertolongan pertama + kriteria IGD)"
  },
  {
   "q": "anak minum minyak tanah",

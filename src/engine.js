@@ -225,6 +225,8 @@
       s = s.replace(/\u0001/g, ".");
       s = s.replace(/(\d)([a-z])/g, "$1 $2").replace(/([a-z])(\d)/g, "$1 $2"); // 8bln -> 8 bln
       s = s.replace(/([a-z])\1{2,}/g, "$1");              // panasss -> panas
+      // "bb" = berat badan bila diikuti kata tentang berat ("bb ga naik", "bb anak segini"); selain itu "bb" = bayi.
+      s = s.replace(/(^|\s)bb(?=\s+(tidak|ga|gak|nggak|ngga|naik|turun|anak|bayi|segini|kurang|normal|ideal|susah|seret|stuck|berapa|lahir)\b)/g, "$1berat badan");
       const words = s.split(/\s+/).filter(Boolean);
       return TextNormalizer.applySlang(words).join(" ");
     }
@@ -407,18 +409,19 @@
     { id: "muntahsemua", level: "igd", re: /\s(muntah (terus|semua|setiap|tiap)|semua (dimuntahkan|keluar lagi)|apa pun dimuntahkan)/, text: "Memuntahkan semua yang diminum termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
     { id: "muntahdarah", level: "hari", re: /\s(muntah (\S+ ){0,2}(ber)?darah|muntah (seperti )?(ampas )?kopi)/, text: "Muntah berdarah atau seperti ampas kopi perlu diperiksa dokter hari ini.", src: "idai_gumoh" },
     { id: "babdarah", level: "hari", re: /\s((bab|diare|tinja|feses) (\S+ ){0,3}(ber)?darah|darah (di|pada|dalam) (bab|tinja|feses))/, text: "Darah di BAB perlu diperiksakan ke dokter.", src: "who_ors" },
-    { id: "ubun", level: "igd", re: /\subun (\S+ ){0,2}(cekung|menonjol|cembung|tegang|melesak)/, text: "Ubun-ubun cekung atau menonjol perlu segera diperiksa.", src: null },
+    { id: "ubun", level: "igd", re: /\subun (\S+ ){0,2}(cekung|menonjol|cembung|tegang|melesak)/, text: "Ubun-ubun cekung bisa tanda bayi kekurangan cairan; ubun-ubun yang tetap menonjol saat bayi tenang dan tegak perlu pemeriksaan darurat. Bawa ke IGD sekarang.", src: ["medline_fontanel_sunken", "medline_fontanel_bulge"] },
     { id: "tersedak", level: "igd", re: /\s(tersedak|tercekik)\s/, unless: /masih bisa batuk/, text: "Tersedak: lakukan pertolongan pertama tersedak dan panggil bantuan bila tidak bisa bernapas.", src: "medline_choke" },
     { id: "tenggelam", level: "igd", re: /\s(tenggelam|kelelep)\s/, text: "Tenggelam: segera ke IGD walau tampak pulih.", src: "who_drowning" },
     { id: "keracunan", level: "igd", re: /\s(keracunan|tertelan|menelan (\S+ )?(baterai|obat|magnet|koin|sabun|deterjen|minyak|kancing)|minum (obat nyamuk|minyak tanah|bensin|pemutih))/, text: "Dugaan keracunan atau benda tertelan: segera ke IGD.", src: "who_injury" },
+    { id: "lukabakar", level: "hari", re: /\s(luka bakar|tersiram|melepuh)\s/, text: "Luka bakar: segera siram air mengalir yang sejuk selama 20 menit. Ke IGD bila luas atau dalam, mengenai wajah, kelamin, atau bokong, atau akibat bahan kimia atau listrik. Untuk anak di bawah 5 tahun, mintalah saran tenaga kesehatan.", src: "nhs_burns" },
     { id: "muntahhijau", level: "hari", re: /\smuntah (\S+ )?hijau/, text: "Muntah berwarna hijau perlu diperiksakan ke dokter hari ini, sesegera mungkin.", src: "orami_gumoh" },
-    { id: "kuning24", level: "igd", re: /\skuning (\S+ ){0,3}(24 jam|hari pertama)/, text: "Kuning dalam 24 jam pertama perlu diperiksa segera.", src: "aap_bili" },
+    { id: "kuning24", level: "igd", re: /\skuning (\S+ ){0,3}(24 jam|hari pertama)/, text: "Kuning sebelum bayi berumur 24 jam: bawa ke rumah sakit sekarang.", src: ["who_imci_jaundice", "aap_bili"] },
     { id: "tinjapucat", level: "hari", re: /\s(tinja|bab|feses) (\S+ ){0,2}(pucat|putih|dempul)/, text: "Tinja pucat pada bayi kuning perlu pemeriksaan bilirubin direk.", src: "aap_bili" },
-    { id: "perdarahan", level: "igd", re: /\s(mimisan|gusi berdarah|bintik merah|muntah darah)/, text: "Perdarahan (mimisan, gusi berdarah) saat atau setelah demam bisa tanda bahaya dengue.", src: "who_dengue" },
+    { id: "perdarahan", level: "igd", re: /\s(mimisan|gusi berdarah|bintik merah|muntah darah)/, text: "Perdarahan (mimisan, gusi berdarah) saat atau setelah demam bisa tanda bahaya dengue: segera cari pertolongan medis.", src: "who_dengue_fs" },
     { id: "cederakepala", level: "igd", re: /\s((jatuh|terjatuh|terbentur) (\S+ ){0,4}(muntah|mengantuk|ngantuk|pingsan|kejang)|muntah (\S+ ){0,3}(jatuh|terjatuh|terbentur))/, text: "Jatuh lalu muntah, mengantuk, atau pingsan: segera ke IGD.", src: null },
     { id: "kepala", level: "pantau", re: /\s(kepala (\S+ ){0,2}terbentur|terbentur (\S+ ){0,2}kepala|jatuh (\S+ ){0,3}kepala)/, unless: /\s(jatuh|terjatuh|terbentur) (\S+ ){0,4}(muntah|mengantuk|ngantuk|pingsan|kejang)|muntah (\S+ ){0,3}(jatuh|terjatuh|terbentur)/, text: "Kepala terbentur: pantau 24 jam. Segera ke IGD bila muntah, sangat mengantuk, pingsan, kejang, atau menangis tak bisa ditenangkan.", src: null },
     { id: "matacekung", level: "hari", re: /\smata (\S+ ){0,2}cekung/, text: "Mata cekung bisa tanda dehidrasi, apalagi saat diare atau muntah. Nilai dengan penilai \"Diare & dehidrasi\" dan periksakan hari ini.", src: "who_dehid" },
-    { id: "kuningtelapak", level: "igd", re: /\s(kuning (\S+ ){0,3}(telapak|kaki)|telapak (\S+ ){0,3}kuning)/, text: "Kuning sampai telapak tangan atau kaki termasuk tanda bahaya bayi baru lahir WHO.", src: "who_newborn" },
+    { id: "kuningtelapak", level: "igd", re: /\s(kuning (\S+ ){0,3}(telapak|kaki)|telapak (\S+ ){0,3}kuning)/, text: "Telapak tangan atau kaki yang kuning termasuk kuning berat menurut WHO: bawa ke rumah sakit sekarang.", src: ["who_imci_jaundice", "who_newborn"] },
     { id: "pusar", level: "hari", re: /\s(pusar|pusat) (\S+ ){0,3}(nanah|bau|kemerahan|merah|bengkak)/, text: "Tali pusat bernanah, berbau, atau kemerahan meluas perlu diperiksakan ke dokter atau bidan hari ini.", src: null },
     { id: "pikiranmenyakiti", level: "hari", re: /\s(menyakiti|nyakitin|melukai|bunuh) (\S+ )?(diri|bayi)/, text: "Ada pikiran menyakiti diri atau bayi: cari bantuan hari ini.", src: "ppd" }
   ];
@@ -466,6 +469,9 @@
       this.avgLen = this.N ? this.docs.reduce((a, d) => a + d.len, 0) / this.N : 1;
       this.df = {};
       this.docs.forEach(d => Object.keys(d.tf).forEach(t => { this.df[t] = (this.df[t] || 0) + 1; }));
+      // Alias yang setelah dinormalisasi hanya berisi kata umum (mis. "bayi") tidak boleh memberi bonus frasa.
+      const common = t => (this.df[t] || 0) > this.N / 3;
+      this.docs.forEach(d => { d.phrases = d.phrases.filter(p => !TextNormalizer.tokensOfNorm(p).every(common)); });
     }
     idf(t) { const df = this.df[t] || 0; return Math.log(1 + (this.N - df + 0.5) / (df + 0.5)); }
     /** @returns {Array<{type,id,title,score}>} urut skor menurun, hanya skor > 0. */
@@ -534,7 +540,7 @@
         const common = t => (this.index.df[t] || 0) > this.index.N / 3;
         const doc = this.index.docs.filter(d => d.type === r0.type && d.id === r0.id)[0];
         const hits = doc ? qt.filter(t => doc.tf[t] && !common(t)).length : r0.hits;
-        if (confidence === "high" && typeof hits === "number" && hits < 2 && !r0.phrase && unknown > 0) confidence = "low";
+        if (confidence === "high" && typeof hits === "number" && !r0.phrase && unknown > 0 && (hits < 2 || unknown >= hits)) confidence = "low";
       }
       let best = results.length ? Object.assign({}, results[0]) : null;
       if (best && best.type === "checker") {

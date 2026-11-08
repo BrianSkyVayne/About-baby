@@ -274,7 +274,7 @@ module.exports = [
     ],
     rules: [
       { id: "r-syok", when: { yes: "syok" }, level: 4, text: "Kulit pucat dan dingin termasuk tanda bahaya dengue berat menurut WHO. Bawa ke IGD sekarang.", src: ["who_dengue_fs"] },
-      { id: "r-ws", when: { any: [{ yes: "perut" }, { yes: "muntah" }, { yes: "cairan" }, { yes: "darah" }, { yes: "lemas" }] }, level: 4, text: "Ada tanda bahaya dengue menurut WHO. Bawa ke rumah sakit sekarang.", src: ["who_dengue"] },
+      { id: "r-ws", when: { any: [{ yes: "perut" }, { yes: "muntah" }, { yes: "cairan" }, { yes: "darah" }, { yes: "lemas" }] }, level: 4, text: "Ada tanda bahaya dengue menurut WHO. Bawa ke rumah sakit sekarang.", src: ["who_dengue", "who_dengue_fs"] },
       { id: "r-turun", when: { yes: "turun" }, level: 2, text: "Menurut Kemenkes, demam tinggi sekitar 3 hari yang turun di hari keempat (pola pelana kuda) justru fase kritis, bukan tanda sembuh. Pantau ketat tanda bahaya di bawah.", src: ["kemenkes_dbd"] },
       { id: "r-3hari", when: { all: [{ age: [">=", 90] }, { age: ["<=", 1095] }, { num: ["hari", ">", 3] }] }, level: 3, text: "Menurut IDAI, anak usia 3–36 bulan yang demam lebih dari 3 hari dibawa ke dokter.", src: ["idai_demam"] },
       { id: "r-3bln", when: { age: ["<", 90] }, level: 3, text: "Menurut IDAI, bayi di bawah 3 bulan yang demam dibawa ke dokter.", src: ["idai_demam"] }
@@ -282,7 +282,7 @@ module.exports = [
     default: { level: 2, title: "Pantau", text: "Belum ada tanda bahaya dengue. Demam punya banyak penyebab, dan DBD hanya bisa dipastikan lewat pemeriksaan darah oleh dokter.", src: ["who_dengue"] },
     differentials: [],
     care: [
-      { t: "Pastikan anak banyak minum dan pantau tanda bahaya setiap hari, terutama saat demam mulai turun.", src: ["who_dengue", "kemenkes_dbd"] }
+      { t: "Pastikan anak banyak minum dan pantau tanda bahaya setiap hari, terutama saat demam mulai turun.", src: ["who_dengue", "who_dengue_fs", "kemenkes_dbd"] }
     ],
     escalate: ["Nyeri perut", "Muntah terus-menerus", "Perdarahan", "Lemas atau gelisah", "Kulit pucat dan dingin"]
   },
@@ -304,7 +304,7 @@ module.exports = [
       { id: "malas", text: "Bayi malas menyusu atau sangat mengantuk sampai sulit dibangunkan untuk menyusu?", type: YN }
     ],
     rules: [
-      { id: "r-awal", when: { yes: "awal" }, level: 4, text: "Kuning dalam 24 jam pertama termasuk tanda bahaya bayi baru lahir WHO, dan menurut AAP kadar bilirubinnya perlu diperiksa segera.", src: ["who_newborn", "aap_bili"] },
+      { id: "r-awal", when: { yes: "awal" }, level: 4, text: "Kuning dalam 24 jam pertama termasuk tanda bahaya bayi baru lahir WHO, dan menurut AAP kadar bilirubinnya perlu diperiksa segera.", src: ["who_newborn", "who_imci_jaundice", "aap_bili"] },
       { id: "r-telapak", when: { yes: "telapak" }, level: 4, text: "Telapak tangan atau kaki yang kuning termasuk tanda bahaya bayi baru lahir WHO.", src: ["who_newborn"] },
       { id: "r-malas-nb", when: { all: [{ yes: "malas" }, { age: ["<=", 28] }] }, level: 4, text: "Tidak mau menyusu dengan baik termasuk tanda bahaya bayi baru lahir WHO.", src: ["who_newborn"] },
       { id: "r-malas", when: { all: [{ yes: "malas" }, { age: [">", 28] }] }, level: 3, text: "Malas menyusu disertai kuning perlu diperiksakan hari ini. Bila bayi yang kuning sama sekali tidak mau menyusu, lebih mengantuk dari biasanya, atau sulit dibangunkan, segera bawa ke IGD.", src: ["nhs_jaundice"] },
