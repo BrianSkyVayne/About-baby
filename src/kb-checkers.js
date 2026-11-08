@@ -21,6 +21,8 @@ module.exports = [
     order: 1,
     title: "Gumoh & muntah bayi",
     short: "Bayi di bawah 1 tahun yang gumoh atau muntah",
+    aliases: ["gumoh", "muntah", "muntah susu", "nyembur", "gumoh banyak", "ngeluarin susu", "muntah bayi", "gumoh terus", "refluks", "gerd", "guah", "gumoh nyembur"],
+    examples: ["bayi 2 bln gumoh terus tiap abis nyusu normal ga", "anak muntah nyembur gmn bun", "gumoh hijau bahaya ga", "bayi 1bln muntah semua susunya", "gumoh campur darah"],
     needsAge: true,
     danger: ["lemas", "tdkminum", "muntahsemua"],
     questions: [
@@ -75,6 +77,8 @@ module.exports = [
     order: 2,
     title: "Demam",
     short: "Kapan demam cukup dipantau dan kapan perlu ke dokter",
+    aliases: ["panas", "anget", "meriang", "suhu tinggi", "demam tinggi", "badan panas", "panas tinggi", "demem", "dmam", "badan anget", "panas naik turun"],
+    examples: ["bb 8bln panas 38,5 gmn bun", "anak panas 3 hari blm turun", "bayi 2 bulan demam 38 harus ke dokter ga", "anak anget terus dari semalam", "suhu 39 kapan harus ke igd"],
     needsAge: true,
     danger: ["lemas", "kejang", "tdkminum", "muntahsemua", "tarikan"],
     questions: [
@@ -109,6 +113,8 @@ module.exports = [
     order: 3,
     title: "Diare & dehidrasi",
     short: "Menilai dehidrasi dengan tabel WHO",
+    aliases: ["mencret", "bab cair", "berak cair", "menceret", "mencret terus", "bab encer", "diare", "bab sering", "berak encer", "mules", "mencret berlendir"],
+    examples: ["anak 2thn mencret 5x sehari", "bab cair bayi 6 bln gmn", "mencret trus ga mau minum", "bayi diare ada lendir", "anak berak cair dari kemarin"],
     needsAge: true,
     questions: [
       { id: "kondisi", text: "Bagaimana kondisi anak?", type: "choice", options: [{ v: "baik", label: "Sadar dan aktif seperti biasa" }, { v: "gelisah", label: "Gelisah, rewel" }, { v: "lemas", label: "Lemas, sulit dibangunkan, atau tidak sadar" }] },
@@ -149,6 +155,8 @@ module.exports = [
     order: 4,
     title: "Batuk & napas",
     short: "Membedakan batuk pilek biasa dari pneumonia (kriteria WHO)",
+    aliases: ["sesak", "batuk", "pilek", "napas cepat", "ngik", "ngik ngik", "batuk pilek", "sesak napas", "napas berat", "bunyi grok grok", "hidung tersumbat", "pneumonia", "batpil"],
+    examples: ["anak batuk pilek 5 hari napas cepet", "bayi ngik ngik bun", "bb 1 thn sesak dadanya tarik ke dalam", "batuk berdahak anak 3thn", "napas anak cepet bgt pas tidur"],
     needsAge: true,
     danger: ["tarikan", "stridor", "lemas", "kejang", "tdkminum", "muntahsemua"],
     questions: [
@@ -182,6 +190,8 @@ module.exports = [
     order: 5,
     title: "Tangisan & kolik",
     short: "Bayi rewel atau menangis lama",
+    aliases: ["rewel", "nangis terus", "menangis lama", "kolik", "bayi nangis", "rewel malam", "gelisah", "nangis ga berhenti", "colic", "bayi rewel terus", "nangis jerit"],
+    examples: ["bayi 3 minggu nangis tiap malam kolik ya", "anak rewel gak mau tidur", "bayi nangis menjerit terus ga bisa ditenangin", "kolik gmn cara ngatasinya", "bayi 2bln rewel tiap sore"],
     needsAge: true,
     danger: ["lemas"],
     questions: [
@@ -217,6 +227,8 @@ module.exports = [
     order: 6,
     title: "Kejang demam",
     short: "Mengenali kejang demam sederhana dan kompleks (AAP)",
+    aliases: ["kejang demam", "step", "stip", "kejang", "mata mendelik", "kaku", "kejet", "ayan", "bayi kejang", "badan kaku", "kelojotan"],
+    examples: ["anak step pas panas gmn", "bayi kejang tadi udah berhenti", "kejang demam 5 menit lebih bahaya", "anak kejet kejet matanya mendelik", "kejang demam lagi apa harus ke igd"],
     needsAge: true,
     questions: [
       { id: "demam", text: "Kejang terjadi saat demam (suhu ≥ 38 °C)?", type: YN },
@@ -245,6 +257,8 @@ module.exports = [
     order: 7,
     title: "Demam berdarah (DBD)",
     short: "Tanda bahaya dengue menurut WHO",
+    aliases: ["dbd", "demam berdarah", "dengue", "bintik merah", "trombosit turun", "dengeu", "demam berdarah dengue", "panas hari ke 4", "bintik merah di kulit", "dbd anak", "tipes"],
+    examples: ["anak panas 4 hari ada bintik merah dbd ga", "demam berdarah tanda bahaya apa", "panas turun hari ke 4 tapi lemes", "trombosit anak turun gmn", "anak muntah terus sakit perut panas tinggi dbd"],
     needsAge: true,
     danger: ["syok", "perut", "muntah", "cairan", "darah", "lemas"],
     questions: [
@@ -277,6 +291,8 @@ module.exports = [
     order: 8,
     title: "Kuning bayi baru lahir",
     short: "Ikterus pada bayi usia 0–2 bulan",
+    aliases: ["bayi kuning", "kulit kuning", "mata kuning", "jaundice", "ikterus", "kuning bayi", "bilirubin", "bayi kuning berapa lama", "kuning di muka", "badan kuning", "bayi kunyit"],
+    examples: ["bayi 5 hari kuning sampe perut", "mata bayi kuning normal ga", "kuning hari ke 2 lahir bahaya", "bilirubin bayi tinggi gmn", "bayi kuning mau dijemur pagi ga"],
     needsAge: true,
     danger: ["awal", "telapak"],
     questions: [
@@ -307,6 +323,8 @@ module.exports = [
     order: 9,
     title: "Cek bayi baru lahir",
     short: "Tanda bahaya WHO untuk bayi usia 0–28 hari",
+    aliases: ["bayi baru lahir", "newborn", "neonatus", "bayi 0 bulan", "bayi umur sebulan", "bayi dibawah 28 hari", "bayi baru lahir sakit", "bayi merah", "bayi minggu pertama", "bayi lemes baru lahir", "tali pusat"],
+    examples: ["bayi 10 hari ga mau nyusu lemes", "newborn demam 38 gmn", "bayi baru lahir napas cepet", "bayi 2 minggu tali pusat bau", "bayi 3 hari tidur terus susah dibangunin"],
     needsAge: false,
     danger: ["menyusu", "kejang", "napas", "tarikan", "gerak", "kuning"],
     questions: [

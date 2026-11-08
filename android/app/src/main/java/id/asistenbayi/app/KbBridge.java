@@ -26,6 +26,7 @@ final class KbBridge {
     private final KnowledgeStore store;
     private final ExecutorService io = Executors.newSingleThreadExecutor();
     private int pendingPickId = -1;
+    private int pendingListenId = -1;
 
     KbBridge(MainActivity activity, WebView webView, KnowledgeStore store) {
         this.activity = activity;
@@ -94,6 +95,26 @@ final class KbBridge {
                 callback(id, false, "File tidak bisa dibaca.");
             }
         });
+    }
+
+    /** Pengenal suara bawaan (id-ID); hasil lewat window.__androidCb(id, ok, teks). */
+    @JavascriptInterface public void listen(int id) {
+        activity.runOnUiThread(() -> {
+            if (pendingListenId != -1) callback(pendingListenId, false, "");
+            pendingListenId = id;
+            if (!activity.startSpeech()) {
+                pendingListenId = -1;
+                callback(id, false, "Pengenal suara tidak tersedia");
+            }
+        });
+    }
+
+    void onSpeech(String text) {
+        final int id = pendingListenId;
+        pendingListenId = -1;
+        if (id == -1) return;
+        if (text == null || text.isEmpty()) callback(id, false, "");
+        else callback(id, true, text);
     }
 
     private void callback(int id, boolean ok, String text) {

@@ -6,6 +6,7 @@ import android.graphics.Insets;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.webkit.WebResourceRequest;
@@ -13,6 +14,8 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import java.util.ArrayList;
 
 /**
  * Satu layar WebView yang menampilkan halaman yang sama dengan versi online,
@@ -23,6 +26,7 @@ public class MainActivity extends Activity {
     static final String HOST = "appassets.androidplatform.net";
     static final String START_URL = "https://" + HOST + "/assets/www/index.html";
     static final int REQ_PICK = 41;
+    static final int REQ_SPEECH = 42;
 
     private WebView webView;
     private KbBridge bridge;
@@ -48,6 +52,9 @@ public class MainActivity extends Activity {
 
         if (savedInstanceState != null) webView.restoreState(savedInstanceState);
         else webView.loadUrl(START_URL);
+
+        KbUpdateJob.schedule(this);
+        if (savedInstanceState == null) KbUpdateJob.checkNowAsync(this);
     }
 
     /** Tautan ke luar aplikasi dibuka di peramban; aset aplikasi dilayani dari APK. */
@@ -55,7 +62,8 @@ public class MainActivity extends Activity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             Uri uri = request.getUrl();
-            if (HOST.equals(uri.getHost())) return false;
+            if ("https".equals(uri.getScheme()) && HOST.equals(uri.getHost())) return false;
+            // tel:, mailto:, wa.me, Google Maps, dan semua host lain dibuka di aplikasi luar.
             openExternal(uri.toString());
             return true;
         }
@@ -70,7 +78,9 @@ public class MainActivity extends Activity {
 
     void openExternal(String url) {
         try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            Uri u = Uri.parse(url);
+            String action = "tel".equals(u.getScheme()) ? Intent.ACTION_DIAL : Intent.ACTION_VIEW;
+            startActivity(new Intent(action, u));
         } catch (Exception ignored) {
             // Tidak ada aplikasi yang bisa membuka tautan ini.
         }
@@ -98,9 +108,29 @@ public class MainActivity extends Activity {
         startActivityForResult(i, REQ_PICK);
     }
 
+    /** Membuka pengenal suara; false bila tidak ada aplikasi pengenal di perangkat. */
+    boolean startSpeech() {
+        Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "id-ID");
+        i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Silakan bicara");
+        if (i.resolveActivity(getPackageManager()) == null) return false;
+        try {
+            startActivityForResult(i, REQ_SPEECH);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_SPEECH) {
+            ArrayList<String> r = resultCode == RESULT_OK && data != null ? data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) : null;
+            bridge.onSpeech(r != null && !r.isEmpty() ? r.get(0) : null);
+            return;
+        }
         if (requestCode == REQ_PICK) bridge.onFilePicked(resultCode == RESULT_OK && data != null ? data.getData() : null);
     }
 

@@ -38,7 +38,7 @@ final class KnowledgeStore {
             try { saved = readAll(new FileInputStream(f)); } catch (IOException ignored) { }
         }
         if (saved.isEmpty()) return bundled;
-        return versionOf(saved).compareTo(versionOf(bundled)) >= 0 ? saved : bundled;
+        return KbUpdateJob.compareVersion(versionOf(saved), versionOf(bundled)) >= 0 ? saved : bundled;
     }
 
     static String versionOf(String text) {

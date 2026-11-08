@@ -172,11 +172,368 @@
       }));
       (kb.obat || []).forEach(o => this.checkSrc("obat " + o.id, o.src, H(o.t)));
       if (kb.imunisasi) this.checkSrc("imunisasi", kb.imunisasi.src, false);
+      const strArr = (where, v) => {
+        if (v === undefined) return;
+        if (!Array.isArray(v) || v.some(x => typeof x !== "string" || !x.trim())) this.errors.push(where + ": harus array string tidak kosong");
+      };
+      [["checker", kb.checkers], ["panduan", kb.guides], ["obat", kb.obat], ["mitos", kb.mitos]].forEach(p => (p[1] || []).forEach(e => {
+        strArr(p[0] + " " + e.id + " aliases", e.aliases); strArr(p[0] + " " + e.id + " examples", e.examples);
+      }));
+      if (kb.mitos !== undefined && !Array.isArray(kb.mitos)) this.errors.push("mitos: bukan array");
+      (Array.isArray(kb.mitos) ? kb.mitos : []).forEach((m, i) => {
+        const w = "mitos " + (m && m.id ? m.id : "#" + i);
+        if (!m || !m.id) this.errors.push(w + ": id kosong");
+        if (!m || typeof m.claim !== "string" || !m.claim.trim()) this.errors.push(w + ": claim kosong");
+        if (!m || ["benar", "tidak", "belum"].indexOf(m.verdict) < 0) this.errors.push(w + ": verdict harus benar/tidak/belum");
+        if (!m || typeof m.text !== "string" || !m.text.trim()) this.errors.push(w + ": text kosong");
+        this.checkSrc(w, m ? m.src : undefined, false);
+      });
       if (!kb.meta || !kb.meta.verifiedDate) this.errors.push("meta: verifiedDate kosong");
       return this.errors;
     }
     static validate(kb) { return new KnowledgeValidator(kb).validate(); }
   }
 
-  return { Level, ConditionEvaluator, Assessment, SymptomChecker, Age, KnowledgeValidator };
+
+  /* ===== Tanya-jawab luring: hanya menelusuri entri basis pengetahuan (tanpa LLM). ===== */
+
+  /** Normalisasi teks bahasa Indonesia sehari-hari + stemmer ringan gaya Nazief-Adriani (tanpa kamus akar). */
+  class TextNormalizer {
+    /** Ganti frasa/kata gaul menjadi istilah baku (frasa multi-kata dicek lebih dulu). */
+    static applySlang(words) {
+      const out = [];
+      let i = 0;
+      while (i < words.length) {
+        let hit = null;
+        for (let n = TextNormalizer.MAX_PHRASE; n >= 1; n--) {
+          if (i + n > words.length) continue;
+          const key = words.slice(i, i + n).join(" ");
+          if (Object.prototype.hasOwnProperty.call(TextNormalizer.SLANG, key)) { hit = { n, v: TextNormalizer.SLANG[key] }; break; }
+        }
+        if (hit) { if (hit.v) out.push.apply(out, hit.v.split(" ")); i += hit.n; }
+        else { out.push(words[i]); i++; }
+      }
+      return out;
+    }
+    /** Teks -> string kata baku (huruf kecil, tanpa tanda baca kecuali desimal "38.5"). */
+    static normalize(text) {
+      let s = String(text || "").toLowerCase();
+      s = s.replace(/°\s*c?/g, " derajat ");
+      s = s.replace(/(\d)[.,](\d)/g, "$1\u0001$2");      // lindungi desimal
+      s = s.replace(/([a-z]{2,})2(?![0-9])/g, "$1");     // muntah2 -> muntah (reduplikasi)
+      s = s.replace(/[^a-z0-9\u0001\s]/g, " ");
+      s = s.replace(/\u0001/g, ".");
+      s = s.replace(/(\d)([a-z])/g, "$1 $2").replace(/([a-z])(\d)/g, "$1 $2"); // 8bln -> 8 bln
+      s = s.replace(/([a-z])\1{2,}/g, "$1");              // panasss -> panas
+      const words = s.split(/\s+/).filter(Boolean);
+      return TextNormalizer.applySlang(words).join(" ");
+    }
+    static stem(w) {
+      if (w.length < 4 || /\d/.test(w) || TextNormalizer.PROTECTED.has(w)) return w;
+      const ok = r => r.length >= 4;
+      let x = w, m;
+      if ((m = /^(.+?)(lah|kah|pun)$/.exec(x)) && ok(m[1])) x = m[1];
+      if ((m = /^(.+?)(ku|mu|nya)$/.exec(x)) && ok(m[1])) x = m[1];
+      if (TextNormalizer.PROTECTED.has(x)) return x;
+      if ((m = /^(.+?)(kan|an)$/.exec(x)) && ok(m[1])) x = m[1];
+      else if ((m = /^(.+)i$/.exec(x)) && ok(m[1])) x = m[1];
+      if (TextNormalizer.PROTECTED.has(x)) return x;
+      for (let k = 0; k < 2; k++) {
+        let r = null;
+        if ((m = /^(di|ke|se)(.+)$/.exec(x))) r = m[2];
+        else if ((m = /^(ber|ter)(.+)$/.exec(x))) r = m[2];
+        else if ((m = /^(me|pe)ny([aiueo].*)$/.exec(x))) r = "s" + m[2];
+        else if ((m = /^(me|pe)ng([aiueo].*)$/.exec(x))) r = m[2];
+        else if ((m = /^(me|pe)ng(.+)$/.exec(x))) r = m[2];
+        else if ((m = /^(me|pe)m([aiueo].*)$/.exec(x))) r = "p" + m[2];
+        else if ((m = /^(me|pe)m(.+)$/.exec(x))) r = m[2];
+        else if ((m = /^(me|pe)n([aiueo].*)$/.exec(x))) r = "t" + m[2];
+        else if ((m = /^(me|pe)n(.+)$/.exec(x))) r = m[2];
+        else if ((m = /^(me|pe)(.+)$/.exec(x))) r = m[2];
+        if (!r || !ok(r)) break;
+        x = r;
+        if (TextNormalizer.PROTECTED.has(x)) break;
+      }
+      return x;
+    }
+    /** Teks mentah -> token ber-stem tanpa stopword. */
+    static tokens(text) { return TextNormalizer.tokensOfNorm(TextNormalizer.normalize(text)); }
+    static tokensOfNorm(norm) {
+      return norm.split(" ").filter(w => w && !TextNormalizer.STOP.has(w)).map(TextNormalizer.stem);
+    }
+  }
+  TextNormalizer.SLANG = {
+    "bb": "bayi", "baby": "bayi", "bayik": "bayi", "dedek": "bayi", "debay": "bayi",
+    "dmm": "demam", "dmam": "demam", "panas": "demam", "anget": "demam", "meriang": "demam", "febris": "demam",
+    "mencret": "diare", "menceret": "diare", "mencret mencret": "diare", "bab cair": "diare", "berak cair": "diare", "pup cair": "diare", "eek cair": "diare",
+    "mencrit": "diare", "diare": "diare", "muntaber": "muntah diare",
+    "gmn": "bagaimana", "gimana": "bagaimana", "bgmn": "bagaimana", "gmana": "bagaimana", "gmna": "bagaimana",
+    "udh": "sudah", "udah": "sudah", "sdh": "sudah", "dah": "sudah", "blm": "belum", "blom": "belum",
+    "gak": "tidak", "ga": "tidak", "nggak": "tidak", "ngga": "tidak", "enggak": "tidak", "engga": "tidak", "tdk": "tidak", "tak": "tidak", "gk": "tidak",
+    "bln": "bulan", "th": "tahun", "thn": "tahun", "taun": "tahun", "mgg": "minggu", "hr": "hari", "jm": "jam",
+    "brp": "berapa", "bnr": "benar", "obt": "obat", "bs": "bisa", "bsa": "bisa", "jd": "jadi", "krn": "karena", "dgn": "dengan", "sm": "sama", "yg": "yang", "aja": "saja", "aj": "saja",
+    "pct": "parasetamol", "sanmol": "parasetamol", "tempra": "parasetamol", "paracetamol": "parasetamol", "parasetamol": "parasetamol", "proris": "ibuprofen",
+    "ibu profen": "ibuprofen", "ibuprofen": "ibuprofen",
+    "sesek": "sesak", "ngik": "mengi", "ngik ngik": "mengi", "cepet": "cepat", "telen": "menelan", "nelen": "menelan", "ketelen": "tertelan", "ngomong": "bicara", "amox": "antibiotik", "amoxicillin": "antibiotik", "amoksisilin": "antibiotik", "lemes": "lemas", "pilek": "pilek", "flu": "pilek", "meler": "pilek", "ingus": "pilek", "ingusan": "pilek",
+    "batpil": "batuk pilek", "btk": "batuk", "ngeden": "mengejan", "mengejan": "mengejan", "gumoh": "gumoh", "gumo": "gumoh",
+    "rewel": "rewel", "nangis": "menangis", "nenen": "menyusu", "mimik": "menyusu", "mimi": "menyusu", "gw": "aku", "gue": "aku", "gua": "aku", "mulu": "terus", "melulu": "terus", "abis": "habis", "menyusui": "menyusu", "nyusu": "menyusu", "netek": "menyusu", "asip": "asi perah",
+    "sufor": "susu formula", "mpasi": "mpasi", "mp asi": "mpasi", "imun": "imunisasi", "vaksin": "imunisasi", "vaksinasi": "imunisasi", "suntik imunisasi": "imunisasi",
+    "step": "kejang", "stip": "kejang", "stuip": "kejang", "kejeng": "kejang",
+    "nafas": "napas", "bernafas": "bernapas", "tersedak": "tersedak", "keselek": "tersedak", "kesedak": "tersedak",
+    "pup": "bab", "eek": "bab", "berak": "bab", "poop": "bab", "pipis": "bak", "kencing": "bak", "ompol": "bak",
+    "ruam popok": "ruam popok", "biang keringat": "biang keringat", "biduran": "ruam",
+    "loyo": "lemas", "kuning": "kuning", "kunig": "kuning",
+    "tumbuh gigi": "tumbuh gigi", "tumgi": "tumbuh gigi", "teething": "tumbuh gigi",
+    "bobok": "tidur", "bobo": "tidur", "bubu": "tidur", "begadang": "tidur",
+    "vit": "vitamin", "suplemen": "suplemen", "zink": "zinc", "zing": "zinc",
+    "termometer": "termometer", "derajat celcius": "derajat", "celcius": "derajat", "celsius": "derajat",
+    "bgt": "sekali", "banget": "sekali", "bngt": "sekali", "amat": "sekali", "trs": "terus", "terus terusan": "terus", "trus": "terus",
+    "mual": "mual", "muntah muntah": "muntah", "kembung": "kembung", "sembelit": "sembelit", "susah bab": "sembelit", "konstipasi": "sembelit",
+    "kolik": "kolik", "cegukan": "cegukan", "ubun ubun": "ubun", "ubunubun": "ubun"
+  };
+  TextNormalizer.MAX_PHRASE = 3;
+  TextNormalizer.PROTECTED = new Set(["demam", "minum", "makan", "bayi", "diare", "kejang", "tangan", "badan", "ruam", "pilek",
+    "batuk", "muntah", "gumoh", "kuning", "sesak", "menyusu", "napas", "susu", "mpasi", "imunisasi", "parasetamol", "ibuprofen",
+    "oralit", "zinc", "madu", "darah", "lemas", "tidur", "gigi", "telinga", "mata", "kulit", "perut", "kepala", "kaki", "dada",
+    "minggu", "bulan", "tahun", "hari", "berat", "tinggi", "panas", "pertama", "keluar", "benar", "belum", "sudah", "tidak",
+    "kolik", "rewel", "obat", "vitamin", "besi", "asi", "biru", "pucat", "dengue", "campak", "cacar", "sembelit", "kembung",
+    "tenggelam", "keracunan", "tersedak", "ubun", "jatuh", "luka", "bakar", "tertelan", "pusar", "bersin", "menangis", "mengejan", "dokter", "perkembangan", "pertumbuhan", "tengkurap", "merangkak", "berjalan", "bicara", "suhu", "termometer"]);
+  TextNormalizer.STOP = new Set(["yang", "dan", "di", "ke", "dari", "ini", "itu", "apa", "apakah", "saya", "anak", "anakku", "aku", "ya", "sih", "dong", "kok", "nih", "tuh",
+    "bun", "bunda", "mom", "moms", "dok", "dokter", "kak", "sus", "min", "admin", "pak", "bu", "mas", "mbak", "deh", "loh", "lho", "kah", "pun", "lah", "juga", "jadi",
+    "ada", "adalah", "untuk", "buat", "dengan", "pada", "atau", "tapi", "tetapi", "karena", "kalau", "kalo", "klo", "kl", "jika", "bila", "saja", "sudah", "lagi", "masih",
+    "mau", "bisa", "boleh", "harus", "perlu", "kenapa", "mengapa", "bagaimana", "berapa", "kapan", "sama", "sangat", "sekali", "agak", "aja", "nya", "gitu", "begitu",
+    "tolong", "mohon", "tanya", "nanya", "mau", "si", "para", "kami", "kita", "dia", "beliau", "punya", "oleh", "akan", "telah", "sedang", "lagi", "baru", "terus",
+    "hai", "halo", "permisi", "terima", "kasih", "makasih", "hal", "seperti", "kayak", "kaya", "gak", "pas", "waktu", "saat", "tadi", "sekarang", "barusan"]);
+
+  /** Ekstraksi angka penting dari pertanyaan: usia, suhu, lama sakit, nama obat. */
+  class QueryExtractor {
+    static wordsToDays(n, unit) {
+      return unit === "tahun" ? Math.round(n * 365) : unit === "bulan" ? Math.round(n * 30.4375) : unit === "minggu" ? Math.round(n * 7) : Math.round(n);
+    }
+    /** @param {string} text  @param {Array} obat entri kb.obat (opsional, untuk nama obat) */
+    static extract(text, obat) {
+      const norm = TextNormalizer.normalize(text);
+      return QueryExtractor.fromNorm(norm, obat);
+    }
+    static fromNorm(norm, obat) {
+      const w = norm.split(" ").filter(Boolean);
+      const out = { ageDays: null, tempC: null, days: null, drugs: [] };
+      const UNITS = { hari: 1, minggu: 1, bulan: 1, tahun: 1 };
+      const AGE_CTX = { umur: 1, usia: 1, bayi: 1, anak: 1, baru: 1, berumur: 1, berusia: 1, lahir: 1 };
+      const ILL_CTX = { demam: 1, sakit: 1, sudah: 1, selama: 1, diare: 1, batuk: 1, pilek: 1, muntah: 1, sejak: 1, lebih: 1, hampir: 1, kurang: 1 };
+      for (let i = 0; i < w.length; i++) {
+        const num = parseFloat(w[i]);
+        if (!/^\d+(\.\d+)?$/.test(w[i]) || !Number.isFinite(num)) continue;
+        const prev = w[i - 1] || "", prev2 = w[i - 2] || "", next = w[i + 1] || "";
+        // "hari ke 3" -> lama sakit
+        if (prev === "ke" && prev2 === "hari") { if (out.days === null) out.days = Math.round(num); continue; }
+        // Suhu
+        const tempCtx = next === "derajat" || next === "c" || prev === "suhu" || prev2 === "suhu" || prev === "demam" || prev === "panas";
+        if (num >= 35 && num <= 43 && !UNITS[next] && (tempCtx || /\./.test(w[i]))) { if (out.tempC === null) out.tempC = num; continue; }
+        if (!UNITS[next]) continue;
+        const ageCtx = !!(AGE_CTX[prev] || AGE_CTX[prev2]);
+        const illCtx = !!(ILL_CTX[prev] || ILL_CTX[prev2] || ILL_CTX[w[i + 2] || ""]);
+        const asDays = QueryExtractor.wordsToDays(num, next);
+        let isAge;
+        if (ageCtx) isAge = true;
+        else if (next === "hari") isAge = false;
+        else if (next === "minggu") isAge = !illCtx;
+        else isAge = !(prev === "selama" || prev === "sejak");   // bulan/tahun biasanya usia
+        if (isAge) { if (out.ageDays === null) out.ageDays = asDays; }
+        else if (out.days === null) out.days = asDays;
+        i++;
+      }
+      // Obat: kata gaul sudah dibakukan; cocokkan juga dengan nama/alias entri kb.obat.
+      const padded = " " + norm + " ";
+      const seen = new Set();
+      QueryExtractor.DRUGS.forEach(d => { if (padded.indexOf(" " + d + " ") >= 0 && !seen.has(d)) { seen.add(d); out.drugs.push(d); } });
+      (obat || []).forEach(o => {
+        [o.name].concat(o.aliases || []).forEach(n => {
+          const nn = TextNormalizer.normalize(n);
+          if (nn && nn.split(" ").length <= 3 && padded.indexOf(" " + nn + " ") >= 0 && !seen.has(o.id)) { seen.add(o.id); out.drugs.push(o.id); }
+        });
+      });
+      return out;
+    }
+  }
+  QueryExtractor.DRUGS = ["parasetamol", "ibuprofen", "oralit", "zinc", "madu", "simetikon", "benzokain", "antibiotik", "vitamin", "besi", "domperidon", "loperamid", "aspirin", "puyer"];
+
+  /** Pendeteksi tanda bahaya pada pertanyaan bebas. Setiap butir menyebut id sumber kb-sources bila ada (null = belum bersumber). */
+  class DangerDetector {
+    /** Disangkal bila kata tepat sebelumnya penyangkal/riwayat ("tidak kejang", "pernah kejang"), atau "tidak ada X". */
+    static negated(norm, idx) {
+      const b = norm.slice(0, idx).trim().split(" ");
+      const p1 = b[b.length - 1] || "", p2 = b[b.length - 2] || "";
+      const NEG = { tidak: 1, belum: 1, bukan: 1, jangan: 1, tanpa: 1, pernah: 1, riwayat: 1 };
+      return !!(NEG[p1] || (NEG[p2] && (p1 === "ada" || p1 === "sampai" || p1 === "terlalu")));
+    }
+    /** @param {string} normText hasil TextNormalizer.normalize  @param {{ageDays:number|null,tempC:number|null}} ex */
+    static detect(normText, ex) {
+      ex = ex || {};
+      const norm = " " + String(normText || "") + " ";
+      const out = [];
+      DangerDetector.RULES.forEach(r => {
+        let m = null;
+        const re = new RegExp(r.re.source, "g");
+        let found = false;
+        while ((m = re.exec(norm))) {
+          if (r.neg === false || !DangerDetector.negated(norm, m.index)) { found = true; break; }
+        }
+        if (found && r.unless && r.unless.test(norm)) found = false;
+        if (found) out.push({ id: r.id, text: r.text, src: r.src });
+      });
+      const fm = / demam /.exec(norm);
+      const fever = (fm && !DangerDetector.negated(norm, fm.index + 1)) || (typeof ex.tempC === "number" && ex.tempC >= 38);
+      if (fever && typeof ex.ageDays === "number" && ex.ageDays < 90)
+        out.push({ id: "demam3bln", text: "Bayi di bawah 3 bulan yang demam perlu dibawa ke dokter, apa pun keadaan umumnya.", src: "idai_demam" });
+      const drugs = ex.drugs || [];
+      if (typeof ex.ageDays === "number" && ex.ageDays < 90 && (drugs.indexOf("parasetamol") >= 0 || drugs.indexOf("ibuprofen") >= 0) && !out.some(d => d.id === "demam3bln"))
+        out.push({ id: "obat3bln", text: "Bayi di bawah 3 bulan yang perlu obat penurun panas berarti demam: bawa ke dokter dulu.", src: "idai_demam" });
+      if (typeof ex.tempC === "number" && ex.tempC >= 40)
+        out.push({ id: "suhu40", text: "Suhu 40 °C atau lebih: segera periksakan ke dokter.", src: null });
+      return out;
+    }
+  }
+  DangerDetector.RULES = [
+    { id: "kejang", re: /\s(kejang|kelojotan)\s/, text: "Kejang termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
+    { id: "biru", re: /\s((bibir|kulit|wajah|muka|kuku|lidah|badan|tubuh|mulut|bayi|lahir) (\S+ )?biru|membiru|kebiruan)\s/, text: "Bibir atau kulit kebiruan: segera ke IGD.", src: null },
+    { id: "sesak", re: /\s(sesak|napas cepat|tarikan dada|dada tertarik|dada (\S+ ){0,3}cekung|susah napas|sulit napas|susah bernapas|sulit bernapas|napas berat|ngos ngosan|tersengal)/, text: "Sesak atau napas cepat/tarikan dada termasuk tanda bahaya WHO.", src: "who_imci_pneu" },
+    { id: "lemas", re: /\s(tidak sadar|pingsan|sulit dibangunkan|susah dibangunkan|tidak bisa dibangunkan|lemas|lunglai|tidak merespons|tidak respon|tidak responsif)/, text: "Lemas sekali atau sulit dibangunkan termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
+    { id: "tdkminum", re: /\stidak (mau|bisa|kuat) (minum|menyusu|asi)/, text: "Tidak bisa minum atau menyusu termasuk tanda bahaya umum WHO.", src: "who_imci_danger", neg: false },
+    { id: "muntahsemua", re: /\s(muntah (terus|semua|setiap|tiap)|semua (dimuntahkan|keluar lagi)|apa pun dimuntahkan)/, text: "Memuntahkan semua yang diminum termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
+    { id: "muntahdarah", re: /\s(muntah (\S+ ){0,2}(ber)?darah|muntah (seperti )?(ampas )?kopi)/, text: "Muntah berdarah atau seperti ampas kopi perlu diperiksa dokter hari ini.", src: "idai_gumoh" },
+    { id: "babdarah", re: /\s((bab|diare|tinja|feses) (\S+ ){0,3}(ber)?darah|darah (di|pada|dalam) (bab|tinja|feses))/, text: "Darah di BAB perlu diperiksakan ke dokter.", src: "who_ors" },
+    { id: "ubun", re: /\subun (cekung|menonjol|cembung|tegang|melesak)/, text: "Ubun-ubun cekung atau menonjol perlu segera diperiksa.", src: null },
+    { id: "tersedak", re: /\s(tersedak|tercekik)\s/, unless: /masih bisa batuk/, text: "Tersedak: lakukan pertolongan pertama tersedak dan panggil bantuan bila tidak bisa bernapas.", src: "medline_choke" },
+    { id: "tenggelam", re: /\s(tenggelam|kelelep)\s/, text: "Tenggelam: segera ke IGD walau tampak pulih.", src: "who_drowning" },
+    { id: "keracunan", re: /\s(keracunan|tertelan|menelan (\S+ )?(baterai|obat|magnet|koin|sabun|deterjen|minyak|kancing)|minum (obat nyamuk|minyak tanah|bensin|pemutih))/, text: "Dugaan keracunan atau benda tertelan: segera ke IGD.", src: "who_injury" },
+    { id: "muntahhijau", re: /\smuntah (\S+ )?hijau/, text: "Muntah berwarna hijau perlu diperiksakan ke dokter hari ini, sesegera mungkin.", src: "orami_gumoh" },
+    { id: "kuning24", re: /\skuning (\S+ ){0,3}(24 jam|hari pertama)/, text: "Kuning dalam 24 jam pertama perlu diperiksa segera.", src: "aap_bili" },
+    { id: "tinjapucat", re: /\s(tinja|bab|feses) (\S+ ){0,2}(pucat|putih|dempul)/, text: "Tinja pucat pada bayi kuning perlu pemeriksaan bilirubin direk.", src: "aap_bili" },
+    { id: "perdarahan", re: /\s(mimisan|gusi berdarah|bintik merah|muntah darah)/, text: "Perdarahan (mimisan, gusi berdarah) saat atau setelah demam bisa tanda bahaya dengue.", src: "who_dengue" },
+    { id: "cederakepala", re: /\sjatuh (\S+ ){0,4}(muntah|mengantuk|ngantuk|pingsan|kejang)/, text: "Jatuh lalu muntah, mengantuk, atau pingsan: segera ke IGD.", src: null },
+    { id: "pikiranmenyakiti", re: /\s(menyakiti|nyakitin|melukai|bunuh) (\S+ )?(diri|bayi)/, text: "Ada pikiran menyakiti diri atau bayi: cari bantuan hari ini.", src: "ppd" }
+  ];
+
+  /** Indeks BM25 atas entri KB (checker, panduan, obat, mitos, tonggak perkembangan, imunisasi). */
+  class KbSearch {
+    constructor(kb) {
+      kb = kb || {};
+      this.k1 = KbSearch.K1; this.b = KbSearch.B;
+      this.docs = [];
+      const T = TextNormalizer;
+      const add = (type, id, title, fields, aliases) => {
+        const tf = {}; let len = 0;
+        fields.forEach(f => (Array.isArray(f.t) ? f.t : [f.t]).forEach(txt => {
+          if (typeof txt !== "string" || !txt) return;
+          T.tokens(txt).forEach(tok => { tf[tok] = (tf[tok] || 0) + f.w; len += f.w; });
+        }));
+        const phrases = (aliases || []).map(a => T.normalize(a)).filter(a => a && a.length >= 3);
+        this.docs.push({ type, id, title, tf, len, phrases });
+      };
+      const W = KbSearch.WEIGHTS;
+      (kb.checkers || []).forEach(c => add("checker", c.id, c.title, [
+        { t: c.title, w: W.title }, { t: c.aliases || [], w: W.aliases }, { t: c.examples || [], w: W.examples },
+        { t: c.short, w: W.other }, { t: (c.questions || []).map(q => q.text), w: W.other }], c.aliases));
+      (kb.guides || []).forEach(g => {
+        const texts = [];
+        (g.sections || []).forEach(s => { texts.push(s.h); if (typeof s.text === "string") texts.push(s.text); (s.items || []).forEach(it => texts.push(it.t)); });
+        add("guide", g.id, g.title, [{ t: g.title, w: W.title }, { t: g.aliases || [], w: W.aliases }, { t: g.examples || [], w: W.examples }, { t: texts, w: W.other }], g.aliases);
+      });
+      (kb.obat || []).forEach(o => add("obat", o.id, o.name, [
+        { t: o.name, w: W.title }, { t: o.aliases || [], w: W.aliases }, { t: o.examples || [], w: W.examples }, { t: [o.t, o.age], w: W.other }], o.aliases));
+      (Array.isArray(kb.mitos) ? kb.mitos : []).forEach(m => add("mitos", m.id, m.claim, [
+        { t: m.claim, w: W.title }, { t: m.aliases || [], w: W.aliases }, { t: m.examples || [], w: W.examples }, { t: m.text, w: W.other }], m.aliases));
+      (kb.milestones || []).forEach(m => {
+        const texts = [];
+        Object.keys(m.d || {}).forEach(k => (m.d[k] || []).forEach(x => texts.push(x)));
+        add("milestone", m.id, "Perkembangan " + m.label, [{ t: "perkembangan tonggak " + m.label, w: W.title }, { t: m.aliases || [], w: W.aliases }, { t: texts, w: W.other }], m.aliases);
+      });
+      if (kb.imunisasi) {
+        const im = kb.imunisasi;
+        add("imunisasi", "imunisasi", "Jadwal imunisasi", [{ t: "jadwal imunisasi vaksin", w: W.title }, { t: im.aliases || [], w: W.aliases },
+          { t: im.examples || [], w: W.examples }, { t: (im.rows || []).map(r => Array.isArray(r) ? r.join(" ") : String(r)), w: W.other }], im.aliases);
+      }
+      this.N = this.docs.length;
+      this.avgLen = this.N ? this.docs.reduce((a, d) => a + d.len, 0) / this.N : 1;
+      this.df = {};
+      this.docs.forEach(d => Object.keys(d.tf).forEach(t => { this.df[t] = (this.df[t] || 0) + 1; }));
+    }
+    idf(t) { const df = this.df[t] || 0; return Math.log(1 + (this.N - df + 0.5) / (df + 0.5)); }
+    /** @returns {Array<{type,id,title,score}>} urut skor menurun, hanya skor > 0. */
+    search(query, n) {
+      n = n || 5;
+      const norm = TextNormalizer.normalize(query);
+      const q = Array.from(new Set(TextNormalizer.tokensOfNorm(norm)));
+      const padded = " " + norm + " ";
+      const res = [];
+      this.docs.forEach(d => {
+        let s = 0;
+        q.forEach(t => {
+          const f = d.tf[t]; if (!f) return;
+          s += this.idf(t) * (f * (this.k1 + 1)) / (f + this.k1 * (1 - this.b + this.b * d.len / this.avgLen));
+        });
+        d.phrases.forEach(p => { if (padded.indexOf(" " + p + " ") >= 0) s += KbSearch.PHRASE_BONUS; });
+        if (s > 0) res.push({ type: d.type, id: d.id, title: d.title, score: Math.round(s * 1000) / 1000 });
+      });
+      res.sort((a, b) => b.score - a.score);
+      return res.slice(0, n);
+    }
+  }
+  KbSearch.K1 = 1.2; KbSearch.B = 0.75;
+  KbSearch.WEIGHTS = { title: 3, aliases: 3, examples: 2, other: 1 };
+  KbSearch.PHRASE_BONUS = 3;
+
+  /** Penjawab: tanda bahaya lebih dulu, lalu entri KB paling cocok. Tidak pernah mengarang jawaban. */
+  class AskEngine {
+    constructor(kb) { this.kb = kb || {}; this.index = new KbSearch(this.kb); }
+    static prefill(checker, ex) {
+      const pre = {};
+      (checker.questions || []).forEach(q => {
+        if (q.type !== "number") return;
+        if (q.unit === "°C" && typeof ex.tempC === "number") pre[q.id] = ex.tempC;
+        else if (q.unit === "hari" && typeof ex.days === "number") pre[q.id] = ex.days;
+      });
+      return pre;
+    }
+    answer(text, profileAgeDays) {
+      const norm = TextNormalizer.normalize(text);
+      const extracted = QueryExtractor.fromNorm(norm, this.kb.obat);
+      const ageDays = extracted.ageDays !== null ? extracted.ageDays : (typeof profileAgeDays === "number" ? profileAgeDays : null);
+      const danger = DangerDetector.detect(norm, { ageDays, tempC: extracted.tempC, drugs: extracted.drugs });
+      let results = this.index.search(text, 1000);
+      const ms = this.kb.milestones || [];
+      if (ageDays !== null && ms.length && norm.split(" ").some(x => AskEngine.DEV_WORDS[x])) {
+        const months = ageDays / 30.4375;
+        let near = ms[0];
+        ms.forEach(m => { if (Math.abs(m.months - months) < Math.abs(near.months - months)) near = m; });
+        const hit = results.filter(r => r.type === "milestone" && r.id === near.id)[0];
+        if (hit) hit.score = Math.round((hit.score + AskEngine.MILESTONE_BONUS) * 1000) / 1000;
+        else results.push({ type: "milestone", id: near.id, title: "Perkembangan " + near.label, score: AskEngine.MILESTONE_BONUS });
+        results.sort((a, b) => b.score - a.score);
+      }
+      results = results.slice(0, 5);
+      let confidence = "none";
+      if (results.length) {
+        const top = results[0].score, second = results.length > 1 ? results[1].score : 0;
+        confidence = top >= AskEngine.HIGH_SCORE && top >= AskEngine.HIGH_RATIO * second ? "high" : "low";
+      }
+      let best = results.length ? Object.assign({}, results[0]) : null;
+      if (best && best.type === "checker") {
+        const c = (this.kb.checkers || []).filter(x => x.id === best.id)[0];
+        if (c) best.prefill = AskEngine.prefill(c, extracted);
+      }
+      return { danger, extracted, ageDays, results, confidence, best };
+    }
+  }
+  /** Ambang "yakin": skor BM25 teratas >= 4 (kira-kira dua kata kunci jarang cocok di judul/alias)
+      DAN >= 1,5x skor kedua. Di bawah itu UI menampilkan beberapa pilihan, bukan satu jawaban. */
+  AskEngine.HIGH_SCORE = 4;
+  AskEngine.HIGH_RATIO = 1.5;
+  /** Pertanyaan perkembangan + usia -> tonggak terdekat usia diberi bonus skor. */
+  AskEngine.MILESTONE_BONUS = 4;
+  AskEngine.DEV_WORDS = { bisa: 1, belum: 1, jalan: 1, berjalan: 1, lari: 1, bicara: 1, merangkak: 1, tengkurap: 1, duduk: 1, berdiri: 1, perkembangan: 1, harusnya: 1, seharusnya: 1, tonggak: 1, milestone: 1, lancar: 1, merespons: 1, senyum: 1, tersenyum: 1, mengoceh: 1 };
+
+  return { Level, ConditionEvaluator, Assessment, SymptomChecker, Age, KnowledgeValidator,
+    TextNormalizer, QueryExtractor, DangerDetector, KbSearch, AskEngine };
 });
