@@ -1,5 +1,12 @@
 # Changelog
 
+### [2026.11.08-10] — 2026-11-08
+- Commit: fix: status bar ikut tema aplikasi, checklist perkembangan per anak
+- Detail:
+  - T2 fix: status bar & navigasi Android mengikuti tema di dalam app (jembatan AndroidKB.setDark) — src/page-body.html, KbBridge.java, MainActivity.java
+  - T1 fix: checklist perkembangan disimpan per anak (anak baru punya id; anak lama tetap memakai "ab.ms") — src/page-body.html
+- Rollback: git revert <sha commit ini>
+
 ### [2026.11.08-9] — 2026-11-08
 - Commit: fix: lanjutan koreksi fakta medis dan bersihkan sumber mati
 - Detail:

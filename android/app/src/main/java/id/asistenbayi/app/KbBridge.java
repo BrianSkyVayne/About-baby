@@ -42,6 +42,11 @@ final class KbBridge {
 
     @JavascriptInterface public void setUrl(String url) { store.setUrl(url); }
 
+    /** Halaman memberi tahu tema yang sedang tampil supaya status bar dan navigasi ikut berwarna sama. */
+    @JavascriptInterface public void setDark(boolean dark) {
+        activity.runOnUiThread(() -> activity.applyBars(dark));
+    }
+
     @JavascriptInterface public void openUrl(String url) {
         activity.runOnUiThread(() -> activity.openExternal(url));
     }

@@ -881,7 +881,7 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
       const k = LocalStore.get("ab.kids", null), p = LocalStore.get("ab.profile", null);
       this.list = k && Array.isArray(k.list) && k.list.length ? k.list : [{ nama: "", lahir: "" }];
       this.active = k ? Math.min(Math.max(0, k.active | 0), this.list.length - 1) : 0;
-      if (p) this.list[this.active] = { nama: p.nama || "", lahir: p.lahir || "" };
+      if (p) Object.assign(this.list[this.active], { nama: p.nama || "", lahir: p.lahir || "" });
     }
     get cur() { return this.list[this.active]; }
     get name() { return this.cur.nama || ""; }
@@ -889,7 +889,9 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
     persist() { LocalStore.set("ab.kids", { list: this.list, active: this.active }); LocalStore.set("ab.profile", { nama: this.name, lahir: this.birth }); }
     save(name, birth) { this.cur.nama = name; this.cur.lahir = birth; this.persist(); }
     select(i) { if (i >= 0 && i < this.list.length) { this.active = i; this.persist(); } }
-    add() { this.list.push({ nama: "", lahir: "" }); this.active = this.list.length - 1; this.persist(); }
+    /** Kunci checklist perkembangan anak aktif. Anak pertama dari versi lama tanpa id tetap memakai "ab.ms". */
+    get msKey() { return this.cur.id ? "ab.ms." + this.cur.id : "ab.ms"; }
+    add() { this.list.push({ id: Date.now().toString(36), nama: "", lahir: "" }); this.active = this.list.length - 1; this.persist(); }
     remove() { if (this.list.length > 1) this.list.splice(this.active, 1); else this.list = [{ nama: "", lahir: "" }]; this.active = 0; this.persist(); }
     static labelOf(k) { const d = Age.days(k.lahir); return d !== null ? (k.nama ? k.nama + " · " : "") + Age.label(d) : (k.nama || "Belum diisi"); }
     get ageDays() { return Age.days(this.birth); }
@@ -1704,7 +1706,7 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
       const d = this.profile.ageDays, ageM = d === null ? null : d / 30.4375;
       if (!this.tab) { const cur = ageM === null ? ms[0] : ms.filter(m => m.months <= ageM + 0.01).pop() || ms[0]; this.tab = cur.id; }
       const m = ms.find(x => x.id === this.tab) || ms[0];
-      const checked = LocalStore.get("ab.ms", {});
+      const checked = LocalStore.get(this.profile.msKey, {});
       const names = { sosial: "Sosial & emosi", bahasa: "Bahasa & komunikasi", kognitif: "Belajar & berpikir", gerak: "Gerak & fisik" };
       const all = Object.values(m.d).flat(), done = all.filter(t => checked[m.id + "|" + t]).length;
       const isAgeTab = ageM !== null && m.months <= ageM + 0.01;
@@ -1718,7 +1720,7 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
         '<p class="small muted">Anak lahir prematur dinilai dengan usia koreksi.</p>');
     }
     onClick(t) { if (t.dataset.ms) { this.tab = t.dataset.ms; return true; } return false; }
-    onChange(t) { if (t.dataset.mscheck) { const c = LocalStore.get("ab.ms", {}); if (t.checked) c[t.dataset.mscheck] = true; else delete c[t.dataset.mscheck]; LocalStore.set("ab.ms", c); return true; } return false; }
+    onChange(t) { if (t.dataset.mscheck) { const k = this.profile.msKey, c = LocalStore.get(k, {}); if (t.checked) c[t.dataset.mscheck] = true; else delete c[t.dataset.mscheck]; LocalStore.set(k, c); return true; } return false; }
   }
 
   class ImmunizationView extends View {
@@ -1745,7 +1747,15 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
   /** Tema tampilan: ikuti HP, terang, atau gelap. Disimpan per perangkat. */
   class Theme {
     static get() { return LocalStore.get("ab.theme", "auto"); }
-    static apply(v) { const r = document.documentElement; if (v === "light" || v === "dark") r.dataset.theme = v; else delete r.dataset.theme; }
+    static apply(v) {
+      const r = document.documentElement; if (v === "light" || v === "dark") r.dataset.theme = v; else delete r.dataset.theme;
+      Theme.syncBars();
+    }
+    /** Warna status bar & navigasi Android mengikuti tema di dalam aplikasi, bukan hanya tema HP. */
+    static syncBars() {
+      const v = Theme.get(), dark = v === "dark" || (v !== "light" && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
+      try { if (window.AndroidKB && window.AndroidKB.setDark) window.AndroidKB.setDark(dark); } catch (e) { /* versi web: abaikan */ }
+    }
     static set(v) { LocalStore.set("ab.theme", v); Theme.apply(v); }
   }
 
@@ -1871,6 +1881,7 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
       this.kb = new KnowledgeBase();
       this.profile = new Profile();
       Theme.apply(Theme.get());
+      if (window.matchMedia) matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => Theme.syncBars());
       this.source = new DataSource(this.kb);
       this.state = "loading";
       this.views = {
