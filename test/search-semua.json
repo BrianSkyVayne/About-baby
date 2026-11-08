@@ -272,5 +272,14 @@
   "danger": false,
   "synthetic": true,
   "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "ibu aman minum jamu bersalin lengkap?",
+  "expect": "guide:ibu",
+  "note": "2026-11-08: NHS herbal remedies while breastfeeding"
+ },
+ {
+  "q": "menyusui boleh minum jamu ga",
+  "expect": "guide:ibu"
  }
 ]

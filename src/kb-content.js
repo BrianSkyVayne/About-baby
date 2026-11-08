@@ -121,7 +121,7 @@ const guides = [
       { t: "Ke IGD bila luka bakar luas atau dalam, mengenai wajah, kelamin, atau bokong, atau akibat bahan kimia atau listrik. Untuk anak di bawah 5 tahun, mintalah saran tenaga kesehatan.", src: ["nhs_burns"] }
     ] }
   ] },
-  { id: "ibu", order: 11, group: "Kesehatan ibu", ages: [[0,90]], title: "Kesehatan ibu", aliases: ["baby blues", "depresi pascapersalinan", "ppd", "ibu sedih", "stres ibu", "postpartum", "capek mental", "nangis terus ibu", "kesehatan ibu", "ibu baru", "burnout", "mood swing", "nangis sejak lahiran", "sedih habis lahiran"], examples: ["baby blues sampe kapan", "aku sering nangis habis lahiran normal ga", "ppd tanda tandanya apa", "ibu pengen nyakitin bayi", "stres ngurus bayi gmn"], sections: [
+  { id: "ibu", order: 11, group: "Kesehatan ibu", ages: [[0,90]], title: "Kesehatan ibu", aliases: ["baby blues", "depresi pascapersalinan", "ppd", "ibu sedih", "stres ibu", "postpartum", "capek mental", "nangis terus ibu", "kesehatan ibu", "ibu baru", "burnout", "mood swing", "nangis sejak lahiran", "sedih habis lahiran", "jamu", "jamu bersalin", "jamu nifas", "minum jamu", "obat herbal", "herbal menyusui"], examples: ["baby blues sampe kapan", "aku sering nangis habis lahiran normal ga", "ppd tanda tandanya apa", "ibu pengen nyakitin bayi", "stres ngurus bayi gmn"], sections: [
     { h: "Baby blues atau depresi pascapersalinan?", table: { head: ["", "Baby blues", "Depresi pascapersalinan"], rows: [
       ["Kejadian", "Sekitar 8 dari 10 ibu", "Sekitar 1–2 dari 10 ibu"],
       ["Mulai", "2–3 hari setelah melahirkan", "Beberapa minggu sampai 1 tahun setelah melahirkan"],
@@ -131,6 +131,10 @@ const guides = [
     { h: "Kapan mencari bantuan", items: [
       { t: "Gejala lebih dari 2 minggu, makin berat, atau mengganggu merawat diri dan bayi: hubungi dokter, bidan, atau psikolog.", src: ["nimh_ppd", "ppd"] },
       { t: "Ada pikiran menyakiti diri atau bayi: cari bantuan hari ini.", src: ["nimh_ppd"] }
+    ] },
+    { h: "Jamu dan obat herbal saat menyusui", items: [
+      { t: "Jamu dan obat herbal belum cukup diteliti untuk dipastikan aman saat menyusui, termasuk paket jamu bersalin.", src: ["nhs_bf_medicines"] },
+      { t: "Sebelum minum jamu, suplemen, atau obat apa pun, tanyakan dulu ke bidan, dokter, atau apoteker.", src: ["nhs_bf_medicines"] }
     ] }
   ] },
   { id: "skrining", order: 12, group: "Tumbuh kembang", title: "Skrining perkembangan", aliases: ["skrining perkembangan", "autis", "mchat", "m-chat", "speech delay", "telat bicara", "terlambat bicara", "tumbuh kembang", "kembang anak", "autisme", "anak telat jalan", "developmental"], examples: ["anak 2thn belum bicara autis ga", "mchat itu apa", "skrining perkembangan umur brp", "anak 18 bln gak nunjuk benda", "speech delay gmn"], sections: [
@@ -325,7 +329,7 @@ const mitos = [
 ];
 
 const meta = {
-  version: "2026.11.08-10",
+  version: "2026.11.08-11",
   verifiedDate: "2026-11-07",
   lastCheck: "2026-11-07",
   reviewMonths: 12,
