@@ -384,43 +384,43 @@
           if (r.neg === false || !DangerDetector.negated(norm, m.index)) { found = true; break; }
         }
         if (found && r.unless && r.unless.test(norm)) found = false;
-        if (found) out.push({ id: r.id, text: r.text, src: r.src });
+        if (found) out.push({ id: r.id, level: r.level, text: r.text, src: r.src });
       });
       const fm = / demam /.exec(norm);
       const fever = (fm && !DangerDetector.negated(norm, fm.index + 1)) || (typeof ex.tempC === "number" && ex.tempC >= 38);
       if (fever && typeof ex.ageDays === "number" && ex.ageDays < 90)
-        out.push({ id: "demam3bln", text: "Bayi di bawah 3 bulan yang demam perlu dibawa ke dokter, apa pun keadaan umumnya.", src: "idai_demam" });
+        out.push({ id: "demam3bln", level: "hari", text: "Bayi di bawah 3 bulan yang demam perlu dibawa ke dokter, apa pun keadaan umumnya.", src: "idai_demam" });
       const drugs = ex.drugs || [];
       if (typeof ex.ageDays === "number" && ex.ageDays < 90 && (drugs.indexOf("parasetamol") >= 0 || drugs.indexOf("ibuprofen") >= 0) && !out.some(d => d.id === "demam3bln"))
-        out.push({ id: "obat3bln", text: "Bayi di bawah 3 bulan yang perlu obat penurun panas berarti demam: bawa ke dokter dulu.", src: "idai_demam" });
+        out.push({ id: "obat3bln", level: "hari", text: "Bayi di bawah 3 bulan yang perlu obat penurun panas berarti demam: bawa ke dokter dulu.", src: "idai_demam" });
       if (typeof ex.tempC === "number" && ex.tempC >= 40)
-        out.push({ id: "suhu40", text: "Suhu 40 °C atau lebih: segera periksakan ke dokter.", src: null });
+        out.push({ id: "suhu40", level: "hari", text: "Suhu 40 °C atau lebih: segera periksakan ke dokter.", src: null });
       return out;
     }
   }
   DangerDetector.RULES = [
-    { id: "kejang", re: /\s(kejang|kelojotan)\s/, unless: /\s(kejang|kelojotan) (\S+ ){0,2}(bisa|apakah|apa|akan) (kambuh|berulang|terulang)/, text: "Kejang termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
-    { id: "biru", re: /\s((bibir|kulit|wajah|muka|kuku|lidah|badan|tubuh|mulut|bayi|lahir) (\S+ )?biru|membiru|kebiruan)\s/, text: "Bibir atau kulit kebiruan: segera ke IGD.", src: null },
-    { id: "sesak", re: /\s(sesak|napas cepat|tarikan dada|dada tertarik|dada (\S+ ){0,3}cekung|susah napas|sulit napas|susah bernapas|sulit bernapas|napas berat|ngos ngosan|tersengal)/, text: "Sesak atau napas cepat/tarikan dada termasuk tanda bahaya WHO.", src: "who_imci_pneu" },
-    { id: "lemas", re: /\s(tidak sadar|pingsan|sulit dibangunkan|susah dibangunkan|tidak bisa dibangunkan|lemas|lunglai|tidak merespons|tidak respon|tidak responsif)/, text: "Lemas sekali atau sulit dibangunkan termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
-    { id: "tdkminum", re: /\stidak (mau|bisa|kuat) (minum|menyusu|asi)/, text: "Tidak bisa minum atau menyusu termasuk tanda bahaya umum WHO.", src: "who_imci_danger", neg: false },
-    { id: "muntahsemua", re: /\s(muntah (terus|semua|setiap|tiap)|semua (dimuntahkan|keluar lagi)|apa pun dimuntahkan)/, text: "Memuntahkan semua yang diminum termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
-    { id: "muntahdarah", re: /\s(muntah (\S+ ){0,2}(ber)?darah|muntah (seperti )?(ampas )?kopi)/, text: "Muntah berdarah atau seperti ampas kopi perlu diperiksa dokter hari ini.", src: "idai_gumoh" },
-    { id: "babdarah", re: /\s((bab|diare|tinja|feses) (\S+ ){0,3}(ber)?darah|darah (di|pada|dalam) (bab|tinja|feses))/, text: "Darah di BAB perlu diperiksakan ke dokter.", src: "who_ors" },
-    { id: "ubun", re: /\subun (\S+ ){0,2}(cekung|menonjol|cembung|tegang|melesak)/, text: "Ubun-ubun cekung atau menonjol perlu segera diperiksa.", src: null },
-    { id: "tersedak", re: /\s(tersedak|tercekik)\s/, unless: /masih bisa batuk/, text: "Tersedak: lakukan pertolongan pertama tersedak dan panggil bantuan bila tidak bisa bernapas.", src: "medline_choke" },
-    { id: "tenggelam", re: /\s(tenggelam|kelelep)\s/, text: "Tenggelam: segera ke IGD walau tampak pulih.", src: "who_drowning" },
-    { id: "keracunan", re: /\s(keracunan|tertelan|menelan (\S+ )?(baterai|obat|magnet|koin|sabun|deterjen|minyak|kancing)|minum (obat nyamuk|minyak tanah|bensin|pemutih))/, text: "Dugaan keracunan atau benda tertelan: segera ke IGD.", src: "who_injury" },
-    { id: "muntahhijau", re: /\smuntah (\S+ )?hijau/, text: "Muntah berwarna hijau perlu diperiksakan ke dokter hari ini, sesegera mungkin.", src: "orami_gumoh" },
-    { id: "kuning24", re: /\skuning (\S+ ){0,3}(24 jam|hari pertama)/, text: "Kuning dalam 24 jam pertama perlu diperiksa segera.", src: "aap_bili" },
-    { id: "tinjapucat", re: /\s(tinja|bab|feses) (\S+ ){0,2}(pucat|putih|dempul)/, text: "Tinja pucat pada bayi kuning perlu pemeriksaan bilirubin direk.", src: "aap_bili" },
-    { id: "perdarahan", re: /\s(mimisan|gusi berdarah|bintik merah|muntah darah)/, text: "Perdarahan (mimisan, gusi berdarah) saat atau setelah demam bisa tanda bahaya dengue.", src: "who_dengue" },
-    { id: "cederakepala", re: /\s((jatuh|terjatuh|terbentur) (\S+ ){0,4}(muntah|mengantuk|ngantuk|pingsan|kejang)|muntah (\S+ ){0,3}(jatuh|terjatuh|terbentur))/, text: "Jatuh lalu muntah, mengantuk, atau pingsan: segera ke IGD.", src: null },
-    { id: "kepala", re: /\s(kepala (\S+ ){0,2}terbentur|terbentur (\S+ ){0,2}kepala|jatuh (\S+ ){0,3}kepala)/, unless: /\s(jatuh|terjatuh|terbentur) (\S+ ){0,4}(muntah|mengantuk|ngantuk|pingsan|kejang)|muntah (\S+ ){0,3}(jatuh|terjatuh|terbentur)/, text: "Kepala terbentur: pantau 24 jam. Segera ke IGD bila muntah, sangat mengantuk, pingsan, kejang, atau menangis tak bisa ditenangkan.", src: null },
-    { id: "matacekung", re: /\smata (\S+ ){0,2}cekung/, text: "Mata cekung bisa tanda dehidrasi, apalagi saat diare atau muntah. Nilai dengan penilai \"Diare & dehidrasi\" dan periksakan hari ini.", src: "who_dehid" },
-    { id: "kuningtelapak", re: /\s(kuning (\S+ ){0,3}(telapak|kaki)|telapak (\S+ ){0,3}kuning)/, text: "Kuning sampai telapak tangan atau kaki termasuk tanda bahaya bayi baru lahir WHO.", src: "who_newborn" },
-    { id: "pusar", re: /\s(pusar|pusat) (\S+ ){0,3}(nanah|bau|kemerahan|merah|bengkak)/, text: "Tali pusat bernanah, berbau, atau kemerahan meluas perlu diperiksakan ke dokter atau bidan hari ini.", src: null },
-    { id: "pikiranmenyakiti", re: /\s(menyakiti|nyakitin|melukai|bunuh) (\S+ )?(diri|bayi)/, text: "Ada pikiran menyakiti diri atau bayi: cari bantuan hari ini.", src: "ppd" }
+    { id: "kejang", level: "igd", re: /\s(kejang|kelojotan)\s/, unless: /\s(kejang|kelojotan) (\S+ ){0,2}(bisa|apakah|apa|akan) (kambuh|berulang|terulang)/, text: "Kejang termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
+    { id: "biru", level: "igd", re: /\s((bibir|kulit|wajah|muka|kuku|lidah|badan|tubuh|mulut|bayi|lahir) (\S+ )?biru|membiru|kebiruan)\s/, text: "Bibir atau kulit kebiruan: segera ke IGD.", src: null },
+    { id: "sesak", level: "igd", re: /\s(sesak|napas cepat|tarikan dada|dada tertarik|dada (\S+ ){0,3}cekung|susah napas|sulit napas|susah bernapas|sulit bernapas|napas berat|ngos ngosan|tersengal)/, text: "Sesak atau napas cepat/tarikan dada termasuk tanda bahaya WHO.", src: "who_imci_pneu" },
+    { id: "lemas", level: "igd", re: /\s(tidak sadar|pingsan|sulit dibangunkan|susah dibangunkan|tidak bisa dibangunkan|lemas|lunglai|tidak merespons|tidak respon|tidak responsif)/, text: "Lemas sekali atau sulit dibangunkan termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
+    { id: "tdkminum", level: "igd", re: /\stidak (mau|bisa|kuat) (minum|menyusu|asi)/, text: "Tidak bisa minum atau menyusu termasuk tanda bahaya umum WHO.", src: "who_imci_danger", neg: false },
+    { id: "muntahsemua", level: "igd", re: /\s(muntah (terus|semua|setiap|tiap)|semua (dimuntahkan|keluar lagi)|apa pun dimuntahkan)/, text: "Memuntahkan semua yang diminum termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
+    { id: "muntahdarah", level: "hari", re: /\s(muntah (\S+ ){0,2}(ber)?darah|muntah (seperti )?(ampas )?kopi)/, text: "Muntah berdarah atau seperti ampas kopi perlu diperiksa dokter hari ini.", src: "idai_gumoh" },
+    { id: "babdarah", level: "hari", re: /\s((bab|diare|tinja|feses) (\S+ ){0,3}(ber)?darah|darah (di|pada|dalam) (bab|tinja|feses))/, text: "Darah di BAB perlu diperiksakan ke dokter.", src: "who_ors" },
+    { id: "ubun", level: "igd", re: /\subun (\S+ ){0,2}(cekung|menonjol|cembung|tegang|melesak)/, text: "Ubun-ubun cekung atau menonjol perlu segera diperiksa.", src: null },
+    { id: "tersedak", level: "igd", re: /\s(tersedak|tercekik)\s/, unless: /masih bisa batuk/, text: "Tersedak: lakukan pertolongan pertama tersedak dan panggil bantuan bila tidak bisa bernapas.", src: "medline_choke" },
+    { id: "tenggelam", level: "igd", re: /\s(tenggelam|kelelep)\s/, text: "Tenggelam: segera ke IGD walau tampak pulih.", src: "who_drowning" },
+    { id: "keracunan", level: "igd", re: /\s(keracunan|tertelan|menelan (\S+ )?(baterai|obat|magnet|koin|sabun|deterjen|minyak|kancing)|minum (obat nyamuk|minyak tanah|bensin|pemutih))/, text: "Dugaan keracunan atau benda tertelan: segera ke IGD.", src: "who_injury" },
+    { id: "muntahhijau", level: "hari", re: /\smuntah (\S+ )?hijau/, text: "Muntah berwarna hijau perlu diperiksakan ke dokter hari ini, sesegera mungkin.", src: "orami_gumoh" },
+    { id: "kuning24", level: "igd", re: /\skuning (\S+ ){0,3}(24 jam|hari pertama)/, text: "Kuning dalam 24 jam pertama perlu diperiksa segera.", src: "aap_bili" },
+    { id: "tinjapucat", level: "hari", re: /\s(tinja|bab|feses) (\S+ ){0,2}(pucat|putih|dempul)/, text: "Tinja pucat pada bayi kuning perlu pemeriksaan bilirubin direk.", src: "aap_bili" },
+    { id: "perdarahan", level: "igd", re: /\s(mimisan|gusi berdarah|bintik merah|muntah darah)/, text: "Perdarahan (mimisan, gusi berdarah) saat atau setelah demam bisa tanda bahaya dengue.", src: "who_dengue" },
+    { id: "cederakepala", level: "igd", re: /\s((jatuh|terjatuh|terbentur) (\S+ ){0,4}(muntah|mengantuk|ngantuk|pingsan|kejang)|muntah (\S+ ){0,3}(jatuh|terjatuh|terbentur))/, text: "Jatuh lalu muntah, mengantuk, atau pingsan: segera ke IGD.", src: null },
+    { id: "kepala", level: "pantau", re: /\s(kepala (\S+ ){0,2}terbentur|terbentur (\S+ ){0,2}kepala|jatuh (\S+ ){0,3}kepala)/, unless: /\s(jatuh|terjatuh|terbentur) (\S+ ){0,4}(muntah|mengantuk|ngantuk|pingsan|kejang)|muntah (\S+ ){0,3}(jatuh|terjatuh|terbentur)/, text: "Kepala terbentur: pantau 24 jam. Segera ke IGD bila muntah, sangat mengantuk, pingsan, kejang, atau menangis tak bisa ditenangkan.", src: null },
+    { id: "matacekung", level: "hari", re: /\smata (\S+ ){0,2}cekung/, text: "Mata cekung bisa tanda dehidrasi, apalagi saat diare atau muntah. Nilai dengan penilai \"Diare & dehidrasi\" dan periksakan hari ini.", src: "who_dehid" },
+    { id: "kuningtelapak", level: "igd", re: /\s(kuning (\S+ ){0,3}(telapak|kaki)|telapak (\S+ ){0,3}kuning)/, text: "Kuning sampai telapak tangan atau kaki termasuk tanda bahaya bayi baru lahir WHO.", src: "who_newborn" },
+    { id: "pusar", level: "hari", re: /\s(pusar|pusat) (\S+ ){0,3}(nanah|bau|kemerahan|merah|bengkak)/, text: "Tali pusat bernanah, berbau, atau kemerahan meluas perlu diperiksakan ke dokter atau bidan hari ini.", src: null },
+    { id: "pikiranmenyakiti", level: "hari", re: /\s(menyakiti|nyakitin|melukai|bunuh) (\S+ )?(diri|bayi)/, text: "Ada pikiran menyakiti diri atau bayi: cari bantuan hari ini.", src: "ppd" }
   ];
 
   /** Indeks BM25 atas entri KB (checker, panduan, obat, mitos, tonggak perkembangan, imunisasi). */
