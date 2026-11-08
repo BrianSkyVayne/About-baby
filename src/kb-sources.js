@@ -78,4 +78,6 @@ module.exports = {
   febrile_recur: { title: "Cochrane (PMC10871828) — Prophylactic drug management for febrile seizures in children", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10871828/", type: "primer" },
 
   medline_choke: { title: "MedlinePlus — Choking first aid, infant under 1 year", url: "https://medlineplus.gov/ency/presentations/100221_2.htm", type: "primer" },
+  who_hepb: { title: "WHO — Hepatitis B fact sheet (vaksin HB dalam 24 jam setelah lahir)", url: "https://www.who.int/news-room/fact-sheets/detail/hepatitis-b", type: "primer" },
+  aap_colic: { title: "AAP HealthyChildren — Colic Relief Tips for Parents", url: "https://www.healthychildren.org/English/ages-stages/baby/crying-colic/Pages/Colic.aspx", type: "primer" },
 };

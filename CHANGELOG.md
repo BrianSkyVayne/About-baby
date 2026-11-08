@@ -1,5 +1,14 @@
 # Changelog
 
+### [2026.11.08-11] — 2026-11-08
+- Commit: fix: sumber tersedak, imunisasi HB-0, dan kolik
+- Detail:
+  - T2 fix: tekanan dada tersedak bayi (2 jari) hanya bersumber NHS; MedlinePlus (pangkal telapak tangan) dilepas karena bertentangan — src/kb-content.js
+  - T2 fix: jadwal imunisasi menyebut HB-0 dalam 24 jam setelah lahir sesuai WHO (sumber baru who_hepb) — src/kb-content.js, src/kb-sources.js
+  - T1 fix: puncak kolik 6 minggu kini juga bersumber AAP HealthyChildren (aap_colic) — src/kb-checkers.js, src/kb-sources.js
+  - T1 chore: bangun ulang kb.json dan halaman; versi 13 / 2026.11.08-11 — android/app/build.gradle
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-10] — 2026-11-08
 - Commit: fix: status bar ikut tema aplikasi, checklist perkembangan per anak
 - Detail:
@@ -15,7 +24,7 @@
   - T2 fix: anjuran "lebih sedikit tapi lebih sering" dibatasi untuk susu formula sesuai MedlinePlus — src/kb-checkers.js
   - T1 chore: hapus 5 sumber yang tak lagi dirujuk (redcross_choke, banner_pyloric, newborn_intake, medstar_bili, febrile_5min) — src/kb-sources.js, kb/sources/
   - T1 chore: bangun ulang kb.json dan halaman; versi 11 / 2026.11.08-9 — android/app/build.gradle
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert ceb7a40
 
 ### [2026.11.08-8] — 2026-11-08
 - Commit: feat: Beranda dan Profil diringkas dari sudut pandang ortu
