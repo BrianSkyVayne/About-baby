@@ -10,7 +10,7 @@
   </div>
 </div>
 <nav class="bottom" aria-label="Menu utama"><div class="inner" id="nav"></div></nav>
-<div class="toast" id="toast" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <!--KB_EMBED_TAG-->
 <!--OFFLINE_TPL-->
 
@@ -64,9 +64,24 @@
   // =============================================================
   // Model
   // =============================================================
+  /** Beberapa anak per perangkat. "ab.kids" menyimpan daftar; "ab.profile" tetap berisi anak yang aktif
+      (kompatibel dengan data lama dan tes) dan menang bila keduanya berbeda. */
   class Profile {
-    constructor() { const p = LocalStore.get("ab.profile", {}); this.name = p.nama || ""; this.birth = p.lahir || ""; }
-    save(name, birth) { this.name = name; this.birth = birth; LocalStore.set("ab.profile", { nama: name, lahir: birth }); }
+    constructor() {
+      const k = LocalStore.get("ab.kids", null), p = LocalStore.get("ab.profile", null);
+      this.list = k && Array.isArray(k.list) && k.list.length ? k.list : [{ nama: "", lahir: "" }];
+      this.active = k ? Math.min(Math.max(0, k.active | 0), this.list.length - 1) : 0;
+      if (p) this.list[this.active] = { nama: p.nama || "", lahir: p.lahir || "" };
+    }
+    get cur() { return this.list[this.active]; }
+    get name() { return this.cur.nama || ""; }
+    get birth() { return this.cur.lahir || ""; }
+    persist() { LocalStore.set("ab.kids", { list: this.list, active: this.active }); LocalStore.set("ab.profile", { nama: this.name, lahir: this.birth }); }
+    save(name, birth) { this.cur.nama = name; this.cur.lahir = birth; this.persist(); }
+    select(i) { if (i >= 0 && i < this.list.length) { this.active = i; this.persist(); } }
+    add() { this.list.push({ nama: "", lahir: "" }); this.active = this.list.length - 1; this.persist(); }
+    remove() { if (this.list.length > 1) this.list.splice(this.active, 1); else this.list = [{ nama: "", lahir: "" }]; this.active = 0; this.persist(); }
+    static labelOf(k) { const d = Age.days(k.lahir); return d !== null ? (k.nama ? k.nama + " · " : "") + Age.label(d) : (k.nama || "Belum diisi"); }
     get ageDays() { return Age.days(this.birth); }
     get hasAge() { return this.ageDays !== null; }
     get label() { return this.hasAge ? (this.name ? this.name + " · " : "") + Age.label(this.ageDays) : "Atur usia anak"; }
@@ -146,6 +161,8 @@
       const i = this.questions.findIndex(q => q.id === qid);
       if (i >= 0) this.step = i;
     }
+    /** Pertanyaan wajib yang dilewati tanpa jawaban; ditampilkan di hasil agar orang tua tahu hasilnya bisa kurang tepat. */
+    get unanswered() { return this.questions.filter(q => !q.optional && (this.answers[q.id] === undefined || this.answers[q.id] === "")).length; }
     get reviewRows() {
       const all = this.checker.visibleQuestions(this.answers, this.ctx);
       return all.filter(q => this.answers[q.id] !== undefined && this.answers[q.id] !== "").map(q => ({ q, label: CheckerSession.answerLabel(q, this.answers[q.id]) }));
@@ -561,6 +578,7 @@
       if (r.level >= 3) h += Html.emergency();
       h += this.shareButton(s, r, lv, main, mainSrc);
       if (s.skippedByUrgent) h += '<p class="small muted">Pertanyaan lain dilewati karena sudah ada tanda yang perlu segera ditangani.</p>';
+      else if (s.unanswered) h += '<div class="banner warn">' + s.unanswered + " pertanyaan dilewati, jadi hasil ini bisa kurang tepat. Buka \"Jawaban Anda\" di bawah untuk melengkapinya.</div>";
       const more = r.reasons.slice(1);
       if (more.length) h += '<div class="card stack-s"><h3>Alasan lain</h3>' + more.map(x => "<div><p>" + Html.esc(x.text) + "</p>" + this.sources(x.src) + "</div>").join("") + "</div>";
       r.notes.forEach(n => { h += '<div class="banner"><p>' + Html.esc(n.text) + "</p>" + this.sources(n.src) + "</div>"; });
@@ -604,8 +622,14 @@
   class BreathView extends View {
     constructor(app) {
       super(app);
-      this.counter = new BreathCounter(() => this.tick(), () => this.app.render());
+      this.counter = new BreathCounter(() => this.tick(), () => { BreathView.buzz([200, 100, 200]); this.releaseWake(); this.app.render(); });
+      this.wake = null;
     }
+    /** Getar singkat: mata orang tua ke dada anak, bukan ke layar. Diam saja bila tidak didukung. */
+    static buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) { /* abaikan */ } }
+    /** Jaga layar tetap menyala selama 60 detik penghitungan. */
+    async holdWake() { try { if (navigator.wakeLock) this.wake = await navigator.wakeLock.request("screen"); } catch (e) { this.wake = null; } }
+    releaseWake() { try { if (this.wake) this.wake.release(); } catch (e) { /* abaikan */ } this.wake = null; }
     tick() {
       const l = document.getElementById("b-left"); if (l) l.textContent = this.counter.left + " detik";
       const fg = document.querySelector(".ring .c-fg");
@@ -632,9 +656,9 @@
     }
     onClick(t) {
       const a = t.dataset.act;
-      if (a === "start") { this.counter.start(); return true; }
-      if (a === "tap") { this.counter.tap(); const el = document.getElementById("b-count"); if (el) el.textContent = this.counter.count; return "keep"; }
-      if (a === "cancel") { this.counter.reset(); return true; }
+      if (a === "start") { this.counter.start(); this.holdWake(); return true; }
+      if (a === "tap") { this.counter.tap(); if (this.counter.running) BreathView.buzz(15); const el = document.getElementById("b-count"); if (el) el.textContent = this.counter.count; return "keep"; }
+      if (a === "cancel") { this.counter.reset(); this.releaseWake(); return true; }
       if (a === "use-rr") { this.app.views.checker.prefill("napas", "rr", String(this.counter.count)); location.hash = "#cek-napas"; return "keep"; }
       return false;
     }
@@ -840,7 +864,7 @@
 
   class MoreView extends View {
     render() {
-      const items = [["panduan", "Panduan", "ASI, MPASI, tidur aman, tersedak, kesehatan ibu, dan lainnya"], ["tumbuh", "Perkembangan", "Checklist CDC per usia"], ["imunisasi", "Imunisasi", "Jadwal IDAI 2024"], ["obat", "Keamanan obat", "Yang dihindari dan dosis program resmi"], ["data", "Sumber & pembaruan data", "Versi, usulan, riwayat perubahan"], ["profil", "Profil anak", "Nama dan tanggal lahir"]];
+      const items = [["panduan", "Panduan", "ASI, MPASI, tidur aman, tersedak, kesehatan ibu, dan lainnya"], ["tumbuh", "Perkembangan", "Checklist CDC per usia"], ["imunisasi", "Imunisasi", "Jadwal IDAI 2024"], ["obat", "Keamanan obat", "Yang dihindari dan dosis program resmi"], ["data", "Sumber & pembaruan data", "Versi, usulan, riwayat perubahan"], ["profil", "Profil anak & tampilan", "Nama, tanggal lahir, tambah anak, mode gelap"]];
       return this.page('<h1>Lainnya</h1><div class="list">' + items.map(([id, t, s]) => '<a href="#' + id + '"><div><div class="t">' + t + '</div><div class="s">' + s + "</div></div>" + Html.chev() + "</a>").join("") + "</div>" + Html.footer());
     }
   }
@@ -906,12 +930,43 @@
     }
   }
 
+  /** Tema tampilan: ikuti HP, terang, atau gelap. Disimpan per perangkat. */
+  class Theme {
+    static get() { return LocalStore.get("ab.theme", "auto"); }
+    static apply(v) { const r = document.documentElement; if (v === "light" || v === "dark") r.dataset.theme = v; else delete r.dataset.theme; }
+    static set(v) { LocalStore.set("ab.theme", v); Theme.apply(v); }
+  }
+
   class ProfileView extends View {
+    constructor(app) { super(app); this.askDelete = false; }
     render() {
-      return this.page(Html.back("lainnya", "Lainnya") + "<h1>Profil anak</h1>" +
-        '<form data-form="profil" class="card stack"><div class="stack-s"><label for="p-nama">Nama panggilan (opsional)</label><input id="p-nama" value="' + Html.esc(this.profile.name) + '" autocomplete="off"></div>' +
-        '<div class="stack-s"><label for="p-lahir">Tanggal lahir</label><input id="p-lahir" type="date" max="' + Clock.today() + '" value="' + Html.esc(this.profile.birth) + '"></div>' +
-        '<button class="btn-primary" type="submit">Simpan</button></form><p class="small muted">Disimpan di perangkat ini saja, dipakai untuk menghitung usia pada setiap penilaian.</p>');
+      const p = this.profile, many = p.list.length > 1, th = Theme.get();
+      const kids = many ? '<div class="stack-s"><p class="eyebrow">Pilih anak</p><div class="answers">' +
+        p.list.map((k, i) => '<button type="button" data-kid="' + i + '" aria-pressed="' + (i === p.active) + '">' + Html.esc(Profile.labelOf(k)) + "</button>").join("") + "</div></div>" : "";
+      const del = this.askDelete
+        ? '<div class="banner warn stack-s"><p>Hapus data ' + Html.esc(p.name || "anak ini") + ' dari perangkat ini?</p><div class="row"><button type="button" class="btn-danger" data-act="del-yes">Ya, hapus</button><button type="button" data-act="del-no">Batal</button></div></div>'
+        : (many || p.name || p.birth ? '<button type="button" class="btn-ghost" data-act="del-kid">Hapus anak ini</button>' : "");
+      return this.page(Html.back("lainnya", "Lainnya") + "<h1>Profil anak</h1>" + kids +
+        '<form data-form="profil" class="card stack"><div class="stack-s"><label for="p-nama">Nama panggilan (opsional)</label><input id="p-nama" value="' + Html.esc(p.name) + '" autocomplete="off"></div>' +
+        '<div class="stack-s"><label for="p-lahir">Tanggal lahir</label><input id="p-lahir" type="date" max="' + Clock.today() + '" value="' + Html.esc(p.birth) + '"></div>' +
+        '<button class="btn-primary" type="submit">Simpan</button></form>' +
+        '<div class="row"><button type="button" data-act="add-kid">+ Tambah anak</button>' + (this.askDelete ? "" : del) + "</div>" + (this.askDelete ? del : "") +
+        '<p class="small muted">Disimpan di perangkat ini saja, dipakai untuk menghitung usia pada setiap penilaian.</p>' +
+        '<div class="card stack-s"><h3>Tampilan</h3><div class="tabs" role="group" aria-label="Tema tampilan">' +
+        [["auto", "Ikuti HP"], ["light", "Terang"], ["dark", "Gelap"]].map(([v, l]) => '<button type="button" data-theme-set="' + v + '" aria-pressed="' + (th === v) + '">' + l + "</button>").join("") +
+        '</div><p class="small muted">Gelap lebih nyaman di mata saat memeriksa anak malam hari.</p></div>');
+    }
+    /** Ganti anak: jawaban cek gejala dan tab perkembangan milik anak sebelumnya dibuang. */
+    changed() { this.askDelete = false; this.app.views.milestone.tab = null; this.app.views.checker.sessions = {}; }
+    onClick(t) {
+      const p = this.profile, a = t.dataset.act;
+      if (t.dataset.kid !== undefined) { p.select(+t.dataset.kid); this.changed(); Toast.show("Sekarang: " + p.label); return true; }
+      if (t.dataset.themeSet) { Theme.set(t.dataset.themeSet); return true; }
+      if (a === "add-kid") { p.add(); this.changed(); return true; }
+      if (a === "del-kid") { this.askDelete = true; return true; }
+      if (a === "del-no") { this.askDelete = false; return true; }
+      if (a === "del-yes") { p.remove(); this.changed(); Toast.show("Data anak dihapus."); return true; }
+      return false;
     }
     onSubmit(form) {
       if (form.dataset.form !== "profil") return false;
@@ -1007,6 +1062,7 @@
       this.navEl = document.getElementById("nav");
       this.kb = new KnowledgeBase();
       this.profile = new Profile();
+      Theme.apply(Theme.get());
       this.source = new DataSource(this.kb);
       this.state = "loading";
       this.views = {
@@ -1061,7 +1117,10 @@
       if (focusId) { const el = document.getElementById(focusId); if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) { el.focus(); try { el.setSelectionRange(sel, sel); } catch (e) { /* jenis input tanpa seleksi */ } } }
     }
     bindEvents() {
-      window.addEventListener("hashchange", () => { const prev = this.route.raw; this.route = Router.parse(); if (this.route.raw !== prev) window.scrollTo(0, 0); this.render(); });
+      window.addEventListener("hashchange", () => { const prev = this.route.raw; this.route = Router.parse(); if (this.route.raw !== prev) window.scrollTo(0, 0);
+        // Pindah dari hitung napas di tengah hitungan: hentikan dan lepas kunci layar agar baterai tidak terkuras.
+        const br = this.views.breath; if (this.route.name !== "breath" && br.counter.running) { br.counter.reset(); br.releaseWake(); }
+        this.render(); });
       document.addEventListener("click", async e => {
         const t = e.target.closest("button, a");
         if (!t || !this.root.contains(t)) return;

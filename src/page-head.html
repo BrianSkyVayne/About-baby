@@ -226,10 +226,13 @@ th { color: var(--muted); font-weight: 500; font-size: 0.75rem; }
 
 /* Milestone: filter chip */
 .tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-.tabs button { flex: none; min-height: 32px; height: 40px; padding: 0 16px; border-radius: var(--md-sys-shape-corner-small); color: var(--ink); }
+.tabs button { flex: none; min-height: 48px; height: 48px; padding: 0 16px; border-radius: var(--md-sys-shape-corner-small); color: var(--ink); }
 .tabs button[aria-pressed="true"] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); border-color: transparent; }
 .check { display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; }
-.check input { width: 20px; height: 20px; min-height: 0; flex: none; margin-top: 2px; accent-color: var(--accent); }
+.check input { width: 24px; height: 24px; min-height: 0; flex: none; margin-top: 0; accent-color: var(--accent); }
+/* Label ikut jadi area ketuk, supaya baris checkbox setinggi >= 48px tanpa celah mati. */
+.check label { flex: 1; min-height: 32px; padding: 2px 0; cursor: pointer; }
+button, a, summary, label, input { touch-action: manipulation; }
 
 /* Tanya */
 .answer { white-space: pre-wrap; }
@@ -261,6 +264,6 @@ th { color: var(--muted); font-weight: 500; font-size: 0.75rem; }
 details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; display: flex; align-items: center; }
 .review-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }
 .review-row > div { min-width: 0; }
-.review-row button { flex: none; min-height: 40px; padding: 0 12px; }
+.review-row button { flex: none; min-height: 48px; padding: 0 12px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>

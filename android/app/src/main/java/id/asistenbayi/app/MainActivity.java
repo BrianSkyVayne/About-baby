@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
         root.addView(webView, new android.widget.FrameLayout.LayoutParams(-1, -1));
         setContentView(root);
         applySystemBarPadding(root);
+        registerBack();
 
         WebSettings s = webView.getSettings();
         s.setJavaScriptEnabled(true);
@@ -138,10 +139,24 @@ public class MainActivity extends Activity {
         if (requestCode == REQ_PICK) bridge.onFilePicked(resultCode == RESULT_OK && data != null ? data.getData() : null);
     }
 
-    @Override
-    public void onBackPressed() {
+    /** Android 13+ (API 33): back lewat OnBackInvokedCallback, siap untuk predictive back (wajib saat target API 36). */
+    private void registerBack() {
+        if (Build.VERSION.SDK_INT >= 33) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::handleBack);
+        }
+    }
+
+    private void handleBack() {
         if (webView.canGoBack()) webView.goBack();
-        else super.onBackPressed();
+        else finish();
+    }
+
+    /** Android 12 ke bawah tetap lewat jalur lama. */
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onBackPressed() {
+        handleBack();
     }
 
     @Override
