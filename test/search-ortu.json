@@ -106,7 +106,10 @@
  },
  {
   "q": "anak 2 thn blm bisa ngomong",
-  "expect": "milestone:m24",
+  "expect": [
+   "milestone:m24",
+   "guide:bicaraterlambat"
+  ],
   "danger": false,
   "synthetic": true,
   "set": "ortu-buru2-2026-11-08"
@@ -155,10 +158,11 @@
  },
  {
   "q": "bayi cegukan terus",
-  "expect": null,
+  "expect": "guide:cegukanbersin",
   "danger": false,
   "synthetic": true,
-  "set": "ortu-buru2-2026-11-08"
+  "set": "ortu-buru2-2026-11-08",
+  "note": "2026-11-08: topik kini ada di KB (riset AAP/NHS)"
  },
  {
   "q": "mpasi pertama apa",
@@ -191,10 +195,11 @@
  },
  {
   "q": "bayi kepanasan biang keringat",
-  "expect": null,
+  "expect": "guide:biangkeringat",
   "danger": false,
   "synthetic": true,
-  "set": "ortu-buru2-2026-11-08"
+  "set": "ortu-buru2-2026-11-08",
+  "note": "2026-11-08: topik kini ada di KB (riset AAP/NHS)"
  },
  {
   "q": "bayi ga pup 4 hari asi",
@@ -212,17 +217,19 @@
  },
  {
   "q": "mata bayi belekan",
-  "expect": null,
+  "expect": "guide:matabelekan",
   "danger": false,
   "synthetic": true,
-  "set": "ortu-buru2-2026-11-08"
+  "set": "ortu-buru2-2026-11-08",
+  "note": "2026-11-08: topik kini ada di KB (riset AAP/NHS)"
  },
  {
   "q": "sariawan anak ga mau makan",
-  "expect": null,
+  "expect": "guide:sariawanputih",
   "danger": false,
   "synthetic": true,
-  "set": "ortu-buru2-2026-11-08"
+  "set": "ortu-buru2-2026-11-08",
+  "note": "2026-11-08: topik kini ada di KB (riset AAP/NHS)"
  },
  {
   "q": "anak demam ada bintik merah ga ilang ditekan",

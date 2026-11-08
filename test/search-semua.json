@@ -1,0 +1,276 @@
+[
+ {
+  "q": "anakku 10 bln blm merakak jg",
+  "expect": "guide:merangkak",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi ngesot pake pantat normal ga",
+  "expect": "guide:merangkak",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "tummy time brp lama sehari",
+  "expect": "guide:tummytime",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi 1 bulan boleh tengkurep ga pas melek",
+  "expect": "guide:tummytime",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "umur brp bayi bisa duduk sendiri",
+  "expect": "guide:dudukberdiri",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "anak udah bisa rambatan di sofa",
+  "expect": "guide:dudukberdiri",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "anak 15 bulan blm bisa jalan",
+  "expect": "guide:berjalan",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "sepatu pertama bayi yg bagus apa",
+  "expect": "guide:berjalan",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "pake baby walker biar cepet jalan boleh?",
+  "expect": "guide:babywalker",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "anak 2 thn belum ngomong",
+  "expect": "guide:bicaraterlambat",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "telat bicara kapan ke dokter",
+  "expect": "guide:bicaraterlambat",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "kepala bayi peyang sebelah",
+  "expect": "guide:kepalapeyang",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi harus dimandiin tiap hari ga",
+  "expect": "guide:mandibayi",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "air mandi bayi panasnya gmn",
+  "expect": "guide:mandibayi",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "cara motong kuku bayi",
+  "expect": "guide:potongkuku",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "kepala bayi kerak kuning berminyak",
+  "expect": "guide:kerakkepala",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "biang keringet di leher bayi",
+  "expect": "guide:biangkeringat",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "kulit bayi kering merah gatel eksim",
+  "expect": "guide:eksim",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "mata bayi belekan terus",
+  "expect": "guide:matabelekan",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi cegukan terus abis nyusu",
+  "expect": "guide:cegukanbersin",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "newborn sering bersin pilek bukan",
+  "expect": "guide:cegukanbersin",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi 3 hari ga pup keras",
+  "expect": "guide:sembelit",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "lidah bayi putih2 kaya jamur",
+  "expect": "guide:sariawanputih",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi boleh pake sunblock umur brp",
+  "expect": "guide:mataharinyamuk",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "lotion anti nyamuk buat bayi",
+  "expect": "guide:mataharinyamuk",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "cara bikin susu formula yg bener",
+  "expect": "guide:susuformula",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "cara steril botol susu",
+  "expect": "guide:susuformula",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi boleh dikasih empeng ga",
+  "expect": "guide:empeng",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "kenalin telur ke bayi takut alergi",
+  "expect": "guide:alergimakanan",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "car seat bayi hadap belakang sampai kapan",
+  "expect": "guide:kursimobil",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi kejedot meja benjol",
+  "expect": "guide:kepalaterbentur",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "tangan bayi kesiram air panas",
+  "expect": "guide:lukabakar",
+  "danger": true,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08",
+  "note": "danger:true disengaja — aturan lukabakar level hari (NHS: anak <5 th minta saran tenaga kesehatan)"
+ },
+ {
+  "q": "abis imunisasi bayi demam rewel",
+  "expect": "guide:pascaimunisasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "bekas suntik imunisasi merah bengkak",
+  "expect": "guide:pascaimunisasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "perawatan abis sunat bayi",
+  "expect": "guide:sunatpenis",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "kulup bayi boleh ditarik ga",
+  "expect": "guide:sunatpenis",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "pusar bayi bodong menonjol",
+  "expect": "guide:herniaumbilikalis",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "kapan mulai toilet training",
+  "expect": "guide:toilettraining",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ },
+ {
+  "q": "anak 2 tahun belajar pipis di toilet",
+  "expect": "guide:toilettraining",
+  "danger": false,
+  "synthetic": true,
+  "set": "semua-holdout-2026-11-08"
+ }
+]

@@ -1,0 +1,1378 @@
+[
+ {
+  "guide": "merangkak",
+  "t": "Merangkak biasanya dikuasai antara usia 7 sampai 10 bulan.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "a skill usually mastered between seven and ten months."
+ },
+ {
+  "guide": "merangkak",
+  "t": "Sebagian bayi memakai cara lain, misalnya ngesot dengan pantat atau merayap dengan perut.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "they use alternative methods, such as scooting on their bottoms or slithering on their stomachs."
+ },
+ {
+  "guide": "merangkak",
+  "t": "Sebagian kecil anak memang tidak pernah merangkak.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "A few children never crawl."
+ },
+ {
+  "guide": "merangkak",
+  "t": "Kalau bayi memakai kedua sisi tubuhnya sama rata, tidak perlu khawatir.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "there's no cause for concern."
+ },
+ {
+  "guide": "merangkak",
+  "t": "Kalau Bunda merasa gerakan anak tidak normal, bicarakan dengan dokter anak.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "If you feel your child is not moving normally, discuss your concern with the pediatrician."
+ },
+ {
+  "guide": "tummytime",
+  "t": "Tummy time bisa dimulai sejak hari bayi pulang dari rumah sakit.",
+  "src": [
+   "aap_tummy_time"
+  ],
+  "q": "You can start doing tummy time the day your baby gets home from the hospital."
+ },
+ {
+  "guide": "tummytime",
+  "t": "Lakukan 2 sampai 3 kali sehari, masing-masing sebentar (3 sampai 5 menit).",
+  "src": [
+   "aap_tummy_time"
+  ],
+  "q": "2 to 3 times each day for a short time (3 to 5 minutes)."
+ },
+ {
+  "guide": "tummytime",
+  "t": "Tingkatkan pelan-pelan sampai total 15 sampai 30 menit sehari saat usia 7 minggu.",
+  "src": [
+   "aap_tummy_time"
+  ],
+  "q": "Work up to 15 to 30 minutes each day by 7 weeks."
+ },
+ {
+  "guide": "tummytime",
+  "t": "Taruh diri Bunda atau mainan sedikit di luar jangkauan bayi.",
+  "src": [
+   "aap_tummy_time"
+  ],
+  "q": "Place yourself or a toy just out of the baby's reach"
+ },
+ {
+  "guide": "tummytime",
+  "t": "Letakkan mainan melingkar di sekitar bayi.",
+  "src": [
+   "aap_tummy_time"
+  ],
+  "q": "Place toys in a circle around the baby"
+ },
+ {
+  "guide": "tummytime",
+  "t": "Bunda bisa berbaring telentang lalu menaruh bayi di dada.",
+  "src": [
+   "aap_tummy_time"
+  ],
+  "q": "Lie on your back and place the baby on your chest."
+ },
+ {
+  "guide": "tummytime",
+  "t": "Tummy time hanya untuk bayi yang sedang bangun dan diawasi dengan dekat.",
+  "src": [
+   "aap_tummy_time"
+  ],
+  "q": "Tummy time is for babies who are awake and being closely supervised."
+ },
+ {
+  "guide": "dudukberdiri",
+  "t": "Sekitar usia 9 bulan, bayi umumnya bisa duduk tanpa disangga.",
+  "src": [
+   "cdc_9_months"
+  ],
+  "q": "Sits without support"
+ },
+ {
+  "guide": "dudukberdiri",
+  "t": "Sekitar usia 9 bulan, bayi umumnya bisa bangun ke posisi duduk sendiri.",
+  "src": [
+   "cdc_9_months"
+  ],
+  "q": "Gets to a sitting position by herself"
+ },
+ {
+  "guide": "dudukberdiri",
+  "t": "Bayi akan menarik badannya ke posisi berdiri setiap ada kesempatan.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "she'll pull herself to a standing position every chance she gets."
+ },
+ {
+  "guide": "dudukberdiri",
+  "t": "Setelah itu bayi akan merambat di sepanjang perabot.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "she'll cruise alongside furniture."
+ },
+ {
+  "guide": "dudukberdiri",
+  "t": "Pastikan perabot pegangannya tidak bersudut tajam dan cukup berat atau terpasang ke lantai.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "no sharp edges and is properly weighted or attached to the floor."
+ },
+ {
+  "guide": "dudukberdiri",
+  "t": "Kalau Bunda khawatir dengan perkembangan anak, bicarakan dengan dokter dan tanyakan skrining perkembangan.",
+  "src": [
+   "cdc_milestones_web"
+  ],
+  "q": "Talk with your child's doctor, share your concerns, and ask about developmental screening."
+ },
+ {
+  "guide": "berjalan",
+  "t": "Banyak bayi melangkah pertama kali sekitar ulang tahun pertamanya.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "Many babies' first steps are taken around their first birthday."
+ },
+ {
+  "guide": "berjalan",
+  "t": "Kebanyakan anak beralih dari langkah pertama ke jalan dengan mantap dalam hitungan hari.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "most children advance from these first steps to confident walking within days."
+ },
+ {
+  "guide": "berjalan",
+  "t": "Sekitar usia 18 bulan, anak umumnya berjalan tanpa berpegangan pada siapa pun atau apa pun.",
+  "src": [
+   "cdc_18_months"
+  ],
+  "q": "Walks without holding on to anyone or anything"
+ },
+ {
+  "guide": "berjalan",
+  "t": "Pilih sepatu yang tertutup di ujung jari, nyaman, lentur, dan bersol antiselip.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "closed-toe, comfortable, and flexible, with nonskid soles."
+ },
+ {
+  "guide": "berjalan",
+  "t": "Sepatu pertama biasanya cuma muat 2 sampai 3 bulan.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "Her first pair of shoes will probably last two to three months"
+ },
+ {
+  "guide": "berjalan",
+  "t": "Kalau Bunda merasa gerakan anak tidak normal, bicarakan dengan dokter anak.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "If you feel your child is not moving normally, discuss your concern with the pediatrician."
+ },
+ {
+  "guide": "berjalan",
+  "t": "Kalau Bunda khawatir dengan perkembangan anak, bicarakan dengan dokter dan tanyakan skrining perkembangan.",
+  "src": [
+   "cdc_milestones_web"
+  ],
+  "q": "Talk with your child's doctor, share your concerns, and ask about developmental screening."
+ },
+ {
+  "guide": "babywalker",
+  "t": "Bayi di walker bisa terguling dari tangga, yang sering menyebabkan patah tulang dan cedera kepala berat.",
+  "src": [
+   "aap_baby_walkers"
+  ],
+  "q": "Roll down the stairs—which often causes broken bones and severe head injuries."
+ },
+ {
+  "guide": "babywalker",
+  "t": "Bayi di walker bisa bergerak lebih dari 3 kaki (sekitar 1 meter) dalam 1 detik.",
+  "src": [
+   "aap_baby_walkers"
+  ],
+  "q": "A child in a walker can move more than 3 feet in 1 second!"
+ },
+ {
+  "guide": "babywalker",
+  "t": "Bayi bisa terluka bakar karena di walker ia bisa meraih lebih tinggi.",
+  "src": [
+   "aap_baby_walkers"
+  ],
+  "q": "Get burned—a child can reach higher in a walker."
+ },
+ {
+  "guide": "babywalker",
+  "t": "Bayi bisa tenggelam karena jatuh ke kolam atau bak mandi saat di walker.",
+  "src": [
+   "aap_baby_walkers"
+  ],
+  "q": "Drown—child can fall into a pool or bathtub while in a walker."
+ },
+ {
+  "guide": "babywalker",
+  "t": "AAP meminta larangan produksi dan penjualan baby walker beroda.",
+  "src": [
+   "aap_baby_walkers"
+  ],
+  "q": "The AAP has called for a ban on the manufacture and sale of baby walkers with wheels."
+ },
+ {
+  "guide": "babywalker",
+  "t": "AAP sangat menganjurkan orang tua tidak memakai baby walker.",
+  "src": [
+   "aap_movement_8_12"
+  ],
+  "q": "strongly urges parents not to use baby walkers."
+ },
+ {
+  "guide": "babywalker",
+  "t": "Activity center diam: mirip walker tapi tanpa roda.",
+  "src": [
+   "aap_baby_walkers"
+  ],
+  "q": "Stationary activity centers—they look like walkers but have no wheels."
+ },
+ {
+  "guide": "babywalker",
+  "t": "Box bayi atau playpen jadi zona aman saat anak belajar duduk, merangkak, atau berjalan.",
+  "src": [
+   "aap_baby_walkers"
+  ],
+  "q": "Play yards or playpens—these are great safety zones for children as they learn to sit, crawl, or walk."
+ },
+ {
+  "guide": "bicaraterlambat",
+  "t": "Sekitar 9 bulan: banyak mengeluarkan bunyi berbeda seperti \"mamamama\" dan \"babababa\".",
+  "src": [
+   "cdc_9_months"
+  ],
+  "q": "Makes a lot of different sounds like \"mamamama\" and \"bababababa\""
+ },
+ {
+  "guide": "bicaraterlambat",
+  "t": "Sekitar 9 bulan: mengangkat tangan minta digendong.",
+  "src": [
+   "cdc_9_months"
+  ],
+  "q": "Lifts arms up to be picked up"
+ },
+ {
+  "guide": "bicaraterlambat",
+  "t": "Sekitar 18 bulan: mencoba mengucapkan tiga kata atau lebih selain \"mama\" atau \"dada\".",
+  "src": [
+   "cdc_18_months"
+  ],
+  "q": "Tries to say three or more words besides “mama” or “dada”"
+ },
+ {
+  "guide": "bicaraterlambat",
+  "t": "Sekitar 18 bulan: mengikuti perintah satu langkah tanpa isyarat.",
+  "src": [
+   "cdc_18_months"
+  ],
+  "q": "Follows one-step directions without any gestures"
+ },
+ {
+  "guide": "bicaraterlambat",
+  "t": "Sekitar 2 tahun: mengucapkan minimal dua kata bersambung, seperti \"mau susu\".",
+  "src": [
+   "cdc_2_years"
+  ],
+  "q": "Says at least two words together, like “More milk.”"
+ },
+ {
+  "guide": "bicaraterlambat",
+  "t": "Sekitar usia 2 tahun anak mulai menyusun kalimat sederhana.",
+  "src": [
+   "nhs_talk"
+  ],
+  "q": "your child will start to put simple sentences together at around age 2."
+ },
+ {
+  "guide": "bicaraterlambat",
+  "t": "Ulangi kembali bunyi yang dibuat bayi.",
+  "src": [
+   "nhs_talk"
+  ],
+  "q": "Repeat the sounds your baby makes back to them."
+ },
+ {
+  "guide": "bicaraterlambat",
+  "t": "Kalau khawatir dengan perkembangan bicara atau bahasa anak, bicarakan dengan dokter atau tenaga kesehatan.",
+  "src": [
+   "nhs_talk"
+  ],
+  "q": "If you're worried about your child's speech or language development, talk to your GP or health visitor."
+ },
+ {
+  "guide": "bicaraterlambat",
+  "t": "Bila perlu, anak akan dirujuk ke layanan terapi wicara.",
+  "src": [
+   "nhs_talk"
+  ],
+  "q": "If necessary, they'll refer your child to your local speech and language therapy department."
+ },
+ {
+  "guide": "bicaraterlambat",
+  "t": "Kalau Bunda khawatir dengan perkembangan anak, bicarakan dengan dokter dan tanyakan skrining perkembangan.",
+  "src": [
+   "cdc_milestones_web"
+  ],
+  "q": "Talk with your child's doctor, share your concerns, and ask about developmental screening."
+ },
+ {
+  "guide": "kepalapeyang",
+  "t": "Kepala datar di satu sisi bisa tampak tidak rata dan posisi telinga tidak sejajar.",
+  "src": [
+   "nhs_flat_head"
+  ],
+  "q": "flat on 1 side – it may look uneven and their ears may not line up (plagiocephaly)"
+ },
+ {
+  "guide": "kepalapeyang",
+  "t": "Otot leher yang kaku (tortikolis) membuat bayi selalu menyandarkan kepala di sisi yang sama.",
+  "src": [
+   "nhs_flat_head"
+  ],
+  "q": "tight neck muscles (torticollis) – this makes a baby always rest their head on the same side"
+ },
+ {
+  "guide": "kepalapeyang",
+  "t": "Beri bayi banyak waktu tengkurap saat ia bangun di siang hari.",
+  "src": [
+   "nhs_flat_head"
+  ],
+  "q": "give your baby plenty of time on their tummy while they're awake during the day"
+ },
+ {
+  "guide": "kepalapeyang",
+  "t": "Ubah-ubah posisi mainan dan mobile saat bayi berbaring telentang.",
+  "src": [
+   "nhs_flat_head"
+  ],
+  "q": "change the position of your baby's toys and mobiles when they're lying on their back"
+ },
+ {
+  "guide": "mandibayi",
+  "t": "Bayi tidak perlu dimandikan setiap hari.",
+  "src": [
+   "nhs_bathing"
+  ],
+  "q": "You don't need to bathe your baby every day."
+ },
+ {
+  "guide": "mandibayi",
+  "t": "Airnya hangat, bukan panas.",
+  "src": [
+   "nhs_bathing"
+  ],
+  "q": "The water should be warm, not hot."
+ },
+ {
+  "guide": "mandibayi",
+  "t": "Jangan pernah meninggalkan bayi sendirian di bak mandi, walau sedetik.",
+  "src": [
+   "nhs_bathing"
+  ],
+  "q": "Never leave your baby alone in the bath, even for a second."
+ },
+ {
+  "guide": "potongkuku",
+  "t": "Sebagian bayi lahir dengan kuku panjang, dan penting dipotong supaya tidak mencakar dirinya sendiri.",
+  "src": [
+   "nhs_bathing"
+  ],
+  "q": "Some babies are born with long nails and it's important to cut them in case they scratch themselves."
+ },
+ {
+  "guide": "kerakkepala",
+  "t": "Kerak kepala adalah kondisi kulit yang tidak berbahaya dan umum pada bayi.",
+  "src": [
+   "nhs_cradle_cap"
+  ],
+  "q": "Cradle cap is a harmless skin condition that's common in babies."
+ },
+ {
+  "guide": "kerakkepala",
+  "t": "Sikat lembut kulit kepala bayi dengan sikat halus, lalu cuci dengan sampo bayi.",
+  "src": [
+   "nhs_cradle_cap"
+  ],
+  "q": "gently brush your baby's scalp with a soft brush and then wash it with baby shampoo"
+ },
+ {
+  "guide": "kerakkepala",
+  "t": "Pijat ringan emolien (pelembap) atau minyak kelapa ke kulit kepala untuk membantu melonggarkan sisiknya.",
+  "src": [
+   "nhs_cradle_cap"
+  ],
+  "q": "lightly massage an emollient (moisturiser) or coconut oil on to your baby's scalp to help loosen the scales"
+ },
+ {
+  "guide": "kerakkepala",
+  "t": "Jangan pakai minyak kacang tanah karena risiko alergi.",
+  "src": [
+   "nhs_cradle_cap"
+  ],
+  "q": "do not use peanut oil (because of the allergy risk)"
+ },
+ {
+  "guide": "kerakkepala",
+  "t": "Jangan pakai sabun, sampo dewasa, atau produk berpewangi.",
+  "src": [
+   "nhs_cradle_cap"
+  ],
+  "q": "do not use soap, adult shampoos or products containing fragrance or perfume"
+ },
+ {
+  "guide": "kerakkepala",
+  "t": "Jangan mengelupas keraknya karena bisa menambah peluang infeksi.",
+  "src": [
+   "nhs_cradle_cap"
+  ],
+  "q": "do not pick crusts because this can increase the chance of infection"
+ },
+ {
+  "guide": "kerakkepala",
+  "t": "Tidak membaik setelah beberapa minggu dirawat.",
+  "src": [
+   "nhs_cradle_cap"
+  ],
+  "q": "your baby's cradle cap does not get better after a few weeks of treatment"
+ },
+ {
+  "guide": "kerakkepala",
+  "t": "Kerak ada di seluruh tubuh.",
+  "src": [
+   "nhs_cradle_cap"
+  ],
+  "q": "your baby has cradle cap all over their body"
+ },
+ {
+  "guide": "kerakkepala",
+  "t": "Keraknya berdarah atau keluar cairan.",
+  "src": [
+   "nhs_cradle_cap"
+  ],
+  "q": "the crusts bleed or leak fluid"
+ },
+ {
+  "guide": "kerakkepala",
+  "t": "Area yang kena tampak bengkak.",
+  "src": [
+   "nhs_cradle_cap"
+  ],
+  "q": "the affected areas look swollen"
+ },
+ {
+  "guide": "biangkeringat",
+  "t": "Bayi sering kena biang keringat karena belum bisa mengatur suhu tubuh sebaik orang dewasa dan anak.",
+  "src": [
+   "nhs_heat_rash"
+  ],
+  "q": "Babies often get heat rash because they cannot control their temperature as well as adults and children can."
+ },
+ {
+  "guide": "biangkeringat",
+  "t": "Tandanya bintik-bintik kecil yang menonjol.",
+  "src": [
+   "nhs_heat_rash"
+  ],
+  "q": "small, raised spots"
+ },
+ {
+  "guide": "biangkeringat",
+  "t": "Pakaikan baju katun yang longgar.",
+  "src": [
+   "nhs_heat_rash"
+  ],
+  "q": "Wear loose cotton clothing."
+ },
+ {
+  "guide": "biangkeringat",
+  "t": "Mandi atau bilas dengan air sejuk.",
+  "src": [
+   "nhs_heat_rash"
+  ],
+  "q": "Take cool baths or showers."
+ },
+ {
+  "guide": "biangkeringat",
+  "t": "Jangan pakai sabun mandi atau krim berpewangi.",
+  "src": [
+   "nhs_heat_rash"
+  ],
+  "q": "Do not use perfumed shower gels or creams."
+ },
+ {
+  "guide": "biangkeringat",
+  "t": "Ruam tidak membaik setelah beberapa hari.",
+  "src": [
+   "nhs_heat_rash"
+  ],
+  "q": "you have heat rash that does not improve after a few days"
+ },
+ {
+  "guide": "biangkeringat",
+  "t": "Bayi ruam dan Bunda khawatir.",
+  "src": [
+   "nhs_heat_rash"
+  ],
+  "q": "your baby has a rash and you're worried"
+ },
+ {
+  "guide": "eksim",
+  "t": "Eksim atopik adalah kondisi kulit umum yang membuat kulit gatal.",
+  "src": [
+   "nhs_eczema"
+  ],
+  "q": "Atopic eczema (atopic dermatitis) is a common skin condition that causes itchy skin."
+ },
+ {
+  "guide": "eksim",
+  "t": "Gejala bisa mulai di usia berapa pun, tapi biasanya mulai pada bayi dan anak kecil.",
+  "src": [
+   "nhs_eczema"
+  ],
+  "q": "Symptoms can start at any age, but they usually start in babies and young children."
+ },
+ {
+  "guide": "eksim",
+  "t": "Eksim tidak bisa disembuhkan, tapi pengobatan bisa membantu mengendalikan gejalanya.",
+  "src": [
+   "nhs_eczema"
+  ],
+  "q": "cannot be cured, but treatment can help manage the symptoms"
+ },
+ {
+  "guide": "eksim",
+  "t": "Kontak dengan alergen atau iritan seperti sabun, deterjen, hewan peliharaan.",
+  "src": [
+   "nhs_eczema"
+  ],
+  "q": "coming into contact with an allergen or irritant such as soap, washing detergent, pets"
+ },
+ {
+  "guide": "eksim",
+  "t": "Panas atau perubahan suhu.",
+  "src": [
+   "nhs_eczema"
+  ],
+  "q": "heat or changes in temperature"
+ },
+ {
+  "guide": "eksim",
+  "t": "Anak punya gejala eksim atopik.",
+  "src": [
+   "nhs_eczema"
+  ],
+  "q": "you or your child have symptoms of atopic eczema"
+ },
+ {
+  "guide": "eksim",
+  "t": "Pengobatan tidak membantu.",
+  "src": [
+   "nhs_eczema"
+  ],
+  "q": "treatments are not helping your atopic eczema"
+ },
+ {
+  "guide": "eksim",
+  "t": "Segera: eksim mendadak memburuk atau meluas.",
+  "src": [
+   "nhs_eczema"
+  ],
+  "q": "suddenly gets worse or gets bigger"
+ },
+ {
+  "guide": "eksim",
+  "t": "Segera: melepuh, berkerak, keluar cairan, atau ada bintik bernanah.",
+  "src": [
+   "nhs_eczema"
+  ],
+  "q": "blistered, crusty, leaking fluid or has spots filled with pus"
+ },
+ {
+  "guide": "matabelekan",
+  "t": "Kondisi ini dialami sekitar 1 dari 5 bayi.",
+  "src": [
+   "nhs_hey_tear_duct"
+  ],
+  "q": "This typically occurs in 1 out of 5 babies."
+ },
+ {
+  "guide": "matabelekan",
+  "t": "Pada 9 dari 10 kasus, sumbatan membuka sendiri dalam tahun pertama.",
+  "src": [
+   "nhs_hey_tear_duct"
+  ],
+  "q": "In nine out of ten cases blocked tear ducts resolve on their own within the first year of life."
+ },
+ {
+  "guide": "matabelekan",
+  "t": "Usap kotoran mata dengan kapas dan air matang yang sudah didinginkan.",
+  "src": [
+   "nhs_hey_tear_duct"
+  ],
+  "q": "gently wipe this away with cooled boiled water using cotton wool"
+ },
+ {
+  "guide": "matabelekan",
+  "t": "Mata juga bisa terkena konjungtivitis (radang mata), jadi perhatikan bila ini muncul.",
+  "src": [
+   "nhs_hey_tear_duct"
+  ],
+  "q": "It is also important to be aware the eyes may develop conjunctivitis"
+ },
+ {
+  "guide": "matabelekan",
+  "t": "Bila berlanjut melewati usia 1 tahun atau sering infeksi mata, operasi bisa dipertimbangkan.",
+  "src": [
+   "nhs_hey_tear_duct"
+  ],
+  "q": "if the problem persists after this age or your baby has repeated eye infections, then an operation may be considered"
+ },
+ {
+  "guide": "cegukanbersin",
+  "t": "Sebagian besar bayi cegukan sesekali.",
+  "src": [
+   "aap_burping_hiccups"
+  ],
+  "q": "Most babies hiccup from time to time."
+ },
+ {
+  "guide": "cegukanbersin",
+  "t": "Bayi baru lahir membuat beragam suara, termasuk bersin dan cegukan.",
+  "src": [
+   "aap_newborn_behaves"
+  ],
+  "q": "your newborn will have a wide variety of grunts, squeaks, sighs, sneezes, and hiccups"
+ },
+ {
+  "guide": "cegukanbersin",
+  "t": "Bila tidak hilang dalam 5-10 menit, coba lanjutkan menyusui beberapa menit.",
+  "src": [
+   "aap_burping_hiccups"
+  ],
+  "q": "If they don't disappear in 5 to 10 minutes, try to resume feeding for a few minutes."
+ },
+ {
+  "guide": "cegukanbersin",
+  "t": "Untuk mengurangi cegukan, susui saat bayi tenang dan sebelum sangat lapar.",
+  "src": [
+   "aap_burping_hiccups"
+  ],
+  "q": "try to feed your baby when they are calm and before they are extremely hungry"
+ },
+ {
+  "guide": "sembelit",
+  "t": "Anak mungkin sembelit bila mengejan atau kesakitan saat BAB.",
+  "src": [
+   "nhs_constipation_children"
+  ],
+  "q": "they are straining or in pain when they poo"
+ },
+ {
+  "guide": "sembelit",
+  "t": "Atau BAB kurang dari 3 kali dalam seminggu terakhir.",
+  "src": [
+   "nhs_constipation_children"
+  ],
+  "q": "they have done less than 3 poos in the last week"
+ },
+ {
+  "guide": "sembelit",
+  "t": "Bayi susu formula yang sembelit boleh diberi minum air tambahan di antara jadwal susu.",
+  "src": [
+   "nhs_constipation_children"
+  ],
+  "q": "Formula-fed babies can have extra drinks of water between their formula feeds."
+ },
+ {
+  "guide": "sembelit",
+  "t": "Untuk bayi di bawah 6 bulan, airnya harus air matang yang sudah didinginkan.",
+  "src": [
+   "nhs_constipation_children"
+  ],
+  "q": "This must be cooled boiled water for babies under 6 months."
+ },
+ {
+  "guide": "sembelit",
+  "t": "Bayi ASI yang belum makan MPASI: tawarkan menyusu lebih sering.",
+  "src": [
+   "nhs_constipation_children"
+  ],
+  "q": "offer breastfed babies who are not eating solids yet plenty of breastfeeds"
+ },
+ {
+  "guide": "sembelit",
+  "t": "Bicarakan dengan dokter sebelum memberi obat sembelit bebas apa pun.",
+  "src": [
+   "kidshealth_constipation"
+  ],
+  "q": "Talk with the doctor before giving your child any kind of over-the-counter medicine for constipation."
+ },
+ {
+  "guide": "sembelit",
+  "t": "Bila Bunda menduga anak sembelit, bawa ke dokter.",
+  "src": [
+   "nhs_constipation_children"
+  ],
+  "q": "If you think your child may be constipated, take them to a GP."
+ },
+ {
+  "guide": "sembelit",
+  "t": "Bila sembelit berlanjut atau tampak mengganggu anak, hubungi dokter.",
+  "src": [
+   "kidshealth_constipation"
+  ],
+  "q": "If the constipation lasts or seems to bother your child, call your doctor to schedule a visit."
+ },
+ {
+  "guide": "sariawanputih",
+  "t": "Bayi dengan oral thrush punya lapisan putih di lidahnya.",
+  "src": [
+   "nhs_oral_thrush"
+  ],
+  "q": "A baby with oral thrush will have a white coating on their tongue."
+ },
+ {
+  "guide": "sariawanputih",
+  "t": "Lapisannya bisa tampak seperti keju cottage.",
+  "src": [
+   "nhs_oral_thrush"
+  ],
+  "q": "look like cottage cheese"
+ },
+ {
+  "guide": "sariawanputih",
+  "t": "Gel mulut dari apotek cocok untuk bayi di atas 4 bulan.",
+  "src": [
+   "nhs_oral_thrush"
+  ],
+  "q": "The gel is suitable for adults, children and babies over the age of 4 months."
+ },
+ {
+  "guide": "sariawanputih",
+  "t": "Bayi di bawah 4 bulan dengan tanda oral thrush perlu diperiksakan ke dokter.",
+  "src": [
+   "nhs_oral_thrush"
+  ],
+  "q": "your baby is under 4 months old and has signs of oral thrush"
+ },
+ {
+  "guide": "mataharinyamuk",
+  "t": "Bayi di bawah 6 bulan sebaiknya dijauhkan dari sinar matahari langsung yang terik.",
+  "src": [
+   "nhs_sun_safety"
+  ],
+  "q": "Children aged under 6 months should be kept out of direct strong sunlight."
+ },
+ {
+  "guide": "mataharinyamuk",
+  "t": "Di bawah 6 bulan: sunscreen hanya di area kecil seperti wajah, bila baju pelindung dan tempat teduh tidak tersedia.",
+  "src": [
+   "aap_sun_safety"
+  ],
+  "q": "Use sunscreen on small areas of the body, such as the face, if protective clothing and shade are not available."
+ },
+ {
+  "guide": "mataharinyamuk",
+  "t": "Pilih sunscreen spektrum luas dengan SPF minimal 15 (sampai SPF 50).",
+  "src": [
+   "aap_sun_safety"
+  ],
+  "q": "Use a broad-spectrum sunscreen with a sun protection factor (SPF) of at least 15 (up to SPF 50)."
+ },
+ {
+  "guide": "mataharinyamuk",
+  "t": "Pasang kelambu di stroller dan gendongan bayi.",
+  "src": [
+   "cdc_mosquito_prevention"
+  ],
+  "q": "Cover strollers and baby carriers with mosquito netting."
+ },
+ {
+  "guide": "mataharinyamuk",
+  "t": "Jangan pakai produk berisi OLE (oil of lemon eucalyptus/minyak eukaliptus lemon) atau PMD pada anak di bawah 3 tahun.",
+  "src": [
+   "cdc_mosquito_prevention"
+  ],
+  "q": "Do not use products containing OLE or PMD on children under 3 years old."
+ },
+ {
+  "guide": "mataharinyamuk",
+  "t": "Selalu ikuti petunjuk label.",
+  "src": [
+   "cdc_mosquito_prevention"
+  ],
+  "q": "Always follow label instructions."
+ },
+ {
+  "guide": "mataharinyamuk",
+  "t": "Jangan oleskan repelan ke tangan, mata, mulut, luka, atau kulit iritasi anak.",
+  "src": [
+   "cdc_mosquito_prevention"
+  ],
+  "q": "Do not apply repellent to a child's hands, eyes, mouth, cuts, or irritated skin."
+ },
+ {
+  "guide": "mataharinyamuk",
+  "t": "Orang dewasa: oleskan dulu ke tangan sendiri, lalu ke wajah anak.",
+  "src": [
+   "cdc_mosquito_prevention"
+  ],
+  "q": "Adults: Apply repellent onto your hands and then apply to a child's face."
+ },
+ {
+  "guide": "susuformula",
+  "t": "Isi ketel dengan minimal 1 liter air keran segar, jangan pakai air yang sudah pernah dididihkan.",
+  "src": [
+   "nhs_making_formula"
+  ],
+  "q": "Fill the kettle with at least 1 litre of fresh tap water (do not use water that has been boiled before)."
+ },
+ {
+  "guide": "susuformula",
+  "t": "Air bersuhu 70°C atau lebih membunuh bakteri berbahaya.",
+  "src": [
+   "nhs_making_formula"
+  ],
+  "q": "Water at 70C or more will kill any harmful bacteria."
+ },
+ {
+  "guide": "susuformula",
+  "t": "Masukkan air ke botol dulu selagi masih panas, baru tambahkan bubuk formula.",
+  "src": [
+   "nhs_making_formula"
+  ],
+  "q": "Always put the water in the bottle first, while it is still hot, before adding the powdered formula."
+ },
+ {
+  "guide": "susuformula",
+  "t": "Dinginkan susu dulu supaya tidak terlalu panas untuk diminum.",
+  "src": [
+   "nhs_making_formula"
+  ],
+  "q": "It's important to cool the formula so it's not too hot to drink."
+ },
+ {
+  "guide": "susuformula",
+  "t": "Sisa susu di botol setelah menyusu dibuang.",
+  "src": [
+   "nhs_making_formula"
+  ],
+  "q": "If there is any made-up formula left in the bottle after a feed, throw it away."
+ },
+ {
+  "guide": "susuformula",
+  "t": "Sterilkan semua alat minum bayi, termasuk botol dan dot, sampai bayi minimal berusia 12 bulan.",
+  "src": [
+   "nhs_sterilising"
+  ],
+  "q": "It's important to sterilise all your baby's feeding equipment, including bottles and teats, until they're at least 12 months old."
+ },
+ {
+  "guide": "susuformula",
+  "t": "Cuci botol dan dot dengan air panas bersabun secepatnya setelah dipakai.",
+  "src": [
+   "nhs_sterilising"
+  ],
+  "q": "Clean bottles, teats and other feeding equipment in hot, soapy water as soon as possible after feeds."
+ },
+ {
+  "guide": "susuformula",
+  "t": "Bilas dengan air dingin bersih yang mengalir sebelum disterilkan.",
+  "src": [
+   "nhs_sterilising"
+  ],
+  "q": "Rinse all your equipment in clean, cold running water before sterilising."
+ },
+ {
+  "guide": "susuformula",
+  "t": "Bila pakai cairan sterilisasi dingin, rendam alat minimal 30 menit.",
+  "src": [
+   "nhs_sterilising"
+  ],
+  "q": "Leave feeding equipment in the sterilising solution for at least 30 minutes."
+ },
+ {
+  "guide": "empeng",
+  "t": "Kalau menyusui, tunggu sampai menyusui sudah lancar sebelum memberi empeng, biasanya sekitar 3-4 minggu.",
+  "src": [
+   "aap_pacifiers"
+  ],
+  "q": "If you are breastfeeding, wait until breastfeeding is going well before offering a pacifier. This usually takes about 3 to 4 weeks."
+ },
+ {
+  "guide": "empeng",
+  "t": "Tawarkan empeng saat tidur siang dan malam; ini membantu menurunkan risiko SIDS.",
+  "src": [
+   "aap_pacifiers"
+  ],
+  "q": "Offer a pacifier at nap time and bedtime. This helps to reduce the risk of sudden infant death syndrome (SIDS)."
+ },
+ {
+  "guide": "empeng",
+  "t": "Sebagian riset menunjukkan empeng saat menidurkan bayi bisa membantu menurunkan risiko SIDS.",
+  "src": [
+   "nhs_sids"
+  ],
+  "q": "think about using a dummy to settle your baby to sleep – some research suggests this can help lower the risk of SIDS"
+ },
+ {
+  "guide": "empeng",
+  "t": "Jangan pernah mengikat empeng ke boks, leher, atau tangan anak.",
+  "src": [
+   "aap_pacifiers"
+  ],
+  "q": "Never tie a pacifier to your child's crib or around your child's neck or hand."
+ },
+ {
+  "guide": "empeng",
+  "t": "Jangan pakai dot botol susu sebagai empeng.",
+  "src": [
+   "aap_pacifiers"
+  ],
+  "q": "Do not use the nipple from a baby bottle as a pacifier."
+ },
+ {
+  "guide": "empeng",
+  "t": "Kebanyakan anak berhenti kebiasaan mengisap sebelum jauh masuk usia sekolah.",
+  "src": [
+   "aap_pacifiers"
+  ],
+  "q": "Most children stop their sucking habits before they get very far in school."
+ },
+ {
+  "guide": "alergimakanan",
+  "t": "Makanan pemicu alergi bisa dikenalkan sejak sekitar 6 bulan seperti makanan lain.",
+  "src": [
+   "nhs_allergy_babies"
+  ],
+  "q": "can be introduced from around 6 months as part of your baby's diet, just like any other foods"
+ },
+ {
+  "guide": "alergimakanan",
+  "t": "Kenalkan satu per satu supaya reaksinya bisa dikenali.",
+  "src": [
+   "nhs_allergy_babies"
+  ],
+  "q": "introduce the foods that can trigger allergic reactions one at a time so that you can spot any reaction"
+ },
+ {
+  "guide": "alergimakanan",
+  "t": "Menunda kacang tanah dan telur melewati usia 6-12 bulan bisa menaikkan risiko alergi.",
+  "src": [
+   "nhs_allergy_babies"
+  ],
+  "q": "delaying the introduction of peanut and hen's eggs beyond 6 to 12 months may increase the risk"
+ },
+ {
+  "guide": "alergimakanan",
+  "t": "Reaksi alergi biasanya muncul cepat, dalam beberapa menit setelah mencoba makanan baru.",
+  "src": [
+   "nhs_allergy_babies"
+  ],
+  "q": "Allergic reactions usually happen quickly within a few minutes of your baby trying a new food."
+ },
+ {
+  "guide": "alergimakanan",
+  "t": "Gejala alergi makanan bisa mengenai bagian tubuh mana pun, bahkan beberapa sekaligus.",
+  "src": [
+   "nhs_food_allergy"
+  ],
+  "q": "Symptoms of a food allergy can affect any part of the body, including different parts of the body at the same time."
+ },
+ {
+  "guide": "alergimakanan",
+  "t": "Anafilaksis adalah keadaan darurat yang perlu penanganan segera.",
+  "src": [
+   "nhs_allergy_babies"
+  ],
+  "q": "Anaphylaxis is a medical emergency and needs urgent treatment."
+ },
+ {
+  "guide": "alergimakanan",
+  "t": "Segera minta pertolongan darurat bila bibir, mulut, tenggorokan, atau lidah tiba-tiba bengkak.",
+  "src": [
+   "nhs_food_allergy"
+  ],
+  "q": "your lips, mouth, throat or tongue suddenly become swollen"
+ },
+ {
+  "guide": "alergimakanan",
+  "t": "Juga bila napas sangat cepat atau kesulitan bernapas.",
+  "src": [
+   "nhs_food_allergy"
+  ],
+  "q": "you're breathing very fast or struggling to breathe"
+ },
+ {
+  "guide": "alergimakanan",
+  "t": "Juga bila kulit, lidah, atau bibir berubah biru, abu-abu, atau pucat.",
+  "src": [
+   "nhs_food_allergy"
+  ],
+  "q": "your skin, tongue or lips turn blue, grey or pale"
+ },
+ {
+  "guide": "kursimobil",
+  "t": "Biarkan anak tetap di kursi menghadap belakang selama mungkin.",
+  "src": [
+   "aap_car_seats"
+  ],
+  "q": "continue to ride in a rear facing seat as long as possible"
+ },
+ {
+  "guide": "kursimobil",
+  "t": "Tempat paling aman untuk semua anak di bawah 13 tahun adalah kursi belakang.",
+  "src": [
+   "aap_car_seats"
+  ],
+  "q": "The safest place to ride for all children younger than 13 years is the back seat."
+ },
+ {
+  "guide": "kursimobil",
+  "t": "Jangan pernah memasang kursi menghadap belakang di kursi depan yang airbag penumpangnya aktif.",
+  "src": [
+   "aap_car_seats"
+  ],
+  "q": "Never place a rear-facing seat in the front seat of a vehicle that has an active front passenger airbag."
+ },
+ {
+  "guide": "kursimobil",
+  "t": "Pastikan sabuk pengaman kursi terpasang pas dan rapat.",
+  "src": [
+   "aap_car_seats"
+  ],
+  "q": "Ensure that the harness is snug"
+ },
+ {
+  "guide": "kursimobil",
+  "t": "Untuk kursi hadap belakang, sabuk dipasang di slot setinggi atau di bawah bahu anak.",
+  "src": [
+   "aap_car_seats"
+  ],
+  "q": "Place the harnesses in your rear-facing seat in slots that are at or below your child's shoulders."
+ },
+ {
+  "guide": "kursimobil",
+  "t": "Pakaian tebal seperti jaket bisa tertekan saat tabrakan.",
+  "src": [
+   "aap_car_seats"
+  ],
+  "q": "Bulky clothing, including winter coats and snowsuits, can compress in a crash"
+ },
+ {
+  "guide": "kepalaterbentur",
+  "t": "Ke IGD bila bayi di bawah 1 tahun memar, bengkak, atau luka besar di kepala.",
+  "src": [
+   "nhs_head_injury"
+  ],
+  "q": "has a bruise, swelling or large cut on their head and they are under 1 year old"
+ },
+ {
+  "guide": "kepalaterbentur",
+  "t": "Ke IGD bila pingsan dan belum sadar.",
+  "src": [
+   "nhs_head_injury"
+  ],
+  "q": "has been knocked out and has not woken up"
+ },
+ {
+  "guide": "kepalaterbentur",
+  "t": "Ke IGD bila tidak bisa tetap terjaga atau membuka mata.",
+  "src": [
+   "nhs_head_injury"
+  ],
+  "q": "cannot stay awake or keep their eyes open"
+ },
+ {
+  "guide": "kepalaterbentur",
+  "t": "Ke IGD bila jatuh dari ketinggian lebih dari 1 meter atau 5 anak tangga.",
+  "src": [
+   "nhs_head_injury"
+  ],
+  "q": "has fallen from a height of more than 1 metre or 5 stairs"
+ },
+ {
+  "guide": "kepalaterbentur",
+  "t": "Ke IGD bila perilakunya berubah, misalnya lebih rewel, linglung, atau kehilangan minat.",
+  "src": [
+   "nhs_head_injury"
+  ],
+  "q": "their behaviour has changed, like being more irritable or distracted, or losing interest in things around them"
+ },
+ {
+  "guide": "kepalaterbentur",
+  "t": "Pastikan ada orang dewasa menemani anak minimal 24 jam pertama.",
+  "src": [
+   "nhs_head_injury"
+  ],
+  "q": "make sure an adult stays with you or your child for at least the first 24 hours"
+ },
+ {
+  "guide": "lukabakar",
+  "t": "Aliri luka dengan air mengalir yang sejuk selama 20 menit.",
+  "src": [
+   "nhs_burns"
+  ],
+  "q": "Hold the burn or scald under cool running water for 20 minutes."
+ },
+ {
+  "guide": "lukabakar",
+  "t": "Lakukan secepatnya, dalam 3 jam sejak kejadian.",
+  "src": [
+   "nhs_burns"
+  ],
+  "q": "Do this as soon as possible, within 3 hours of it happening."
+ },
+ {
+  "guide": "lukabakar",
+  "t": "Lepaskan pakaian atau perhiasan di dekat luka, tapi jangan lepas yang menempel di luka.",
+  "src": [
+   "nhs_burns"
+  ],
+  "q": "do not remove anything that is stuck to the affected area."
+ },
+ {
+  "guide": "lukabakar",
+  "t": "Setelah dingin, tutup dengan plastik wrap bila ada, tanpa dililitkan.",
+  "src": [
+   "nhs_burns"
+  ],
+  "q": "Do not wrap the cling film around it."
+ },
+ {
+  "guide": "lukabakar",
+  "t": "Jangan oleskan krim, minyak, atau mentega.",
+  "src": [
+   "nhs_burns"
+  ],
+  "q": "do not put any creams, oils or butter on burns or scalds"
+ },
+ {
+  "guide": "lukabakar",
+  "t": "Ke IGD bila luka ada di wajah, kelamin, atau bokong.",
+  "src": [
+   "nhs_burns"
+  ],
+  "q": "is on your face, genitals or bottom"
+ },
+ {
+  "guide": "pascaimunisasi",
+  "t": "Kebanyakan efek samping vaksin muncul di bekas suntikan.",
+  "src": [
+   "healthdirect_immunisation"
+  ],
+  "q": "Most vaccine side effects happen at the injection site"
+ },
+ {
+  "guide": "pascaimunisasi",
+  "t": "Bisa juga demam ringan dan lelah.",
+  "src": [
+   "healthdirect_immunisation"
+  ],
+  "q": "You may also get a mild fever and feel tired."
+ },
+ {
+  "guide": "pascaimunisasi",
+  "t": "Bila bekas suntikan merah dan hangat, kompres dengan kain basah yang sejuk.",
+  "src": [
+   "healthdirect_immunisation"
+  ],
+  "q": "If their injection site is red and warm to touch, put a cool wet cloth on their leg or arm."
+ },
+ {
+  "guide": "pascaimunisasi",
+  "t": "Bila demam 38°C atau lebih, obat penurun panas (parasetamol atau ibuprofen) boleh diberikan. Ikuti batas usia dan dosis di kartu obat penurun panas, karena tiap obat punya usia minimal.",
+  "src": [
+   "healthdirect_immunisation"
+  ],
+  "q": "If your baby has a fever (temperature of 38°C or higher), you can give them paracetamol or ibuprofen."
+ },
+ {
+  "guide": "pascaimunisasi",
+  "t": "Segera cari pertolongan bila bayi tiba-tiba menjerit tak biasa disertai muntah.",
+  "src": [
+   "healthdirect_immunisation"
+  ],
+  "q": "your baby has sudden unusual screaming events with vomiting"
+ },
+ {
+  "guide": "pascaimunisasi",
+  "t": "Juga bila ada darah di feses bayi.",
+  "src": [
+   "healthdirect_immunisation"
+  ],
+  "q": "your baby has blood in their bowel motion (poo)"
+ },
+ {
+  "guide": "pascaimunisasi",
+  "t": "Temui dokter secepatnya bila Bunda khawatir setelah vaksin.",
+  "src": [
+   "healthdirect_immunisation"
+  ],
+  "q": "See your doctor as soon as possible if you are worried about yourself or your child after getting a vaccine."
+ },
+ {
+  "guide": "sunatpenis",
+  "t": "Ujung penis bisa tampak merah beberapa hari pertama.",
+  "src": [
+   "aap_penis_care"
+  ],
+  "q": "The tip of the penis may look red for the first few days."
+ },
+ {
+  "guide": "sunatpenis",
+  "t": "Kemerahan dan cairan berangsur hilang dalam seminggu.",
+  "src": [
+   "aap_penis_care"
+  ],
+  "q": "The redness and secretion disappear gradually within a week."
+ },
+ {
+  "guide": "sunatpenis",
+  "t": "Kulup awalnya menempel ke kepala penis, jadi jangan coba ditarik.",
+  "src": [
+   "aap_penis_care"
+  ],
+  "q": "Initially, the foreskin is connected by tissue to the glans, or head, of the penis, so you shouldn't try to retract it."
+ },
+ {
+  "guide": "sunatpenis",
+  "t": "Memaksa menarik kulup bisa menyebabkan perdarahan dan robekan yang nyeri.",
+  "src": [
+   "aap_penis_care"
+  ],
+  "q": "if you force the foreskin to retract before it is ready, you could cause painful bleeding and tears in the skin."
+ },
+ {
+  "guide": "sunatpenis",
+  "t": "Bila kemerahan menetap, bengkak, atau ada luka berkerak kuning, mungkin infeksi.",
+  "src": [
+   "aap_penis_care"
+  ],
+  "q": "If the redness persists or there is swelling or crusted yellow sores, there may be an infection."
+ },
+ {
+  "guide": "herniaumbilikalis",
+  "t": "Banyak bayi lahir dengan hernia umbilikalis.",
+  "src": [
+   "nhs_umbilical_hernia"
+  ],
+  "q": "Many babies are born with an umbilical hernia."
+ },
+ {
+  "guide": "herniaumbilikalis",
+  "t": "Biasanya gejalanya hanya benjolan lunak yang menonjol dari pusar.",
+  "src": [
+   "nhs_umbilical_hernia"
+  ],
+  "q": "Usually, the only symptom is a soft swelling or lump coming out of the belly button."
+ },
+ {
+  "guide": "herniaumbilikalis",
+  "t": "Hernia biasanya hilang sendiri sebelum anak berusia 5 tahun.",
+  "src": [
+   "nhs_umbilical_hernia"
+  ],
+  "q": "the hernia will usually disappear by the time they're 5 years old."
+ },
+ {
+  "guide": "herniaumbilikalis",
+  "t": "Darurat bila nyeri perut hebat yang tidak hilang.",
+  "src": [
+   "nhs_umbilical_hernia"
+  ],
+  "q": "you get very bad tummy pain that does not go away"
+ },
+ {
+  "guide": "herniaumbilikalis",
+  "t": "Darurat bila hernia lebih bengkak dari biasa dan kulit sekitarnya berubah warna.",
+  "src": [
+   "nhs_umbilical_hernia"
+  ],
+  "q": "your hernia is more swollen than usual and the skin around it has changed colour"
+ },
+ {
+  "guide": "toilettraining",
+  "t": "Umumnya anak menunjukkan tanda kontrol kandung kemih dan usus di usia 18-24 bulan.",
+  "src": [
+   "aap_toilet_age"
+  ],
+  "q": "In general, children show signs of bladder and bowel control between 18 and 24 months of age."
+ },
+ {
+  "guide": "toilettraining",
+  "t": "Rata-rata toilet training di AS dimulai usia 2-3 tahun.",
+  "src": [
+   "aap_toilet_age"
+  ],
+  "q": "The average age toilet training begins in the United States is between 2 and 3 years of age."
+ },
+ {
+  "guide": "toilettraining",
+  "t": "Kebanyakan anak di AS sudah lulus toilet training di usia 4 tahun.",
+  "src": [
+   "aap_toilet_age"
+  ],
+  "q": "Most children in the United States are bowel and bladder trained by 4 years of age."
+ },
+ {
+  "guide": "toilettraining",
+  "t": "Popok kering minimal 2 jam di siang hari atau kering setelah tidur siang.",
+  "src": [
+   "aap_toilet_age"
+  ],
+  "q": "Is dry at least 2 hours at a time during the day or is dry after naps"
+ },
+ {
+  "guide": "toilettraining",
+  "t": "Menunjukkan tanda mau pipis/BAB, seperti mengejan, diam mematung, atau jongkok.",
+  "src": [
+   "aap_toilet_age"
+  ],
+  "q": "Shows signs they are about to pee or poop, like grunting, freezing, or squatting"
+ },
+ {
+  "guide": "toilettraining",
+  "t": "Bisa mengikuti instruksi sederhana.",
+  "src": [
+   "aap_toilet_age"
+  ],
+  "q": "Can follow simple instructions"
+ },
+ {
+  "guide": "toilettraining",
+  "t": "Tidak suka popok basah dan minta diganti.",
+  "src": [
+   "aap_toilet_age"
+  ],
+  "q": "Does not like to be in wet diapers and wants to be changed"
+ }
+]

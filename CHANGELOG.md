@@ -1,5 +1,14 @@
 # Changelog
 
+### [2026.11.08-24] — 2026-11-08
+- Commit: feat: riset dalam semua tentang bayi (27 panduan baru, sumber AAP/NHS/CDC/WHO dll)
+- Detail:
+  - T2 feat: 27 panduan baru (merangkak, tummy time, duduk/berdiri, berjalan, baby walker, bicara terlambat, kepala peyang, mandi, potong kuku, kerak kepala, biang keringat, eksim, mata belekan, cegukan/bersin, sembelit, sariawan putih, matahari/nyamuk, susu formula, empeng, alergi makanan, kursi mobil, kepala terbentur, luka bakar, pasca imunisasi, sunat/penis, hernia umbilikalis, toilet training); 35 sumber baru; perawatan tali pusat (AAP) di bbl; KB 2026.11.08-9 — src/kb-content.js, src/kb-sources.js, src/kb-checkers.js
+  - T2 feat: tanda bahaya tali pusat bernanah/bau/berdarah (level hari, AAP) dan aturan keyakinan satu-kata-badan — src/engine.js
+  - T1 test: set uji search-semua (39 kueri), label lama disesuaikan ke panduan baru, expect boleh beberapa jawaban — test/*
+  - docs: kutipan verbatim 172 butir — research/kutipan-riset-2026-11-08.json
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-23] — 2026-11-08
 - Commit: fix: sisa kegagalan uji cari (napas, neonatus, topik di luar KB, kancing)
 - Detail:

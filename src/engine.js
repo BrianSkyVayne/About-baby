@@ -413,6 +413,7 @@
     { id: "tersedak", level: "igd", re: /\s(tersedak|tercekik)\s/, unless: /masih bisa batuk/, text: "Tersedak: lakukan pertolongan pertama tersedak dan panggil bantuan bila tidak bisa bernapas.", src: "medline_choke" },
     { id: "tenggelam", level: "igd", re: /\s(tenggelam|kelelep)\s/, text: "Tenggelam: segera ke IGD walau tampak pulih.", src: "who_drowning" },
     { id: "keracunan", level: "igd", re: /\s(keracunan|tertelan|menelan (\S+ )?(baterai|obat|magnet|koin|sabun|deterjen|minyak|kancing)|minum (obat nyamuk|minyak tanah|bensin|pemutih))/, text: "Dugaan keracunan atau benda tertelan: segera ke IGD.", src: "who_injury" },
+    { id: "pusar", level: "hari", re: /\s(pusar|tali pusat)( \S+){0,2} (bernanah|nanah|bau|berbau|berdarah|merah)\s|\snanah( \S+){0,2} (pusar|tali pusat)\s/, text: "Tali pusat yang mengeluarkan cairan kekuningan berbau, kulit di pangkalnya merah, atau bayi menangis saat disentuh perlu diperiksakan ke dokter. Bila tali pusat terus berdarah, segera hubungi dokter.", src: "aap_cord" },
     { id: "lukabakar", level: "hari", re: /\s(luka bakar|tersiram|melepuh)\s/, text: "Luka bakar: segera siram air mengalir yang sejuk selama 20 menit. Ke IGD bila luas atau dalam, mengenai wajah, kelamin, atau bokong, atau akibat bahan kimia atau listrik. Untuk anak di bawah 5 tahun, mintalah saran tenaga kesehatan.", src: "nhs_burns" },
     { id: "muntahhijau", level: "hari", re: /\smuntah (\S+ )?hijau/, text: "Muntah berwarna hijau perlu diperiksakan ke dokter hari ini, sesegera mungkin.", src: "orami_gumoh" },
     { id: "kuning24", level: "igd", re: /\skuning (\S+ ){0,3}(24 jam|hari pertama)/, text: "Kuning sebelum bayi berumur 24 jam: bawa ke rumah sakit sekarang.", src: ["who_imci_jaundice", "aap_bili"] },
@@ -546,6 +547,13 @@
         // KB tidak membahas topik itu, jadi jangan tampilkan satu jawaban seolah yakin.
         const head = qt.filter(t => !AskEngine.WEAK_WORDS[t] && !common(t))[0];
         if (confidence === "high" && head && head.length >= 4 && !this.index.df[head]) confidence = "low";
+        // Hanya satu kata bermakna yang cocok, dan kata itu cuma muncul di isi (bukan judul/alias) entri teratas
+        // ("kapan anak boleh sekolah" -> empeng karena satu kalimat menyebut sekolah): jangan yakin.
+        if (confidence === "high" && doc && !r0.phrase && hits === 1) {
+          const t1 = qt.filter(t => doc.tf[t] && !common(t))[0];
+          const label = " " + TextNormalizer.normalize(doc.title || "") + " " + doc.phrases.join(" ") + " ";
+          if (t1 && label.indexOf(" " + t1 + " ") < 0) confidence = "low";
+        }
       }
       let best = results.length ? Object.assign({}, results[0]) : null;
       if (best && best.type === "checker") {
