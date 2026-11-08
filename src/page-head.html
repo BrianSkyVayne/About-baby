@@ -144,13 +144,29 @@ label { font-weight: 500; font-size: 0.875rem; color: var(--muted); }
 
 /* Navigasi bawah: navigation-bar M3 — tinggi 80px, surface-container, indikator aktif pil 64x32 secondary-container */
 nav.bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--md-sys-color-surface-container); padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
-nav.bottom .inner { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); height: var(--nav-h); }
+nav.bottom .inner { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); height: var(--nav-h); }
 nav.bottom a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: var(--md-sys-color-on-surface-variant); font-size: 0.75rem; line-height: 1rem; font-weight: 500; letter-spacing: 0.03125rem; text-align: center; }
 nav.bottom a svg { width: 24px; height: 24px; padding: 4px 20px; border-radius: var(--md-sys-shape-corner-full); box-sizing: content-box; transition: background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard); }
 nav.bottom a[aria-current="page"] { color: var(--md-sys-color-on-surface); font-weight: 700; }
 nav.bottom a[aria-current="page"] svg { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
 
 /* Daftar menu: list M3 di dalam outlined card */
+/* Ubin pilihan utama: 2 kolom, warna lembut, sudut bulat besar. */
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.tile { display: flex; flex-direction: column; gap: 6px; padding: 14px; min-height: 92px; border-radius: 20px; text-decoration: none; color: var(--ink); background: var(--md-sys-color-secondary-container, var(--surface)); position: relative; overflow: hidden; transition: transform var(--md-sys-motion-duration-short4, .15s) ease; }
+.tile:nth-child(4n+2) { background: var(--md-sys-color-tertiary-container, var(--surface)); }
+.tile:nth-child(4n+3) { background: var(--md-sys-color-primary-container, var(--surface)); }
+.tile:active { transform: scale(.97); }
+.tile .ico { font-size: 1.6rem; line-height: 1; }
+.tile .t { font-weight: 600; line-height: 1.25rem; }
+.tile .s { font-size: 0.8125rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .tile { transition: none; } .tile:active { transform: none; } }
+input.find { width: 100%; box-sizing: border-box; min-height: 48px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 1rem; }
+details.grp { border-radius: 16px; background: var(--surface); border: 1px solid var(--line); overflow: hidden; }
+details.grp summary { cursor: pointer; min-height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 16px; font-weight: 600; list-style: none; }
+details.grp summary::-webkit-details-marker { display: none; }
+details.grp summary .n { margin-left: auto; font-size: 0.8125rem; font-weight: 500; color: var(--muted); }
+details.grp .list { border: 0; border-top: 1px solid var(--line); border-radius: 0; }
 .list { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--md-sys-shape-corner-medium); background: var(--surface); overflow: hidden; }
 .list a, .list button { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 16px; min-height: 56px; text-decoration: none; color: var(--ink); border: 0; border-top: 1px solid var(--line); border-radius: 0; text-align: left; font-size: 1rem; font-weight: 400; position: relative; }
 .list a::after { content: ""; position: absolute; inset: 0; background: var(--ink); opacity: 0; pointer-events: none; }

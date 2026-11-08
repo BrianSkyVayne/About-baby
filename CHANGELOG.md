@@ -1,5 +1,14 @@
 # Changelog
 
+### [2026.11.08-25] — 2026-11-08
+- Commit: feat: menu lebih ringkas — navigasi 4 tombol, ubin keluhan, panduan dikelompokkan
+- Detail:
+  - T2 feat: menu bawah 5 → 4 (Beranda, Keluhan, Panduan, Lainnya); Tanya dan Cek Gejala digabung di layar Keluhan; Hitung Napas pindah ke ubin Keluhan dan halaman Darurat (App.renderNav, AskView.render, EmergencyView) — src/page-body.html
+  - T2 feat: Panduan dikelompokkan jadi 7 grup buka-tutup + kotak cari + "Cocok untuk usia" (GuideListView.GROUPS/forAge, pemetaan tampilan saja); tinggi halaman 3594 → 1198 px — src/page-body.html
+  - T1 style: ubin berwarna 2 kolom (Html.tiles) untuk keluhan dan topik, kotak cari bulat — src/page-head.html
+  - T1 chore: versi 27 / 2026.11.08-25 — android/app/build.gradle
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-24] — 2026-11-08
 - Commit: feat: riset dalam semua tentang bayi (27 panduan baru, sumber AAP/NHS/CDC/WHO dll)
 - Detail:
