@@ -8,7 +8,7 @@
   - T1 feat: setelah Tanya, layar menggulir ke tanda bahaya/hasil (sebelumnya di y=879, di bawah layar 818) (AskView.revealResult) — src/page-body.html
   - T1 style: "Isi tanggal lahir" jadi tautan, tidak bersaing dengan tombol Darurat — src/page-body.html
   - T1 chore: bangun ulang halaman; versi 20 / 2026.11.08-18 — android/app/build.gradle
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert 5efe496
 
 ### [2026.11.08-17] — 2026-11-08
 - Commit: feat: tingkat urgensi per tanda bahaya (igd / hari / pantau)
