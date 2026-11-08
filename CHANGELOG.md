@@ -1,5 +1,11 @@
 # Changelog
 
+### [2026.11.08-3] — 2026-11-08
+- Commit: fix: aplikasi crash saat dibuka karena izin ACCESS_NETWORK_STATE hilang
+- Detail:
+  - T1 fix: tambah izin ACCESS_NETWORK_STATE yang wajib untuk job auto-update ber-syarat jaringan (crash SecurityException di KbUpdateJob.schedule) — android/app/src/main/AndroidManifest.xml
+- Rollback: git revert <sha commit ini>
+
 ### [2026.11.08-2] — 2026-11-08
 - Commit: feat: chatbot Tanya offline tanpa token (mesin pencari KB lokal)
 - Detail:
