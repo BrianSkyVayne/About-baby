@@ -470,18 +470,16 @@
       const pick = d !== null && d <= 28 ? ["neonatus", "gumoh", "kuning", "demam"] : ["gumoh", "demam", "diare", "napas"];
       const pending = kb.usulan.filter(u => u.status === "baru").length;
       const items = pick.map(id => kb.checkers.find(c => c.id === id)).filter(Boolean);
-      const canTanya = true;
       return this.page(
         '<div class="stack-s"><h1>' + (this.profile.hasAge ? "Ada keluhan apa hari ini?" : "Selamat datang") + "</h1>" +
-        '<p class="muted">Jawab beberapa pertanyaan singkat untuk tahu apa yang perlu dilakukan, lengkap dengan sumbernya.</p></div>' +
+        '<p class="muted">Pilih keluhan, jawab beberapa pertanyaan.</p></div>' +
         '<a class="btn btn-big btn-danger" href="#darurat">Darurat</a>' +
         (this.profile.hasAge ? "" : '<a class="btn btn-primary" href="#profil" style="text-align:center;text-decoration:none">Isi tanggal lahir anak</a>') +
         (kb.isStale ? '<div class="banner warn">Data terakhir diverifikasi ' + Html.esc(m.verifiedDate) + ". Sebagian fakta mungkin perlu dicek ulang.</div>" : "") +
         (pending && this.source.canApprove ? '<a class="banner" href="#data" style="text-decoration:none;color:inherit">' + pending + " usulan pembaruan data menunggu persetujuan Anda ›</a>" : "") +
-        (canTanya ? '<div class="list"><a href="#tanya"><div><div class="t">Tanya</div><div class="s">Tulis atau ucapkan pertanyaan Anda</div></div>' + Html.chev() + "</a></div>" : "") +
         '<div class="stack-s"><p class="eyebrow">Cek gejala</p><div class="list">' +
         items.map(c => '<a href="#cek-' + Html.esc(c.id) + '"><div><div class="t">' + Html.esc(c.title) + '</div><div class="s">' + Html.esc(c.short) + "</div></div>" + Html.chev() + "</a>").join("") +
-        '<a href="#cek"><div><div class="t">Semua keluhan</div></div>' + Html.chev() + "</a></div></div>" +
+        '</div><a class="more-link" href="#cek">Keluhan lain ›</a></div>' +
         Html.footer());
     }
   }
@@ -864,9 +862,13 @@
 
   class MoreView extends View {
     render() {
-      const items = [["panduan", "Panduan", "ASI, MPASI, tidur aman, tersedak, kesehatan ibu, dan lainnya"], ["tumbuh", "Perkembangan", "Checklist CDC per usia"], ["imunisasi", "Imunisasi", "Jadwal IDAI 2024"], ["obat", "Keamanan obat", "Yang dihindari dan dosis program resmi"], ["data", "Sumber & pembaruan data", "Versi, usulan, riwayat perubahan"], ["profil", "Profil anak & tampilan", "Nama, tanggal lahir, tambah anak, mode gelap"]];
-      return this.page('<h1>Lainnya</h1><div class="list">' + items.map(([id, t, s]) => '<a href="#' + id + '"><div><div class="t">' + t + '</div><div class="s">' + s + "</div></div>" + Html.chev() + "</a>").join("") + "</div>" + Html.footer());
+      const items = [["panduan", "Panduan", "ASI, MPASI, tidur aman, tersedak, kesehatan ibu, dan lainnya"], ["tumbuh", "Perkembangan", "Checklist CDC per usia"], ["imunisasi", "Imunisasi", "Jadwal IDAI 2024"], ["obat", "Keamanan obat", "Yang dihindari dan dosis program resmi"], ["data", "Sumber & pembaruan data", "Versi, usulan, riwayat perubahan"], ["profil", "Profil anak", "Nama, tanggal lahir, tambah anak"]];
+      return this.page('<h1>Lainnya</h1><div class="list">' + items.map(([id, t, s]) => '<a href="#' + id + '"><div><div class="t">' + t + '</div><div class="s">' + s + "</div></div>" + Html.chev() + "</a>").join("") + "</div>" +
+        '<div class="card stack-s"><h3>Tampilan</h3><div class="tabs" role="group" aria-label="Tema tampilan">' +
+        [["auto", "Ikuti HP"], ["light", "Terang"], ["dark", "Gelap"]].map(([v, l]) => '<button type="button" data-theme-set="' + v + '" aria-pressed="' + (Theme.get() === v) + '">' + l + "</button>").join("") +
+        '</div><p class="small muted">Gelap lebih nyaman di mata saat memeriksa anak malam hari.</p></div>' + Html.footer());
     }
+    onClick(t) { if (t.dataset.themeSet) { Theme.set(t.dataset.themeSet); return true; } return false; }
   }
 
   class GuideListView extends View {
@@ -940,7 +942,7 @@
   class ProfileView extends View {
     constructor(app) { super(app); this.askDelete = false; }
     render() {
-      const p = this.profile, many = p.list.length > 1, th = Theme.get();
+      const p = this.profile, many = p.list.length > 1;
       const kids = many ? '<div class="stack-s"><p class="eyebrow">Pilih anak</p><div class="answers">' +
         p.list.map((k, i) => '<button type="button" data-kid="' + i + '" aria-pressed="' + (i === p.active) + '">' + Html.esc(Profile.labelOf(k)) + "</button>").join("") + "</div></div>" : "";
       const del = this.askDelete
@@ -951,17 +953,13 @@
         '<div class="stack-s"><label for="p-lahir">Tanggal lahir</label><input id="p-lahir" type="date" max="' + Clock.today() + '" value="' + Html.esc(p.birth) + '"></div>' +
         '<button class="btn-primary" type="submit">Simpan</button></form>' +
         '<div class="row"><button type="button" data-act="add-kid">+ Tambah anak</button>' + (this.askDelete ? "" : del) + "</div>" + (this.askDelete ? del : "") +
-        '<p class="small muted">Disimpan di perangkat ini saja, dipakai untuk menghitung usia pada setiap penilaian.</p>' +
-        '<div class="card stack-s"><h3>Tampilan</h3><div class="tabs" role="group" aria-label="Tema tampilan">' +
-        [["auto", "Ikuti HP"], ["light", "Terang"], ["dark", "Gelap"]].map(([v, l]) => '<button type="button" data-theme-set="' + v + '" aria-pressed="' + (th === v) + '">' + l + "</button>").join("") +
-        '</div><p class="small muted">Gelap lebih nyaman di mata saat memeriksa anak malam hari.</p></div>');
+        '<p class="small muted">Disimpan di perangkat ini saja, dipakai untuk menghitung usia pada setiap penilaian.</p>');
     }
     /** Ganti anak: jawaban cek gejala dan tab perkembangan milik anak sebelumnya dibuang. */
     changed() { this.askDelete = false; this.app.views.milestone.tab = null; this.app.views.checker.sessions = {}; }
     onClick(t) {
       const p = this.profile, a = t.dataset.act;
       if (t.dataset.kid !== undefined) { p.select(+t.dataset.kid); this.changed(); Toast.show("Sekarang: " + p.label); return true; }
-      if (t.dataset.themeSet) { Theme.set(t.dataset.themeSet); return true; }
       if (a === "add-kid") { p.add(); this.changed(); return true; }
       if (a === "del-kid") { this.askDelete = true; return true; }
       if (a === "del-no") { this.askDelete = false; return true; }

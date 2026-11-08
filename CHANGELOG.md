@@ -1,5 +1,12 @@
 # Changelog
 
+### [2026.11.08-8] — 2026-11-08
+- Commit: feat: Beranda dan Profil diringkas dari sudut pandang ortu
+- Detail:
+  - T1 feat: Beranda hanya Darurat + keluhan sesuai usia; kartu Tanya dobel (sudah di menu bawah) dihapus, "Semua keluhan" jadi tautan "Keluhan lain", teks pembuka satu kalimat — src/page-body.html, src/page-head.html
+  - T1 feat: pilihan tema pindah dari Profil ke Lainnya — src/page-body.html
+- Rollback: git revert <sha commit ini>
+
 ### [2026.11.08-7] — 2026-11-08
 - Commit: feat: UI/UX ramah ortu (audit Web Interface Guidelines, beberapa anak, mode gelap, back Android 13+)
 - Detail:
