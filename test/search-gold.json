@@ -295,15 +295,20 @@
  },
  {
   "q": "bayi 1 minggu ada nanah di pusar",
-  "expect": "checker:neonatus",
-  "danger": false,
-  "synthetic": true
+  "expect": "guide:bbl",
+  "danger": true,
+  "synthetic": true,
+  "note": "2026-11-08: aturan pusar (AAP cord care, level hari); panduan tali pusat ada di bbl"
  },
  {
   "q": "bayi baru lahir sering bersin normal gak",
-  "expect": "checker:neonatus",
+  "expect": [
+   "checker:neonatus",
+   "guide:cegukanbersin"
+  ],
   "danger": false,
-  "synthetic": true
+  "synthetic": true,
+  "note": "cegukanbersin: AAP bersin pada bayi baru lahir normal"
  },
  {
   "q": "asi ga keluar banyak gmn caranya",
@@ -961,7 +966,10 @@
  },
  {
   "q": "anak 3 thn belum lancar ngomong",
-  "expect": "milestone:m36",
+  "expect": [
+   "milestone:m36",
+   "guide:bicaraterlambat"
+  ],
   "danger": false,
   "synthetic": true
  },

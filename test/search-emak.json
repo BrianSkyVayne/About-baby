@@ -149,7 +149,10 @@
  },
  {
   "q": "anak 2 tahun belum ngomong",
-  "expect": "milestone:m24",
+  "expect": [
+   "milestone:m24",
+   "guide:bicaraterlambat"
+  ],
   "danger": false,
   "synthetic": true,
   "set": "emak-holdout-2026-11-08"

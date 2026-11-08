@@ -23,8 +23,9 @@ gold.forEach(g => {
   const keys = r.results.map(x => x.type + ":" + x.id);
   if (g.expect) {
     withExpect++;
-    if (keys[0] === g.expect) top1++;
-    if (keys.slice(0, 3).indexOf(g.expect) >= 0) top3++;
+    const ex = [].concat(g.expect); // boleh beberapa jawaban yang sama-sama benar
+    if (ex.indexOf(keys[0]) >= 0) top1++;
+    if (keys.slice(0, 3).some(k => ex.indexOf(k) >= 0)) top3++;
     else fails.push("[cari] " + g.q + " -> harap " + g.expect + ", dapat " + (keys.slice(0, 3).join(", ") || "(kosong)"));
   } else if (keys.length && r.confidence === "high") {
     fails.push("[cari] " + g.q + " -> harap tidak ada jawaban yakin, dapat " + keys[0]);

@@ -171,10 +171,11 @@
  },
  {
   "q": "bayi cegukan terus",
-  "expect": null,
+  "expect": "guide:cegukanbersin",
   "danger": false,
   "synthetic": true,
-  "set": "ortu-holdout-2026-11-08b"
+  "set": "ortu-holdout-2026-11-08b",
+  "note": "2026-11-08: topik kini ada di KB (riset AAP/NHS)"
  },
  {
   "q": "rambut bayi rontok",
@@ -185,31 +186,35 @@
  },
  {
   "q": "biang keringat di leher bayi",
-  "expect": null,
+  "expect": "guide:biangkeringat",
   "danger": false,
   "synthetic": true,
-  "set": "ortu-holdout-2026-11-08b"
+  "set": "ortu-holdout-2026-11-08b",
+  "note": "2026-11-08: topik kini ada di KB (riset AAP/NHS)"
  },
  {
   "q": "kuku bayi panjang cara potong",
-  "expect": null,
+  "expect": "guide:potongkuku",
   "danger": false,
   "synthetic": true,
-  "set": "ortu-holdout-2026-11-08b"
+  "set": "ortu-holdout-2026-11-08b",
+  "note": "2026-11-08: topik kini ada di KB (riset AAP/NHS)"
  },
  {
   "q": "anak sembelit 4 hari ga bab",
-  "expect": null,
+  "expect": "guide:sembelit",
   "danger": false,
   "synthetic": true,
-  "set": "ortu-holdout-2026-11-08b"
+  "set": "ortu-holdout-2026-11-08b",
+  "note": "2026-11-08: topik kini ada di KB (riset AAP/NHS)"
  },
  {
   "q": "sariawan di mulut bayi putih putih",
-  "expect": null,
+  "expect": "guide:sariawanputih",
   "danger": false,
   "synthetic": true,
-  "set": "ortu-holdout-2026-11-08b"
+  "set": "ortu-holdout-2026-11-08b",
+  "note": "2026-11-08: topik kini ada di KB (riset AAP/NHS)"
  },
  {
   "q": "ayahnya suruh nyusuin terus soalnya bayi emut tangan, malah nyembur",
