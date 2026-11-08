@@ -58,6 +58,7 @@ module.exports = {
   medline_vomitblood: { title: "MedlinePlus (NIH) — Vomiting blood", url: "https://medlineplus.gov/ency/article/003118.htm", type: "primer" },
   aap_hc_safesleep: { title: "AAP HealthyChildren — A Parent's Guide to Safe Sleep", url: "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/A-Parents-Guide-to-Safe-Sleep.aspx", type: "primer" },
   nhs_jaundice: { title: "NHS — Newborn jaundice", url: "https://www.nhs.uk/conditions/jaundice-newborn/", type: "primer" },
+  nhs_bf_medicines: { title: "NHS — Medicines and breastfeeding", url: "https://www.nhs.uk/conditions/baby/breastfeeding-and-bottle-feeding/breastfeeding-and-lifestyle/medicines/", type: "primer" },
   nhs_burns: { title: "NHS — Burns and scalds", url: "https://www.nhs.uk/conditions/burns-and-scalds/", type: "primer" },
   medline_fontanel_sunken: { title: "MedlinePlus — Fontanelles - sunken", url: "https://medlineplus.gov/ency/article/003309.htm", type: "primer" },
   medline_fontanel_bulge: { title: "MedlinePlus — Fontanelles - bulging", url: "https://medlineplus.gov/ency/article/003310.htm", type: "primer" },

@@ -10,8 +10,8 @@ android {
         applicationId "id.asistenbayi.app"
         minSdk 24
         targetSdk 35
-        versionCode 29
-        versionName "2026.11.08-27"
+        versionCode 30
+        versionName "2026.11.08-28"
     }
 
     buildTypes {
