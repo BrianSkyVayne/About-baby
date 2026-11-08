@@ -1,0 +1,212 @@
+[
+ {
+  "q": "bokong bayi merah merah abis pake pampers",
+  "expect": "guide:ruampopok",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "anak 2 thn panas 39 rewel",
+  "expect": "checker:demam",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "bayi muntah tiap habis nyusu wajar ga",
+  "expect": "checker:gumoh",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "mencret 5x sehari bayi 8 bulan",
+  "expect": "checker:diare",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "bayi 2 minggu kuning sampe perut",
+  "expect": "checker:kuning",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "napas bayi grok grok batuk pilek",
+  "expect": "checker:napas",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "bayi nangis terus tiap sore jam yg sama",
+  "expect": "checker:tangis",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "anak demam hari ke 4 bintik merah di kaki",
+  "expect": "checker:dbd",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "kapan bayi boleh mulai makan",
+  "expect": "guide:mpasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "asi sedikit gimana biar banyak",
+  "expect": "guide:asi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "bayi tidur sendiri di box mulai umur brp",
+  "expect": "guide:tidur",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "anak umur 2 boleh nonton hp",
+  "expect": "guide:layar",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "obat penurun panas dosis anak",
+  "expect": "obat:penurunpanas",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "oralit buat bayi diare caranya",
+  "expect": "obat:oralit",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "jadwal vaksin campak",
+  "expect": "imunisasi:imunisasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "bayi 9 bulan harusnya udah bisa apa",
+  "expect": "milestone:m09",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "madu buat bayi 6 bulan batuk boleh",
+  "expect": "mitos:madu-bayi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "bayi baru lahir boleh dikasih air putih",
+  "expect": "mitos:air-putih",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "aku sedih terus abis lahiran",
+  "expect": "guide:ibu",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "anak kesiram air panas melepuh",
+  "expect": "guide:aman",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "bayi lemes ga mau nyusu sama sekali",
+  "expect": "checker:neonatus",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "anak muntah warna hijau",
+  "expect": "checker:gumoh",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "resep bubur ayam bayi",
+  "expect": "guide:mpasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "cara memandikan bayi baru lahir",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "bayi cegukan terus",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "rambut bayi rontok",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "biang keringat di leher bayi",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "kuku bayi panjang cara potong",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "anak sembelit 4 hari ga bab",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "sariawan di mulut bayi putih putih",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-holdout-2026-11-08b"
+ }
+]

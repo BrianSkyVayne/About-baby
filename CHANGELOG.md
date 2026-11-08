@@ -1,5 +1,13 @@
 # Changelog
 
+### [2026.11.08-16] — 2026-11-08
+- Commit: chore: hapus sumber dobel, tambah soal uji tertahan baru
+- Detail:
+  - T1 chore: hapus entri sumber identik yang dobel (nhs_fever, who_dengue fact sheet, who_zinc); kb.json dan halaman hasil bangun tidak berubah — src/kb-sources.js
+  - T1 test: 30 soal uji tertahan baru, dijalankan sekali tanpa penyetelan (Top-1 82,6%, Top-3 100%, recall bahaya 3/4, bahaya palsu 1) — test/search-ortu2.json
+  - T1 chore: versi 18 / 2026.11.08-16 — android/app/build.gradle
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-15] — 2026-11-08
 - Commit: fix: panduan ruam popok, alias keracunan, peringatan kejang palsu, keyakinan kata umum
 - Detail:
