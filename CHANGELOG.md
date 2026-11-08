@@ -1,5 +1,16 @@
 # Changelog
 
+### [2026.11.08-15] — 2026-11-08
+- Commit: fix: panduan ruam popok, alias keracunan, peringatan kejang palsu, keyakinan kata umum
+- Detail:
+  - T2 fix: AskEngine tidak menghitung kata umum (df > 1/3 entri, mis. "bayi") sebagai kecocokan bermakna saat menilai keyakinan ("ubun2 bayi cekung" tidak lagi yakin ke checker diare) — src/engine.js
+  - T2 fix: peringatan kejang tidak muncul untuk pertanyaan "kejang ... bisa kambuh/berulang" — src/engine.js
+  - T2 feat: panduan "Ruam popok" dari NHS (sumber baru nhs_nappy) — src/kb-content.js, src/kb-sources.js
+  - T1 fix: alias panduan Pencegahan cedera mengikuti kosakata aturan bahaya keracunan (tertelan, minyak tanah, bensin, pemutih, obat nyamuk, deterjen) — src/kb-content.js
+  - T1 test: target soal "ruam popok merah lecet" null → guide:ruampopok karena KB kini punya isinya — test/search-ortu.json
+  - T1 chore: meta.version KB 2026.11.08-3; bangun ulang kb.json, kb/, halaman; versi 17 / 2026.11.08-15 — android/app/build.gradle
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-14] — 2026-11-08
 - Commit: fix: tangkap tanda bahaya ketikan ortu panik, turunkan keyakinan jawaban salah topik
 - Detail:
@@ -8,7 +19,7 @@
   - T2 fix: kartu checker di Tanya tidak lagi menampilkan kesimpulan default ("Tidak ada tanda bahaya", "tanpa dehidrasi") sebelum pertanyaan dijawab, yang bertentangan dengan peringatan bahaya di atasnya (dicek di Safari) — src/page-body.html (AskView.card)
   - T1 test: soal uji terpisah 50 ketikan ortu buru-buru (test/search-ortu.json), search-eval.js menerima path file — test/
   - T1 chore: bangun ulang halaman — index.html, offline.html, android/app/src/main/assets/www/index.html; versi 16 / 2026.11.08-14 — android/app/build.gradle
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert 624d38d
 
 ### [2026.11.08-13] — 2026-11-08
 - Commit: fix: naikkan versi KB agar koreksi medis sampai ke HP terpasang

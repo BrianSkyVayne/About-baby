@@ -148,7 +148,7 @@
  },
  {
   "q": "ruam popok merah lecet",
-  "expect": null,
+  "expect": "guide:ruampopok",
   "danger": false,
   "synthetic": true,
   "set": "ortu-buru2-2026-11-08"

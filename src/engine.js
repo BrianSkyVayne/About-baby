@@ -399,7 +399,7 @@
     }
   }
   DangerDetector.RULES = [
-    { id: "kejang", re: /\s(kejang|kelojotan)\s/, text: "Kejang termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
+    { id: "kejang", re: /\s(kejang|kelojotan)\s/, unless: /\s(kejang|kelojotan) (\S+ ){0,2}(bisa|apakah|apa|akan) (kambuh|berulang|terulang)/, text: "Kejang termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
     { id: "biru", re: /\s((bibir|kulit|wajah|muka|kuku|lidah|badan|tubuh|mulut|bayi|lahir) (\S+ )?biru|membiru|kebiruan)\s/, text: "Bibir atau kulit kebiruan: segera ke IGD.", src: null },
     { id: "sesak", re: /\s(sesak|napas cepat|tarikan dada|dada tertarik|dada (\S+ ){0,3}cekung|susah napas|sulit napas|susah bernapas|sulit bernapas|napas berat|ngos ngosan|tersengal)/, text: "Sesak atau napas cepat/tarikan dada termasuk tanda bahaya WHO.", src: "who_imci_pneu" },
     { id: "lemas", re: /\s(tidak sadar|pingsan|sulit dibangunkan|susah dibangunkan|tidak bisa dibangunkan|lemas|lunglai|tidak merespons|tidak respon|tidak responsif)/, text: "Lemas sekali atau sulit dibangunkan termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
@@ -530,7 +530,11 @@
         const r0 = results[0];
         const qt = Array.from(new Set(TextNormalizer.tokensOfNorm(norm))).filter(t => !/^\d/.test(t));
         const unknown = qt.filter(t => !this.index.df[t]).length;
-        if (confidence === "high" && typeof r0.hits === "number" && r0.hits < 2 && !r0.phrase && unknown > 0) confidence = "low";
+        // Kata umum (muncul di > 1/3 entri, mis. "bayi") tidak dihitung sebagai kecocokan yang bermakna.
+        const common = t => (this.index.df[t] || 0) > this.index.N / 3;
+        const doc = this.index.docs.filter(d => d.type === r0.type && d.id === r0.id)[0];
+        const hits = doc ? qt.filter(t => doc.tf[t] && !common(t)).length : r0.hits;
+        if (confidence === "high" && typeof hits === "number" && hits < 2 && !r0.phrase && unknown > 0) confidence = "low";
       }
       let best = results.length ? Object.assign({}, results[0]) : null;
       if (best && best.type === "checker") {

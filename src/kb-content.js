@@ -105,7 +105,7 @@ const guides = [
       { t: "Ukur tinggi juga, bukan hanya berat. Masa paling menentukan adalah sejak kehamilan sampai usia 2 tahun.", src: ["stunting"] }
     ] }
   ] },
-  { id: "aman", order: 10, title: "Pencegahan cedera", aliases: ["cedera", "jatuh", "tenggelam", "kecelakaan", "luka bakar", "keracunan", "bahaya rumah", "child proofing", "jatuh dari kasur", "kepala kebentur", "terjatuh", "obat terkunci", "baby proofing"], examples: ["bayi jatuh dari kasur gmn", "anak deket kolam bahaya", "bayi minum sabun keracunan", "cara aman simpen obat dr anak", "anak kebentur kepala muntah"], sections: [
+  { id: "aman", order: 10, title: "Pencegahan cedera", aliases: ["cedera", "jatuh", "tenggelam", "kecelakaan", "luka bakar", "keracunan", "bahaya rumah", "child proofing", "jatuh dari kasur", "kepala kebentur", "terjatuh", "obat terkunci", "baby proofing", "tertelan", "minyak tanah", "bensin", "pemutih", "obat nyamuk", "deterjen", "baterai tertelan"], examples: ["bayi jatuh dari kasur gmn", "anak deket kolam bahaya", "bayi minum sabun keracunan", "cara aman simpen obat dr anak", "anak kebentur kepala muntah"], sections: [
     { h: "WHO", items: [
       { t: "Anak usia 0–4 tahun punya angka tenggelam tertinggi. Risiko naik saat anak dekat air tanpa pengawasan aktif orang dewasa.", src: ["who_drowning"] },
       { t: "Penyebab utama kematian akibat cedera pada anak: kecelakaan lalu lintas, tenggelam, luka bakar, jatuh, dan keracunan.", src: ["who_injury"] },
@@ -142,6 +142,21 @@ const guides = [
     { h: "Mengisap tidak selalu berarti lapar", items: [
       { t: "Bayi mengisap bukan hanya karena lapar, tetapi juga untuk menenangkan diri. Tidak setiap tangis atau isapan berarti lapar; bisa jadi ia ingin digendong atau popoknya perlu diganti.", src: ["aap_cues"] },
       { t: "Bayi juga mengisap untuk menenangkan diri, jadi isapan saja belum tentu berarti lapar. Perhatikan tanda lapar lainnya.", src: ["aap_cues"] }
+    ] }
+  ] },
+  { id: "ruampopok", order: 14, title: "Ruam popok", aliases: ["ruam popok", "iritasi popok", "pantat merah", "bokong merah", "diaper rash", "lecet popok", "ruam pantat"], examples: ["ruam popok merah lecet", "pantat bayi merah2 kena pampers", "salep ruam popok apa"], sections: [
+    { h: "Tanda", items: [
+      { t: "Bercak merah atau lecet di bokong atau seluruh area popok; bisa ada bintik, jerawat kecil, atau lepuh; kulit kering bersisik; bokong gatal atau perih; bayi tampak tidak nyaman.", src: ["nhs_nappy"] }
+    ] },
+    { h: "Yang bisa dilakukan di rumah", items: [
+      { t: "Ganti popok basah atau kotor secepatnya. Jaga kulit bersih dan kering; keringkan dengan ditepuk lembut.", src: ["nhs_nappy"] },
+      { t: "Lepas popok selama mungkin. Pakai popok yang lebih menyerap dan pas ukurannya, jangan dipasang terlalu ketat.", src: ["nhs_nappy"] },
+      { t: "Bersihkan dengan air atau tisu basah bayi tanpa pewangi dan tanpa alkohol. Mandikan setiap hari, tetapi tidak lebih dari dua kali sehari.", src: ["nhs_nappy"] },
+      { t: "Hindari sabun, losion bayi, sabun busa, bedak talk, krim antiseptik, dan celana plastik di atas popok.", src: ["nhs_nappy"] },
+      { t: "Bila ruam membuat tidak nyaman, apoteker dapat menyarankan krim pelindung (barrier cream) tipis setiap ganti popok.", src: ["nhs_nappy"] }
+    ] },
+    { h: "Kapan ke dokter", items: [
+      { t: "Ruam tidak hilang, makin parah, atau menyebar; bayi demam tinggi; atau bayi tampak sangat tidak nyaman. Dokter dapat memberi krim steroid, krim antijamur, atau antibiotik sesuai penyebab.", src: ["nhs_nappy"] }
     ] }
   ] }
 ];
@@ -264,7 +279,7 @@ const mitos = [
 ];
 
 const meta = {
-  version: "2026.11.08-2",
+  version: "2026.11.08-3",
   verifiedDate: "2026-11-07",
   lastCheck: "2026-11-07",
   reviewMonths: 12,
