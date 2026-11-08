@@ -61,6 +61,7 @@ module.exports = {
   medline_vomitblood: { title: "MedlinePlus (NIH) — Vomiting blood", url: "https://medlineplus.gov/ency/article/003118.htm", type: "primer" },
   aap_hc_safesleep: { title: "AAP HealthyChildren — A Parent's Guide to Safe Sleep", url: "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/A-Parents-Guide-to-Safe-Sleep.aspx", type: "primer" },
   nhs_jaundice: { title: "NHS — Newborn jaundice", url: "https://www.nhs.uk/conditions/jaundice-newborn/", type: "primer" },
+  nhs_nappy: { title: "NHS — Nappy rash", url: "https://www.nhs.uk/baby/caring-for-a-newborn/nappy-rash/", type: "primer" },
   hc_jaundice: { title: "AAP HealthyChildren — Jaundice in Newborns", url: "https://www.healthychildren.org/English/ages-stages/baby/Pages/Jaundice.aspx", type: "primer" },
   cdc_newborn: { title: "CDC — Newborn Breastfeeding Basics", url: "https://www.cdc.gov/infant-toddler-nutrition/breastfeeding/newborn-basics.html", type: "primer" },
   who_dengue_fs: { title: "WHO — Dengue and severe dengue (fact sheet)", url: "https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue", type: "primer" },
