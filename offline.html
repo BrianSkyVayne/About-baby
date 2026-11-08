@@ -144,13 +144,29 @@ label { font-weight: 500; font-size: 0.875rem; color: var(--muted); }
 
 /* Navigasi bawah: navigation-bar M3 — tinggi 80px, surface-container, indikator aktif pil 64x32 secondary-container */
 nav.bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--md-sys-color-surface-container); padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
-nav.bottom .inner { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); height: var(--nav-h); }
+nav.bottom .inner { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); height: var(--nav-h); }
 nav.bottom a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: var(--md-sys-color-on-surface-variant); font-size: 0.75rem; line-height: 1rem; font-weight: 500; letter-spacing: 0.03125rem; text-align: center; }
 nav.bottom a svg { width: 24px; height: 24px; padding: 4px 20px; border-radius: var(--md-sys-shape-corner-full); box-sizing: content-box; transition: background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard); }
 nav.bottom a[aria-current="page"] { color: var(--md-sys-color-on-surface); font-weight: 700; }
 nav.bottom a[aria-current="page"] svg { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
 
 /* Daftar menu: list M3 di dalam outlined card */
+/* Ubin pilihan utama: 2 kolom, warna lembut, sudut bulat besar. */
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.tile { display: flex; flex-direction: column; gap: 6px; padding: 14px; min-height: 92px; border-radius: 20px; text-decoration: none; color: var(--ink); background: var(--md-sys-color-secondary-container, var(--surface)); position: relative; overflow: hidden; transition: transform var(--md-sys-motion-duration-short4, .15s) ease; }
+.tile:nth-child(4n+2) { background: var(--md-sys-color-tertiary-container, var(--surface)); }
+.tile:nth-child(4n+3) { background: var(--md-sys-color-primary-container, var(--surface)); }
+.tile:active { transform: scale(.97); }
+.tile .ico { font-size: 1.6rem; line-height: 1; }
+.tile .t { font-weight: 600; line-height: 1.25rem; }
+.tile .s { font-size: 0.8125rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .tile { transition: none; } .tile:active { transform: none; } }
+input.find { width: 100%; box-sizing: border-box; min-height: 48px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 1rem; }
+details.grp { border-radius: 16px; background: var(--surface); border: 1px solid var(--line); overflow: hidden; }
+details.grp summary { cursor: pointer; min-height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 16px; font-weight: 600; list-style: none; }
+details.grp summary::-webkit-details-marker { display: none; }
+details.grp summary .n { margin-left: auto; font-size: 0.8125rem; font-weight: 500; color: var(--muted); }
+details.grp .list { border: 0; border-top: 1px solid var(--line); border-radius: 0; }
 .list { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--md-sys-shape-corner-medium); background: var(--surface); overflow: hidden; }
 .list a, .list button { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 16px; min-height: 56px; text-decoration: none; color: var(--ink); border: 0; border-top: 1px solid var(--line); border-radius: 0; text-align: left; font-size: 1rem; font-weight: 400; position: relative; }
 .list a::after { content: ""; position: absolute; inset: 0; background: var(--ink); opacity: 0; pointer-events: none; }
@@ -888,6 +904,10 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
     }
     static emergency() { return '<div class="stack-s"><a class="btn btn-big btn-danger" href="tel:119">Telepon 119</a><a class="btn btn-big" href="https://www.google.com/maps/search/IGD+terdekat" target="_blank" rel="noopener">Cari IGD terdekat</a></div>'; }
     static footer() { return '<p class="small muted" style="text-align:center">' + POWERED + "</p>"; }
+    /** Kartu besar berwarna lembut untuk pilihan utama (keluhan, topik). items: [href, judul, sub, emoji]. */
+    static tiles(items) {
+      return '<div class="tiles">' + items.map(([href, t, sub, ico]) => '<a class="tile" href="' + Html.esc(href) + '"><span class="ico" aria-hidden="true">' + (ico || "•") + '</span><span class="t">' + Html.esc(t) + "</span>" + (sub ? '<span class="s">' + Html.esc(sub) + "</span>" : "") + "</a>").join("") + "</div>";
+    }
     static back(href, label) { return '<a href="#' + href + '" class="small">‹ ' + Html.esc(label) + "</a>"; }
   }
 
@@ -1332,9 +1352,8 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
         (this.profile.hasAge ? "" : '<a class="more-link" href="#profil">Isi tanggal lahir anak agar hasil sesuai usia ›</a>') +
         (kb.isStale ? '<div class="banner warn">Data terakhir diverifikasi ' + Html.esc(m.verifiedDate) + ". Sebagian fakta mungkin perlu dicek ulang.</div>" : "") +
         (pending && this.source.canApprove ? '<a class="banner" href="#data" style="text-decoration:none;color:inherit">' + pending + " usulan pembaruan data menunggu persetujuan Anda ›</a>" : "") +
-        '<div class="stack-s"><p class="eyebrow">Cek gejala</p><div class="list">' +
-        items.map(c => '<a href="#cek-' + Html.esc(c.id) + '"><div><div class="t">' + Html.esc(c.title) + '</div><div class="s">' + Html.esc(c.short) + "</div></div>" + Html.chev() + "</a>").join("") +
-        '</div><a class="more-link" href="#cek">Keluhan lain ›</a></div>' +
+        '<div class="stack-s"><p class="eyebrow">Cek cepat</p>' + CheckerListView.tiles(items) +
+        '<a class="more-link" href="#tanya">Semua keluhan ›</a></div>' +
         Html.footer());
     }
     /** Ketikan di Beranda dijawab di layar Tanya (mesin yang sama), lalu hasilnya digulir ke depan. */
@@ -1355,17 +1374,24 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
     render() {
       const links = [["kejang", "Kejang"], ["napas", "Sulit bernapas"], ["neonatus", "Bayi baru lahir (usia 28 hari ke bawah)"]]
         .map(([id, fallback]) => { const c = this.kb.checkers.find(x => x.id === id); return c ? [c.id, c.title] : null; }).filter(Boolean);
+      links.push(["#napas", "Hitung napas 60 detik"]);
       return this.page(Html.back("beranda", "Beranda") + '<h1>Darurat</h1><p class="muted">Bila anak tidak sadar, kejang, biru, atau sulit bernapas, jangan menunggu hasil pemeriksaan di aplikasi.</p>' +
         Html.emergency() +
-        (links.length ? '<div class="stack-s"><p class="eyebrow">Cek cepat</p><div class="list">' + links.map(([id, t]) => '<a href="#cek-' + Html.esc(id) + '"><div><div class="t">' + Html.esc(t) + "</div></div>" + Html.chev() + "</a>").join("") + "</div></div>" : "") +
+        (links.length ? '<div class="stack-s"><p class="eyebrow">Cek cepat</p><div class="list">' + links.map(([id, t]) => '<a href="' + (id[0] === "#" ? Html.esc(id) : "#cek-" + Html.esc(id)) + '"><div><div class="t">' + Html.esc(t) + "</div></div>" + Html.chev() + "</a>").join("") + "</div></div>" : "") +
         Html.footer());
     }
   }
 
   class CheckerListView extends View {
     render() {
-      return this.page('<h1>Cek gejala</h1><p class="muted">Pilih keluhan yang paling sesuai.</p><div class="list">' +
-        this.kb.byOrder(this.kb.checkers).map(c => '<a href="#cek-' + Html.esc(c.id) + '"><div><div class="t">' + Html.esc(c.title) + '</div><div class="s">' + Html.esc(c.short) + "</div></div>" + Html.chev() + "</a>").join("") + "</div>");
+      return this.page('<h1>Cek gejala</h1><p class="muted">Pilih keluhan yang paling sesuai.</p>' + CheckerListView.tiles(this.kb.byOrder(this.kb.checkers), true));
+    }
+    /** Ubin keluhan; withBreath menambah alat hitung napas di akhir. */
+    static tiles(list, withBreath) {
+      const ICO = { neonatus: "👶", gumoh: "🍼", kuning: "🟡", demam: "🌡️", diare: "💧", napas: "🫁", tangis: "😢", kejang: "⚡", dbd: "🦟" };
+      const items = list.map(c => ["#cek-" + c.id, c.title, "", ICO[c.id]]);
+      if (withBreath) items.push(["#napas", "Hitung napas", "60 detik", "⏱️"]);
+      return Html.tiles(items);
     }
   }
 
@@ -1679,8 +1705,8 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
     }
     render() {
       const mic = this.source.canListen;
-      return this.page("<h1>Tanya</h1>" +
-        '<p class="muted">Dijawab dari data terverifikasi di aplikasi ini, dengan sumbernya, tanpa internet. Bila belum ada, kami bilang terus terang.</p>' +
+      return this.page("<h1>Keluhan anak</h1>" +
+        '<p class="muted">Ketik saja seperti chat. Dijawab dari data terverifikasi beserta sumbernya, tanpa internet.</p>' +
         '<div class="row">' + AskView.TOPICS.map((t, i) => '<button type="button" data-chip="' + i + '">' + Html.esc(t[0]) + "</button>").join("") + "</div>" +
         '<form data-form="ask" class="card stack"><label for="t-q">Pertanyaan</label><textarea id="t-q" placeholder="Contoh: bayi 2 minggu gumoh setelah menyusu tapi masih lapar, perlu ke dokter?">' + Html.esc(this.q) + "</textarea>" +
         '<div class="row"><button class="btn-primary" type="submit"' + (this.busy ? " disabled" : "") + ">" + (this.busy ? "Menjawab…" : "Tanya") + "</button>" + (mic ? '<button type="button" data-act="mic" aria-label="Ucapkan pertanyaan"' + (this.busy ? " disabled" : "") + ">Ucapkan</button>" : "") + (this.busy ? '<button type="button" data-act="stop">Hentikan</button>' : "") + "</div></form>" +
@@ -1688,7 +1714,8 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
         '<div id="t-res">' + this.localHtml() + "</div>" +
         (this.hits.length ? '<div class="card stack-s"><p class="eyebrow">Mungkin membantu</p><div class="list">' + this.hits.map(([href, t]) => '<a href="' + Html.esc(href) + '"><div><div class="t">' + Html.esc(t) + "</div></div>" + Html.chev() + "</a>").join("") + "</div></div>" : "") +
         (this.text ? '<div class="card stack-s"><p class="eyebrow">Jawaban online</p><div class="answer" id="t-ans">' + this.linkify(this.text) + "</div></div>" : "") +
-        (this.res || this.text ? this.feedbackRow() : ""));
+        (this.res || this.text ? this.feedbackRow() : "") +
+        '<div class="stack-s"><p class="eyebrow">' + (this.res ? "Atau cek per keluhan" : "Atau pilih keluhan") + "</p>" + CheckerListView.tiles(this.kb.byOrder(this.kb.checkers), true) + "</div>");
     }
     onInput(t) { if (t.id === "t-q") this.q = t.value; }
     onSubmit(form) { if (form.dataset.form !== "ask") return false; this.q = form.querySelector("textarea").value; this.local(); return false; }
@@ -1747,7 +1774,7 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
 
   class MoreView extends View {
     render() {
-      const items = [["panduan", "Panduan", "ASI, MPASI, tidur aman, tersedak, kesehatan ibu, dan lainnya"], ["tumbuh", "Perkembangan", "Checklist CDC per usia"], ["imunisasi", "Imunisasi", "Jadwal IDAI 2024"], ["obat", "Keamanan obat", "Yang dihindari dan dosis program resmi"], ["data", "Sumber & pembaruan data", "Versi, usulan, riwayat perubahan"], ["profil", "Profil anak", "Nama, tanggal lahir, tambah anak"]];
+      const items = [["tumbuh", "Perkembangan", "Checklist CDC per usia"], ["imunisasi", "Imunisasi", "Jadwal IDAI 2024"], ["obat", "Keamanan obat", "Yang dihindari dan dosis program resmi"], ["data", "Sumber & pembaruan data", "Versi, usulan, riwayat perubahan"], ["profil", "Profil anak", "Nama, tanggal lahir, tambah anak"]];
       return this.page('<h1>Lainnya</h1><div class="list">' + items.map(([id, t, s]) => '<a href="#' + id + '"><div><div class="t">' + t + '</div><div class="s">' + s + "</div></div>" + Html.chev() + "</a>").join("") + "</div>" +
         '<div class="card stack-s"><h3>Tampilan</h3><div class="tabs" role="group" aria-label="Tema tampilan">' +
         [["auto", "Ikuti HP"], ["light", "Terang"], ["dark", "Gelap"]].map(([v, l]) => '<button type="button" data-theme-set="' + v + '" aria-pressed="' + (Theme.get() === v) + '">' + l + "</button>").join("") +
@@ -1758,9 +1785,55 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
 
   class GuideListView extends View {
     render() {
-      return this.page(Html.back("lainnya", "Lainnya") + '<h1>Panduan</h1><div class="list">' + this.kb.byOrder(this.kb.guides).map(g => '<a href="#panduan-' + Html.esc(g.id) + '"><div class="t">' + Html.esc(g.title) + "</div>" + Html.chev() + "</a>").join("") + "</div>");
+      const all = this.kb.byOrder(this.kb.guides), d = this.profile.ageDays;
+      const byId = id => all.find(g => g.id === id);
+      const picks = GuideListView.forAge(d).map(byId).filter(Boolean).slice(0, 6);
+      const used = new Set();
+      const groups = GuideListView.GROUPS.map(([name, ico, ids]) => {
+        const gs = ids.map(byId).filter(Boolean); gs.forEach(g => used.add(g.id)); return [name, ico, gs];
+      });
+      const rest = all.filter(g => !used.has(g.id));
+      if (rest.length) groups.push(["Lainnya", "📚", rest]);
+      const row = g => '<a href="#panduan-' + Html.esc(g.id) + '" data-find="' + Html.esc((g.title + " " + (g.aliases || []).join(" ")).toLowerCase()) + '"><div class="t">' + Html.esc(g.title) + "</div>" + Html.chev() + "</a>";
+      return this.page('<h1>Panduan</h1>' +
+        '<input id="g-find" type="search" class="find" placeholder="Cari: tidur, ruam, MPASI…" aria-label="Cari panduan" autocomplete="off">' +
+        '<div id="g-body" class="stack">' +
+        (picks.length ? '<div class="stack-s"><p class="eyebrow">' + (d === null ? "Paling sering dibuka" : "Cocok untuk usia " + Html.esc(this.profile.label.split(" · ").pop())) + "</p>" + Html.tiles(picks.map(g => ["#panduan-" + g.id, g.title, "", GuideListView.icon(g.id)])) + "</div>" : "") +
+        '<div class="stack-s"><p class="eyebrow">Semua topik</p>' + groups.map(([name, ico, gs]) => '<details class="grp"><summary><span aria-hidden="true">' + ico + "</span> " + Html.esc(name) + ' <span class="n">' + gs.length + '</span></summary><div class="list">' + gs.map(row).join("") + "</div></details>").join("") + "</div></div>" +
+        '<p id="g-none" class="muted" hidden>Belum ada panduan dengan kata itu. Coba tanyakan di Keluhan.</p>');
+    }
+    /** Saring di tempat (tanpa render ulang) supaya fokus ketikan tidak lepas. */
+    onInput(t) {
+      if (t.id !== "g-find") return;
+      const q = t.value.trim().toLowerCase(), body = document.getElementById("g-body");
+      let hit = 0;
+      body.querySelectorAll("details.grp").forEach(det => {
+        let n = 0;
+        det.querySelectorAll("a[data-find]").forEach(a => { const ok = !q || a.dataset.find.includes(q); a.hidden = !ok; if (ok) n++; });
+        det.hidden = q && !n; det.open = !!q && n > 0; hit += n;
+      });
+      const tiles = body.querySelector(".tiles"); if (tiles) tiles.parentElement.hidden = !!q;
+      document.getElementById("g-none").hidden = !q || hit > 0;
+    }
+    static icon(id) { const g = GuideListView.GROUPS.find(x => x[2].includes(id)); return g ? g[1] : "📚"; }
+    /** Topik yang paling relevan per usia (hari). Pemetaan tampilan saja, bukan saran medis. */
+    static forAge(d) {
+      if (d === null) return ["asi", "tidur", "mpasi", "demam", "tersedak", "gigi"];
+      if (d <= 90) return ["bbl", "asi", "lapar", "tidur", "mandibayi", "matabelekan", "cegukanbersin", "ibu"];
+      if (d <= 180) return ["tummytime", "tidur", "asi", "kepalapeyang", "pascaimunisasi", "biangkeringat"];
+      if (d <= 365) return ["mpasi", "tersedak", "gigi", "dudukberdiri", "merangkak", "alergimakanan"];
+      return ["berjalan", "bicaraterlambat", "layar", "toilettraining", "kepalaterbentur", "mpasi"];
     }
   }
+  GuideListView.GROUPS = [
+    ["Makan & minum", "🍼", ["asi", "lapar", "susuformula", "mpasi", "alergimakanan", "suplemen"]],
+    ["Tidur", "😴", ["tidur", "empeng"]],
+    ["Perawatan harian", "🛁", ["bbl", "mandibayi", "potongkuku", "matabelekan", "cegukanbersin", "sembelit", "gigi", "sunatpenis", "herniaumbilikalis", "pascaimunisasi", "toilettraining"]],
+    ["Kulit & mulut", "🧴", ["ruampopok", "kerakkepala", "biangkeringat", "eksim", "sariawanputih", "mataharinyamuk"]],
+    ["Tumbuh kembang", "🌱", ["tumbuh", "skrining", "tummytime", "dudukberdiri", "merangkak", "berjalan", "bicaraterlambat", "kepalapeyang", "babywalker", "layar"]],
+    ["Keamanan & cedera", "🛡️", ["aman", "tersedak", "kepalaterbentur", "lukabakar", "kursimobil"]],
+    ["Kesehatan ibu", "💗", ["ibu"]]
+  ];
 
   class GuideView extends View {
     render(id) {
@@ -1986,10 +2059,10 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
       const ICON = App.ICON;
       const canTanya = true;
       const fourth = canTanya ? ["tanya", "Tanya", "tanya"] : ["panduan", "Panduan", "panduan"];
-      const items = [["beranda", "Beranda", "beranda"], ["cek", "Cek Gejala", "cek"], ["napas", "Hitung Napas", "napas"], fourth, ["lainnya", "Lainnya", "lainnya"]];
+      const items = [["beranda", "Beranda", "beranda"], ["tanya", "Keluhan", "tanya"], ["panduan", "Panduan", "panduan"], ["lainnya", "Lainnya", "lainnya"]];
       const r = this.route;
-      const group = (r.name === "checker" || r.name === "checkers") ? "cek" : (!canTanya && (r.name === "guides" || r.name === "guide")) ? "panduan" :
-        ["guides", "guide", "milestone", "immunization", "medicine", "data", "profile", "more"].includes(r.name) ? "lainnya" : r.raw;
+      const group = ["checker", "checkers", "breath", "ask"].includes(r.name) ? "tanya" : ["guides", "guide"].includes(r.name) ? "panduan" :
+        ["milestone", "immunization", "medicine", "data", "profile", "more"].includes(r.name) ? "lainnya" : r.raw;
       this.navEl.innerHTML = items.map(([id, label, icon]) => '<a href="#' + id + '"' + (group === id ? ' aria-current="page"' : "") + ">" + ICON[icon] + "<span>" + label + "</span></a>").join("");
     }
     stateScreen() {
