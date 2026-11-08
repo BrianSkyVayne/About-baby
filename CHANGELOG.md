@@ -7,7 +7,7 @@
   - T2 feat: Panduan dikelompokkan jadi 7 grup buka-tutup + kotak cari + "Cocok untuk usia" (GuideListView.GROUPS/forAge, pemetaan tampilan saja); tinggi halaman 3594 → 1198 px — src/page-body.html
   - T1 style: ubin berwarna 2 kolom (Html.tiles) untuk keluhan dan topik, kotak cari bulat — src/page-head.html
   - T1 chore: versi 27 / 2026.11.08-25 — android/app/build.gradle
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert defd476
 
 ### [2026.11.08-24] — 2026-11-08
 - Commit: feat: riset dalam semua tentang bayi (27 panduan baru, sumber AAP/NHS/CDC/WHO dll)
@@ -16,7 +16,7 @@
   - T2 feat: tanda bahaya tali pusat bernanah/bau/berdarah (level hari, AAP) dan aturan keyakinan satu-kata-badan — src/engine.js
   - T1 test: set uji search-semua (39 kueri), label lama disesuaikan ke panduan baru, expect boleh beberapa jawaban — test/*
   - docs: kutipan verbatim 172 butir — research/kutipan-riset-2026-11-08.json
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert defd476
 
 ### [2026.11.08-23] — 2026-11-08
 - Commit: fix: sisa kegagalan uji cari (napas, neonatus, topik di luar KB, kancing)
@@ -24,7 +24,7 @@
   - T2 fix: pokok pertanyaan yang tidak dikenal KB (kerokan, bawang merah, akta) tidak lagi dijawab "yakin"; kata lemah (cara/bikin/gimana) diabaikan saat menentukan pokok — src/engine.js
   - T1 fix: alias napas ("ngos ngosan", "bibir biru", "napas tersengal"), neonatus ("bayi 3/5 hari", "bayi seminggu"), m12 ("belum bisa jalan"), lapar ("nyari puting", "buka mulut"); KB 2026.11.08-8 — src/kb-checkers.js, src/kb-content.js
   - T1 test: "nelen kancing" berlabel bahaya (baterai kancing) — test/search-emak.json
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert defd476
 
 ### [2026.11.08-22] — 2026-11-08
 - Commit: fix: tanda bahaya dari uji emak-emak (dada cekung, mendelik, ruam tidak pudar, bintik dengue)
@@ -34,20 +34,20 @@
   - T2 fix: "bintik merah" dikeluarkan dari aturan perdarahan dengue (WHO 2009: ruam/uji torniket = dengue tanpa tanda bahaya; perdarahan mukosa = tanda bahaya); aturan baru ruamkaca: ruam yang tidak pudar ditekan = IGD (NHS fever, "call 999") — src/engine.js
   - T1 feat: alias MPASI untuk buah/pisang; KB meta 2026.11.08-7 — src/kb-content.js
   - T1 test: set baru test/search-emak.json (40 soal ala emak); label ortu2 "hari ke 4 bintik merah di kaki" dikoreksi jadi bukan bahaya sesuai WHO 2009
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert defd476
 
 ### [2026.11.08-21] — 2026-11-08
 - Commit: feat: contoh kasus emut tangan lalu menyembur, tautan gambar dan video tanda lapar
 - Detail:
   - T2 feat: panduan "Tanda lapar & kenyang" mendapat bagian contoh kasus (emut tangan, disusui lagi terus, lalu menyembur) dengan sumber per butir (AAP cues, AAP Why Babies Spit Up, CDC cues, RCH pyloric) dan bagian tautan gambar (CDC) & video (AAP); butir "mengisap" yang dobel digabung; sumber baru aap_cues_video; KB meta 2026.11.08-6 — src/kb-content.js, src/kb-sources.js
   - T1 test: 4 pertanyaan ortu soal lapar/emut tangan ke test/search-ortu2.json
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert defd476
 
 ### [2026.11.08-20] — 2026-11-08
 - Commit: fix: pertanyaan muntah semua tidak terbaca seperti gumoh biasa
 - Detail:
   - T1 fix: teks tanda bahaya "muntahsemua" (cek gumoh, demam, napas) diubah jadi "Setiap kali diberi minum atau menyusu, semuanya dimuntahkan lagi (tidak ada yang tertahan sama sekali)?"; sebelumnya ortu bayi gumoh menjawab "ya" karena "susunya keluar semua" lalu dapat hasil IGD. Aturan dan sumber (who_imci_danger) tidak berubah; KB meta 2026.11.08-5 — src/kb-checkers.js, src/kb-content.js
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert defd476
 
 ### [2026.11.08-19] — 2026-11-08
 - Commit: fix: tingkat bahaya bersumber, luka bakar, sumber dengue, normalisasi bb, keyakinan pencarian
