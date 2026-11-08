@@ -22,6 +22,9 @@
   "use strict";
   const { Level, SymptomChecker, Age, KnowledgeValidator } = window.Engine;
   const ONLINE_URL = "https://claude.ai/artifact/2DjnViTVkzraEi3o7Qmwqr";
+  const CHAT_URL = "https://asisten-bayi-chat.REPLACE.workers.dev/ask"; // placeholder: ganti dengan alamat Worker
+  const REPORT_EMAIL = "support@skydreamer.id"; // placeholder
+  const POWERED = "Powered by PT. SkyDreamer Software";
 
   // =============================================================
   // Utilitas
@@ -35,6 +38,8 @@
       return '<div class="tbl"><table><thead><tr>' + t.head.map(x => "<th>" + e(x) + "</th>").join("") + "</tr></thead><tbody>" +
         t.rows.map(r => "<tr>" + r.map((x, i) => i === 0 ? "<td><strong>" + e(x) + "</strong></td>" : "<td>" + e(x) + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>";
     }
+    static emergency() { return '<div class="stack-s"><a class="btn btn-big btn-danger" href="tel:119">Telepon 119</a><a class="btn btn-big" href="https://www.google.com/maps/search/IGD+terdekat" target="_blank" rel="noopener">Cari IGD terdekat</a></div>'; }
+    static footer() { return '<p class="small muted" style="text-align:center">' + POWERED + "</p>"; }
     static back(href, label) { return '<a href="#' + href + '" class="small">‹ ' + Html.esc(label) + "</a>"; }
   }
 
@@ -70,10 +75,10 @@
   /** Basis pengetahuan yang sedang aktif, dari sumber data mana pun. */
   class KnowledgeBase {
     constructor() { this.clear(); }
-    clear() { this.sources = {}; this.checkers = []; this.guides = []; this.milestones = []; this.obat = []; this.changelog = []; this.usulan = []; this.meta = null; this.imunisasi = null; }
+    clear() { this.sources = {}; this.checkers = []; this.guides = []; this.milestones = []; this.obat = []; this.mitos = []; this.changelog = []; this.usulan = []; this.meta = null; this.imunisasi = null; }
     load(kb) {
       this.sources = kb.sources || {}; this.checkers = kb.checkers || []; this.guides = kb.guides || []; this.milestones = kb.milestones || [];
-      this.obat = kb.obat || []; this.changelog = kb.changelog || []; this.meta = kb.meta || null; this.imunisasi = kb.imunisasi || null;
+      this.obat = kb.obat || []; this.mitos = kb.mitos || []; this.changelog = kb.changelog || []; this.meta = kb.meta || null; this.imunisasi = kb.imunisasi || null;
     }
     get isEmpty() { return !this.checkers.length; }
     get isStale() { return !!this.meta && Age.monthsSince(this.meta.verifiedDate) >= (this.meta.reviewMonths || 12); }
@@ -83,7 +88,14 @@
     source(id) { return this.sources[id] || null; }
     snapshot() {
       const strip = o => { const c = { ...o }; delete c._id; return c; };
-      return { sources: this.sources, checkers: this.checkers.map(strip), guides: this.guides.map(strip), milestones: this.milestones.map(strip), obat: this.obat.map(strip), imunisasi: this.imunisasi, meta: this.meta, changelog: this.changelog.map(strip) };
+      return { sources: this.sources, checkers: this.checkers.map(strip), guides: this.guides.map(strip), milestones: this.milestones.map(strip), obat: this.obat.map(strip), mitos: this.mitos.map(strip), imunisasi: this.imunisasi, meta: this.meta, changelog: this.changelog.map(strip) };
+    }
+    /** Bandingkan versi seperti "2026.11.07-10": pisah di "." dan "-", bandingkan angka. Hasil -1, 0, 1. */
+    static compareVersion(a, b) {
+      const part = v => String(v == null ? "" : v).split(/[.\-]/).map(x => parseInt(x, 10) || 0);
+      const x = part(a), y = part(b), n = Math.max(x.length, y.length);
+      for (let i = 0; i < n; i++) { const d = (x[i] || 0) - (y[i] || 0); if (d) return d < 0 ? -1 : 1; }
+      return 0;
     }
     static parse(text) {
       let kb;
@@ -184,7 +196,8 @@
   class CloudSource extends DataSource {
     constructor(kb, claude) { super(kb); this.claude = claude; this.db = null; this.sample = null; this.downloads = null; this.editor = false; }
     get mode() { return "db"; }
-    get canAsk() { return !!this.sample; }
+    get canAsk() { return true; }
+    get canAskOnline() { return !!this.sample; }
     get canApprove() { return this.editor; }
     get canExport() { return !!this.downloads; }
     async start(onReady, onFail) {
@@ -192,7 +205,7 @@
       this.db = db; this.sample = sample; this.downloads = downloads;
       this.editor = user ? await user.canEdit().catch(() => false) : false;
       if (!db) { onFail(); return; }
-      const kb = this.kb, pending = new Set(["sources", "checkers", "guides", "milestones", "obat", "changelog", "usulan", "meta", "imunisasi"]);
+      const kb = this.kb, pending = new Set(["sources", "checkers", "guides", "milestones", "obat", "mitos", "changelog", "usulan", "meta", "imunisasi"]);
       let ready = false;
       const timer = setTimeout(() => { if (!ready) onFail(); }, 10000);
       const settle = key => { pending.delete(key); if (!pending.size && !ready) { ready = true; clearTimeout(timer); } if (ready) onReady(); };
@@ -203,6 +216,7 @@
       coll("guides", docs => { kb.guides = docs; });
       coll("milestones", docs => { kb.milestones = docs; });
       coll("obat", docs => { kb.obat = docs; });
+      coll("mitos", docs => { kb.mitos = docs; });
       coll("changelog", docs => { kb.changelog = docs; });
       coll("usulan", docs => { kb.usulan = docs; });
       db.doc("kb/meta").onSnapshot(s => { kb.meta = s.exists ? s.data() : null; settle("meta"); }, fail);
@@ -263,6 +277,7 @@
     open(url) { this.native.openUrl(url); }
     fetch(url) { return this.call("fetchText", url); }
     pickFile() { return this.call("pickFile"); }
+    listen() { return this.call("listen"); }
   }
 
   /** Aplikasi Android: data tersimpan di perangkat, bisa dipakai tanpa internet. */
@@ -270,6 +285,46 @@
     constructor(kb, bridge) { super(kb); this.bridge = bridge; this.status = ""; }
     get mode() { return "android"; }
     get canUpdateLocal() { return true; }
+    get canAsk() { return true; }
+    get canAskOnline() { return CHAT_URL.indexOf("REPLACE") < 0; }
+    get canListen() { return !!(window.AndroidKB && window.AndroidKB.listen); }
+    listen() { return this.bridge.listen(); }
+    static deviceId() {
+      try {
+        let id = localStorage.getItem("ab-device");
+        if (!id) { id = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem("ab-device", id); }
+        return id;
+      } catch (e) { return "anon"; }
+    }
+    /** Tanya lewat Worker: respons text/plain dialirkan; antarmuka sama dengan CloudSource.ask. */
+    async ask(question, ageDays, onText, signal) {
+      const cancelled = () => { const c = new Error("cancelled"); c.code = "cancelled"; return c; };
+      let res;
+      try {
+        res = await fetch(CHAT_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question, ageDays, deviceId: AndroidSource.deviceId() }), signal });
+      } catch (e) {
+        if (e && e.name === "AbortError") throw cancelled();
+        throw new Error("Tidak ada koneksi. Coba cek gejala di menu Cek.");
+      }
+      if (res.status === 429) throw new Error("Batas pertanyaan hari ini tercapai.");
+      if (!res.ok || !res.body) throw new Error("Jawaban gagal dimuat. Coba lagi nanti.");
+      const reader = res.body.getReader(), dec = new TextDecoder();
+      let text = "";
+      try {
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          text += dec.decode(value, { stream: true });
+          onText({ text });
+        }
+      } catch (e) {
+        if (signal && signal.aborted) throw cancelled();
+        if (!text) throw new Error("Tidak ada koneksi. Coba cek gejala di menu Cek.");
+      }
+      text += dec.decode();
+      onText({ text });
+      return { text, truncated: false };
+    }
     start(onReady, onFail) {
       const r = KnowledgeBase.parse(this.bridge.getKb() || "");
       if (r.error) { onFail(); return; }
@@ -280,7 +335,7 @@
       const r = KnowledgeBase.parse(text);
       if (r.error) { this.status = r.error; return false; }
       const cur = this.kb.meta ? String(this.kb.meta.version) : "";
-      if (fromUrl && cur && String(r.kb.meta.version) <= cur) { this.status = "Data sudah terbaru (versi " + cur + ")."; return false; }
+      if (fromUrl && cur && KnowledgeBase.compareVersion(r.kb.meta.version, cur) <= 0) { this.status = "Data sudah terbaru (versi " + cur + ")."; return false; }
       if (!this.bridge.save(text)) { this.status = "Gagal menyimpan data di perangkat."; return false; }
       this.kb.load(r.kb); this.status = "Data diperbarui ke versi " + r.kb.meta.version + "."; return true;
     }
@@ -300,12 +355,13 @@
   class StaticSource extends DataSource {
     constructor(kb) { super(kb); this.status = ""; this.origin = ""; }
     get canUpdateLocal() { return true; }
+    get canAsk() { return true; }
     static embedded() { const el = document.getElementById("kb-embed"); return el ? el.textContent.trim() : ""; }
     static stored() { try { return localStorage.getItem("ab.kb") || ""; } catch (e) { return ""; } }
     start(onReady, onFail) {
       const pick = (...texts) => {
         let best = null;
-        texts.forEach(([t, origin]) => { if (!t) return; const r = KnowledgeBase.parse(t); if (!r.error && (!best || String(r.kb.meta.version) > String(best.kb.meta.version))) best = { kb: r.kb, origin }; });
+        texts.forEach(([t, origin]) => { if (!t) return; const r = KnowledgeBase.parse(t); if (!r.error && (!best || KnowledgeBase.compareVersion(r.kb.meta.version, best.kb.meta.version) > 0)) best = { kb: r.kb, origin }; });
         return best;
       };
       const finish = best => { if (!best) { onFail(); return; } this.kb.load(best.kb); this.origin = best.origin; onReady(); };
@@ -396,18 +452,31 @@
       const pick = d !== null && d <= 28 ? ["neonatus", "gumoh", "kuning", "demam"] : ["gumoh", "demam", "diare", "napas"];
       const pending = kb.usulan.filter(u => u.status === "baru").length;
       const items = pick.map(id => kb.checkers.find(c => c.id === id)).filter(Boolean);
-      const keyText = { 1: "Pola yang umum, tanpa tanda bahaya.", 2: "Satu tanda belum memenuhi kriteria. Perhatikan beberapa jam ke depan.", 3: "Kriteria rujukan terpenuhi. Periksakan hari ini.", 4: "Tanda gawat menurut kriteria resmi. Ke IGD sekarang." };
+      const canTanya = true;
       return this.page(
         '<div class="stack-s"><h1>' + (this.profile.hasAge ? "Ada keluhan apa hari ini?" : "Selamat datang") + "</h1>" +
-        '<p class="muted">Jawab beberapa pertanyaan singkat, lalu lihat apa yang perlu dilakukan. Setiap hasil menyebut sumbernya: WHO, IDAI, Kemenkes, atau AAP. Hasilnya berupa kemungkinan, bukan vonis.</p></div>' +
+        '<p class="muted">Jawab beberapa pertanyaan singkat untuk tahu apa yang perlu dilakukan, lengkap dengan sumbernya.</p></div>' +
+        '<a class="btn btn-big btn-danger" href="#darurat">Darurat</a>' +
         (this.profile.hasAge ? "" : '<a class="btn btn-primary" href="#profil" style="text-align:center;text-decoration:none">Isi tanggal lahir anak</a>') +
         (kb.isStale ? '<div class="banner warn">Data terakhir diverifikasi ' + Html.esc(m.verifiedDate) + ". Sebagian fakta mungkin perlu dicek ulang.</div>" : "") +
         (pending && this.source.canApprove ? '<a class="banner" href="#data" style="text-decoration:none;color:inherit">' + pending + " usulan pembaruan data menunggu persetujuan Anda ›</a>" : "") +
+        (canTanya ? '<div class="list"><a href="#tanya"><div><div class="t">Tanya</div><div class="s">Tulis atau ucapkan pertanyaan Anda</div></div>' + Html.chev() + "</a></div>" : "") +
         '<div class="stack-s"><p class="eyebrow">Cek gejala</p><div class="list">' +
         items.map(c => '<a href="#cek-' + Html.esc(c.id) + '"><div><div class="t">' + Html.esc(c.title) + '</div><div class="s">' + Html.esc(c.short) + "</div></div>" + Html.chev() + "</a>").join("") +
         '<a href="#cek"><div><div class="t">Semua keluhan</div></div>' + Html.chev() + "</a></div></div>" +
-        '<div class="stack-s"><p class="eyebrow">Arti hasil</p><div class="card levels-key">' + [1, 2, 3, 4].map(l => Html.levelChip(l) + '<span class="small">' + keyText[l] + "</span>").join("") + "</div></div>" +
-        (m ? '<p class="small muted">Data versi ' + Html.esc(m.version) + " · diverifikasi " + Html.esc(m.verifiedDate) + ' · <a href="#data">sumber & pembaruan</a></p>' : ""));
+        Html.footer());
+    }
+  }
+
+  /** Halaman darurat: telepon 119, cari IGD, dan pintasan ke pemeriksaan yang paling mendesak. */
+  class EmergencyView extends View {
+    render() {
+      const links = [["kejang", "Kejang"], ["napas", "Sulit bernapas"], ["neonatus", "Bayi baru lahir (usia 28 hari ke bawah)"]]
+        .map(([id, fallback]) => { const c = this.kb.checkers.find(x => x.id === id); return c ? [c.id, c.title] : null; }).filter(Boolean);
+      return this.page(Html.back("beranda", "Beranda") + '<h1>Darurat</h1><p class="muted">Bila anak tidak sadar, kejang, biru, atau sulit bernapas, jangan menunggu hasil pemeriksaan di aplikasi.</p>' +
+        Html.emergency() +
+        (links.length ? '<div class="stack-s"><p class="eyebrow">Cek cepat</p><div class="list">' + links.map(([id, t]) => '<a href="#cek-' + Html.esc(id) + '"><div><div class="t">' + Html.esc(t) + "</div></div>" + Html.chev() + "</a>").join("") + "</div></div>" : "") +
+        Html.footer());
     }
   }
 
@@ -465,6 +534,20 @@
       return '<div class="card stack"><label class="qbig"' + (q.type === "number" ? ' for="num-' + Html.esc(q.id) + '"' : "") + ">" + Html.esc(q.text) + "</label>" + (q.help ? '<p class="small muted">' + Html.esc(q.help) + "</p>" : "") + ctl + "</div>" +
         '<div class="navrow"><button type="button" class="btn-ghost" data-act="back">‹ Kembali</button>' + (q.type === "yn" ? '<button type="button" class="btn-ghost" data-act="skip">Lewati</button>' : "") + "</div>";
     }
+    shareButton(s, r, lv, main, mainSrc) {
+      const short = t => { const i = t.indexOf(" — "); return i > 0 ? t.slice(0, i) : t; };
+      const names = (mainSrc || []).map(id => this.kb.source(id)).filter(Boolean).map(x => short(x.title));
+      const lines = [s.checker.def.title];
+      if (this.profile.hasAge) lines.push("Usia anak: " + Age.label(this.profile.ageDays));
+      lines.push(lv.action, main);
+      if (names.length) lines.push("Sumber: " + names.join(", "));
+      lines.push("", "Asisten Bayi · " + POWERED);
+      return '<a class="btn" href="' + Html.esc("https://wa.me/?text=" + encodeURIComponent(lines.join("\n"))) + '" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none">Bagikan ke WA</a>';
+    }
+    legend() {
+      const keyText = { 1: "Pola yang umum, tanpa tanda bahaya.", 2: "Satu tanda belum memenuhi kriteria. Perhatikan beberapa jam ke depan.", 3: "Bawa ke dokter hari ini.", 4: "Ada tanda bahaya. Ke IGD sekarang." };
+      return '<div class="card"><details><summary>Arti hasil</summary><div class="levels-key" style="margin-top:8px">' + [1, 2, 3, 4].map(l => Html.levelChip(l) + '<span class="small">' + keyText[l] + "</span>").join("") + "</div></details></div>";
+    }
     result(s) {
       const r = s.assessment, lv = r.levelInfo;
       const main = r.summary || (r.reasons[0] && r.reasons[0].text) || "";
@@ -473,6 +556,8 @@
       let h = '<div class="result r-' + r.level + '" aria-live="polite"><div class="stack-s">' + Html.levelChip(r.level) + "<h2>" + Html.esc(lv.action) + "</h2>" +
         (r.summary && r.headline !== lv.name ? '<p class="eyebrow">' + Html.esc(r.headline) + "</p>" : "") +
         '<p class="main-msg">' + Html.esc(main) + "</p>" + this.sources(mainSrc) + "</div></div>";
+      if (r.level >= 3) h += Html.emergency();
+      h += this.shareButton(s, r, lv, main, mainSrc);
       if (s.skippedByUrgent) h += '<p class="small muted">Pertanyaan lain dilewati karena sudah ada tanda yang perlu segera ditangani.</p>';
       const more = r.reasons.slice(1);
       if (more.length) h += '<div class="card stack-s"><h3>Alasan lain</h3>' + more.map(x => "<div><p>" + Html.esc(x.text) + "</p>" + this.sources(x.src) + "</div>").join("") + "</div>";
@@ -483,6 +568,7 @@
         if (r.care.length) h += '<div class="card stack-s"><h3>Yang bisa dilakukan sekarang</h3><ul class="items">' + r.care.map(x => "<li>" + Html.esc(x.t) + this.sources(x.src) + "</li>").join("") + "</ul></div>";
         if (r.escalate.length) h += '<div class="card stack-s"><h3>Periksakan bila kemudian muncul</h3><ul class="items">' + r.escalate.map(x => "<li>" + Html.esc(x) + "</li>").join("") + "</ul></div>";
       }
+      h += this.legend();
       const rows = s.reviewRows;
       h += '<div class="card"><details class="review"><summary>Jawaban Anda (' + rows.length + ")</summary>" +
         rows.map(x => '<div class="review-row"><div><p class="small">' + Html.esc(x.q.text) + '</p><p class="small"><strong>' + Html.esc(x.label) + '</strong></p></div><button type="button" data-goto="' + Html.esc(x.q.id) + '">Ubah</button></div>').join("") + "</details></div>";
@@ -532,7 +618,7 @@
         res = '<div class="result r-' + (fast ? th.level : 1) + '"><div class="stack-s"><h2>' + c.count + "×/menit</h2>" +
           (th ? "<p>" + (fast ? "Di atas ambang napas cepat WHO untuk usia ini (" + Html.esc(th.label) + ")." : "Di bawah ambang napas cepat WHO untuk usia ini (" + Html.esc(th.label) + ").") + "</p>" + this.sources(th.src)
             : '<p class="muted">Aplikasi belum punya ambang terverifikasi untuk usia ini' + (d === null ? " (usia belum diisi)" : "") + ".</p>") +
-          '<button type="button" class="btn-primary" data-act="use-rr">Lanjut ke penilaian batuk & napas</button></div></div>';
+          '<button type="button" class="btn-primary" data-act="use-rr">Lanjut ke cek batuk & napas</button></div></div>';
       }
       return this.page("<h1>Hitung napas</h1>" +
         '<p class="muted">Hitung saat anak tenang atau tidur, tidak sedang menangis. Satu kali perut atau dada naik-turun = satu napas. Ketuk tombol besar setiap satu napas selama 60 detik.</p>' +
@@ -553,38 +639,176 @@
   }
 
   class AskView extends View {
-    constructor(app) { super(app); this.q = ""; this.text = ""; this.busy = false; this.err = ""; this.ctl = null; }
+    constructor(app) { super(app); this.q = ""; this.text = ""; this.busy = false; this.err = ""; this.ctl = null; this.hits = []; this.res = null; this.sel = null; this._eng = null; this._engKey = null; }
     linkify(t) {
       const short = s => { const i = s.indexOf(" — "); return i > 0 ? s.slice(0, i) : s; };
       return Html.esc(t).replace(/\[([a-z0-9_]+)\]/g, (m, id) => { const s = this.kb.source(id); return s ? '<a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">[' + Html.esc(short(s.title)) + "]</a>" : m; });
     }
+    static get TOPICS() {
+      return [["Demam", "Bayi saya demam, suhunya "], ["Diare", "Bayi saya diare sejak "], ["Batuk pilek", "Bayi saya batuk pilek sejak "], ["Obat aman?", "Apakah obat ini aman untuk bayi saya: "],
+        ["MPASI", "Bagaimana memulai MPASI untuk bayi saya? "], ["Imunisasi", "Imunisasi apa yang perlu bayi saya sekarang? "], ["Katanya… bener nggak?", "Katanya … bener nggak? Yang saya dengar: "]];
+    }
+    /** Cadangan saat offline: pemeriksaan/panduan yang judulnya cocok dengan kata di pertanyaan (maks 3). */
+    matchTopics(q) {
+      const text = String(q || "").toLowerCase();
+      const hit = (title) => String(title || "").toLowerCase().split(/[^a-z0-9]+/).some(w => w.length >= 4 && text.includes(w));
+      const out = [];
+      this.kb.checkers.forEach(c => { if (hit(c.title)) out.push(["#cek-" + c.id, c.title]); });
+      this.kb.guides.forEach(g => { if (hit(g.title)) out.push(["#panduan-" + g.id, g.title]); });
+      return out.slice(0, 3);
+    }
+    engine() {
+      const kb = this.kb, key = [kb.checkers, kb.guides, kb.obat, kb.mitos, kb.milestones, kb.imunisasi];
+      if (!this._eng || !this._engKey || key.some((x, i) => x !== this._engKey[i])) { this._eng = new window.Engine.AskEngine(kb); this._engKey = key; }
+      return this._eng;
+    }
+    static noteUnmatched(q) {
+      try {
+        const arr = JSON.parse(localStorage.getItem("ab-unmatched") || "[]");
+        arr.push({ q: q, at: new Date().toISOString() });
+        localStorage.setItem("ab-unmatched", JSON.stringify(arr.slice(-200)));
+      } catch (e) { /* penyimpanan tidak tersedia */ }
+    }
+    /** Jawaban utama, selalu dari data di perangkat. */
+    local() {
+      const q = this.q.trim();
+      if (!q) return;
+      this.text = ""; this.err = ""; this.hits = []; this.res = null; this.sel = null;
+      try {
+        this.res = this.engine().answer(q, this.profile.ageDays);
+        if (this.res.confidence === "high") this.sel = this.res.best;
+        if (this.res.confidence !== "high") AskView.noteUnmatched(q);
+      } catch (e) { this.err = "Pertanyaan belum bisa dicari di data aplikasi."; }
+      this.app.render();
+    }
+    srcList(src) { return this.sources(Array.isArray(src) ? src : (src ? [src] : [])); }
+    chips(ex, ageDays) {
+      const c = [];
+      if (typeof ageDays === "number") c.push("Umur " + Age.label(ageDays));
+      if (ex && typeof ex.tempC === "number") c.push("Suhu " + String(ex.tempC).replace(".", ",") + "°C");
+      if (ex && typeof ex.days === "number") c.push(ex.days + " hari");
+      return c.length ? '<div class="row">' + c.map(x => '<span class="tag">' + Html.esc(x) + "</span>").join("") + "</div>" : "";
+    }
+    card(r) {
+      if (!r) return "";
+      const kb = this.kb, res = this.res;
+      const link = (href, label) => '<a class="btn" href="' + Html.esc(href) + '" style="text-decoration:none">' + Html.esc(label) + "</a>";
+      let h = "";
+      if (r.type === "checker") {
+        const c = kb.checkers.find(x => x.id === r.id);
+        if (!c) return "";
+        h = "<h3>" + Html.esc(c.title) + "</h3>" + (c.short ? "<p>" + Html.esc(c.short) + "</p>" : "") + this.chips(res.extracted, res.ageDays) +
+          '<div class="row"><button type="button" class="btn-primary" data-start="' + Html.esc(c.id) + '">' + Html.esc("Mulai cek " + c.title) + "</button></div>";
+      } else if (r.type === "guide") {
+        const g = kb.guides.find(x => x.id === r.id);
+        if (!g) return "";
+        const items = [];
+        (g.sections || []).forEach(sec => (sec.items || []).forEach(it => { if (items.length < 2) items.push(it); }));
+        h = "<h3>" + Html.esc(g.title) + "</h3>" + (items.length ? '<ul class="items">' + items.map(it => "<li>" + Html.esc(it.t) + this.srcList(it.src) + "</li>").join("") + "</ul>" : "") +
+          '<div class="row">' + link("#panduan-" + g.id, "Buka panduan lengkap") + "</div>";
+      } else if (r.type === "obat") {
+        const o = kb.obat.find(x => x.id === r.id);
+        if (!o) return "";
+        const names = { hindari: "Hindari", dokter: "Lewat dokter", info: "Info", program: "Program resmi" };
+        h = "<h3>" + Html.esc(o.name) + '</h3><p class="small muted">' + Html.esc(names[o.status] || o.status || "") + (o.age ? " · Usia: " + Html.esc(o.age) : "") + "</p><p>" + Html.esc(o.t) + "</p>" + this.srcList(o.src) +
+          '<div class="row">' + link("#obat", "Buka keamanan obat") + "</div>";
+      } else if (r.type === "mitos") {
+        const m = (kb.mitos || []).find(x => x.id === r.id);
+        if (!m) return "";
+        const v = { benar: "Benar", tidak: "Tidak benar", belum: "Belum terbukti" }[m.verdict] || "Belum terbukti";
+        h = '<p><span class="lv ' + (m.verdict === "tidak" ? "lv-3" : m.verdict === "benar" ? "lv-1" : "lv-2") + '">' + Html.esc(v) + "</span></p><p><strong>" + Html.esc(m.claim) + "</strong></p><p>" + Html.esc(m.text) + "</p>" + this.srcList(m.src);
+      } else if (r.type === "milestone") {
+        h = "<h3>" + Html.esc(r.title) + '</h3><div class="row">' + link("#tumbuh", "Buka perkembangan") + "</div>";
+      } else if (r.type === "imunisasi") {
+        h = "<h3>" + Html.esc(r.title) + '</h3><div class="row">' + link("#imunisasi", "Buka jadwal imunisasi") + "</div>";
+      } else return "";
+      return '<div class="card stack-s">' + h + "</div>";
+    }
+    localHtml() {
+      const r = this.res;
+      if (!r) return "";
+      let h = "";
+      if (r.danger.length) {
+        h += '<div class="result r-3"><div class="stack-s"><p><strong>Ada tanda bahaya:</strong></p><ul class="items">' + r.danger.map(d => "<li>" + Html.esc(d.text) + this.srcList(d.src) + "</li>").join("") + "</ul>" + Html.emergency() + "</div></div>";
+      }
+      if (r.confidence === "high") h += this.card(this.sel || r.best);
+      else if (r.confidence === "low") {
+        h += '<div class="card stack-s"><p class="eyebrow">Maksudnya yang mana?</p><div class="list">' +
+          r.results.slice(0, 3).map((x, i) => '<button type="button" data-pick="' + i + '">' + Html.esc(x.title) + "</button>").join("") + "</div></div>" + this.card(this.sel);
+      } else {
+        const mail = "mailto:" + REPORT_EMAIL + "?subject=" + encodeURIComponent("Pertanyaan belum terjawab") + "&body=" + encodeURIComponent(this.q.trim());
+        h += '<div class="card stack-s"><p><strong>Belum ada di data kami.</strong></p><div class="row">' +
+          (this.source.saveQuestion ? '<button type="button" data-act="save-q">Kirim pertanyaan ini</button>' : '<a class="btn" href="' + Html.esc(mail) + '" style="text-decoration:none">Kirim pertanyaan ini</a>') +
+          '<a class="btn" href="#darurat" style="text-decoration:none">Darurat</a></div></div>';
+      }
+      const showOnline = !this.busy && !this.text && this.source.canAskOnline && (this.source instanceof CloudSource || r.confidence !== "high");
+      if (showOnline) h += '<div class="row"><button type="button" data-act="online-ask">Tanya lebih lanjut (online)</button></div>';
+      return h;
+    }
+    feedbackRow() {
+      if (this.busy) return "";
+      const body = "Pertanyaan: " + this.q.trim() + "\n\nJawaban: " + (this.text || (this.sel ? this.sel.type + ":" + this.sel.id : "-"));
+      return '<div class="row"><button type="button" data-fb="up" aria-label="Jawaban membantu">👍</button><button type="button" data-fb="down" aria-label="Jawaban kurang membantu">👎</button><a class="btn" href="' + Html.esc("mailto:" + REPORT_EMAIL + "?subject=" + encodeURIComponent("Laporan jawaban") + "&body=" + encodeURIComponent(body)) + '" style="text-decoration:none">Laporkan jawaban</a>' +
+        (this.text && this.source.saveQuestion ? '<button type="button" data-act="save-q">Catat untuk diriset</button>' : "") + "</div>";
+    }
     render() {
-      if (!(this.source instanceof CloudSource)) return this.page('<h1>Tanya</h1><div class="card stack-s"><p>Fitur tanya dijawab Claude dan hanya tersedia di versi online.</p>' + this.app.views.data.onlineLink() + "</div>");
+      const mic = this.source.canListen;
       return this.page("<h1>Tanya</h1>" +
-        '<p class="muted">Dijawab Claude hanya dari isi database aplikasi ini, dengan sumbernya. Bila jawabannya belum ada, Claude akan bilang begitu, dan pertanyaan Anda bisa dicatat untuk diriset.</p>' +
-        (this.source.canAsk ? "" : '<div class="banner warn">Fitur tanya membutuhkan izin Claude di halaman ini dan belum tersedia di tampilan ini.</div>') +
+        '<p class="muted">Dijawab dari data terverifikasi di aplikasi ini, dengan sumbernya, tanpa internet. Bila belum ada, kami bilang terus terang.</p>' +
+        '<div class="row">' + AskView.TOPICS.map((t, i) => '<button type="button" data-chip="' + i + '">' + Html.esc(t[0]) + "</button>").join("") + "</div>" +
         '<form data-form="ask" class="card stack"><label for="t-q">Pertanyaan</label><textarea id="t-q" placeholder="Contoh: bayi 2 minggu gumoh setelah menyusu tapi masih lapar, perlu ke dokter?">' + Html.esc(this.q) + "</textarea>" +
-        '<div class="row"><button class="btn-primary" type="submit"' + (this.busy || !this.source.canAsk ? " disabled" : "") + ">" + (this.busy ? "Menjawab…" : "Tanya") + "</button>" + (this.busy ? '<button type="button" data-act="stop">Hentikan</button>' : "") + "</div></form>" +
+        '<div class="row"><button class="btn-primary" type="submit"' + (this.busy ? " disabled" : "") + ">" + (this.busy ? "Menjawab…" : "Tanya") + "</button>" + (mic ? '<button type="button" data-act="mic" aria-label="Ucapkan pertanyaan"' + (this.busy ? " disabled" : "") + ">Ucapkan</button>" : "") + (this.busy ? '<button type="button" data-act="stop">Hentikan</button>' : "") + "</div></form>" +
         (this.err ? '<div class="banner warn">' + Html.esc(this.err) + "</div>" : "") +
-        (this.text ? '<div class="card stack-s"><p class="eyebrow">Jawaban</p><div class="answer" id="t-ans">' + this.linkify(this.text) + "</div>" + (this.busy ? "" : '<div class="row"><button type="button" data-act="save-q">Catat untuk diriset</button></div>') + "</div>" : ""));
+        this.localHtml() +
+        (this.hits.length ? '<div class="card stack-s"><p class="eyebrow">Mungkin membantu</p><div class="list">' + this.hits.map(([href, t]) => '<a href="' + Html.esc(href) + '"><div><div class="t">' + Html.esc(t) + "</div></div>" + Html.chev() + "</a>").join("") + "</div></div>" : "") +
+        (this.text ? '<div class="card stack-s"><p class="eyebrow">Jawaban online</p><div class="answer" id="t-ans">' + this.linkify(this.text) + "</div></div>" : "") +
+        (this.res || this.text ? this.feedbackRow() : ""));
     }
     onInput(t) { if (t.id === "t-q") this.q = t.value; }
-    onSubmit(form) { if (form.dataset.form !== "ask") return false; this.q = form.querySelector("textarea").value; this.ask(); return true; }
+    onSubmit(form) { if (form.dataset.form !== "ask") return false; this.q = form.querySelector("textarea").value; this.local(); return false; }
     async ask() {
       if (!this.q.trim() || this.busy) return;
-      this.busy = true; this.text = ""; this.err = ""; this.app.render();
+      this.busy = true; this.text = ""; this.err = ""; this.hits = []; this.app.render();
       this.ctl = new AbortController();
       try {
         const out = await this.source.ask(this.q, this.profile.ageDays, ({ text }) => { this.text = text; const el = document.getElementById("t-ans"); if (el) el.innerHTML = this.linkify(text); else this.app.render(); }, this.ctl.signal);
         this.text = out.text + (out.truncated ? "\n\n(Jawaban terpotong. Coba pertanyaan yang lebih spesifik.)" : "");
       } catch (e) {
         const c = e && e.code;
-        this.err = c === "not_granted" ? "Izin untuk Claude di halaman ini ditolak, jadi fitur tanya tidak bisa dipakai di tampilan ini." : c === "rate_limited" ? "Terlalu banyak pertanyaan dalam waktu singkat. Coba lagi beberapa saat lagi." : c === "cancelled" ? "" : "Jawaban gagal dimuat. Periksa koneksi lalu coba lagi.";
+        this.err = c === "not_granted" ? "Izin untuk Claude di halaman ini ditolak, jadi fitur tanya tidak bisa dipakai di tampilan ini." : c === "rate_limited" ? "Terlalu banyak pertanyaan dalam waktu singkat. Coba lagi beberapa saat lagi." : c === "cancelled" ? "" : (!c && this.source instanceof AndroidSource && e && e.message) ? e.message : "Jawaban gagal dimuat. Periksa koneksi lalu coba lagi.";
+        if (this.source instanceof AndroidSource && c !== "cancelled") this.hits = this.matchTopics(this.q);
       }
       this.busy = false; this.app.render();
     }
     async onClick(t) {
+      if (t.dataset.act === "online-ask") { this.ask(); return "keep"; }
+      if (t.dataset.pick !== undefined) { const x = this.res && this.res.results[Number(t.dataset.pick)]; if (x) { this.sel = x; return true; } return false; }
+      if (t.dataset.start) {
+        const id = t.dataset.start, c = this.kb.checkers.find(x => x.id === id), v = this.app.views.checker, sess = v.session(id);
+        if (c && sess) {
+          const pre = window.Engine.AskEngine.prefill(c, (this.res && this.res.extracted) || {});
+          sess.reset();
+          Object.keys(pre).forEach(k => v.prefill(id, k, String(pre[k])));
+        }
+        location.hash = "#cek-" + id; return "keep";
+      }
       if (t.dataset.act === "stop") { if (this.ctl) this.ctl.abort(); return "keep"; }
+      if (t.dataset.chip !== undefined) { const c = AskView.TOPICS[Number(t.dataset.chip)]; if (c) { this.q = c[1]; return true; } return false; }
+      if (t.dataset.act === "mic") {
+        const r = await this.source.listen();
+        if (r && r.ok && r.text) { this.q = (this.q ? this.q.trim() + " " : "") + r.text; return true; }
+        if (r && r.text) Toast.show(r.text);
+        return "keep";
+      }
+      if (t.dataset.fb) {
+        try {
+          const arr = JSON.parse(localStorage.getItem("ab-feedback") || "[]");
+          arr.push({ t: new Date().toISOString(), v: t.dataset.fb, q: this.q.trim(), a: (this.text || (this.sel ? this.sel.type + ":" + this.sel.id : "")).slice(0, 2000) });
+          localStorage.setItem("ab-feedback", JSON.stringify(arr.slice(-200)));
+        } catch (e) { /* penyimpanan tidak tersedia */ }
+        Toast.show("Terima kasih atas masukannya.");
+        return "keep";
+      }
       if (t.dataset.act === "save-q") {
         try { await this.source.saveQuestion(this.q.trim()); Toast.show("Dicatat. Akan diriset pada pemeriksaan berikutnya."); }
         catch (e) { Toast.show(e && e.code === "permission_denied" ? "Anda tidak punya izin mencatat pertanyaan." : "Gagal mencatat."); }
@@ -597,7 +821,7 @@
   class MoreView extends View {
     render() {
       const items = [["panduan", "Panduan", "ASI, MPASI, tidur aman, tersedak, kesehatan ibu, dan lainnya"], ["tumbuh", "Perkembangan", "Checklist CDC per usia"], ["imunisasi", "Imunisasi", "Jadwal IDAI 2024"], ["obat", "Keamanan obat", "Yang dihindari dan dosis program resmi"], ["data", "Sumber & pembaruan data", "Versi, usulan, riwayat perubahan"], ["profil", "Profil anak", "Nama dan tanggal lahir"]];
-      return this.page('<h1>Lainnya</h1><div class="list">' + items.map(([id, t, s]) => '<a href="#' + id + '"><div><div class="t">' + t + '</div><div class="s">' + s + "</div></div>" + Html.chev() + "</a>").join("") + "</div>");
+      return this.page('<h1>Lainnya</h1><div class="list">' + items.map(([id, t, s]) => '<a href="#' + id + '"><div><div class="t">' + t + '</div><div class="s">' + s + "</div></div>" + Html.chev() + "</a>").join("") + "</div>" + Html.footer());
     }
   }
 
@@ -680,6 +904,14 @@
     onlineLink() {
       return this.source instanceof AndroidSource ? '<button type="button" data-act="online">Buka versi online</button>' : '<a href="' + ONLINE_URL + '" target="_blank" rel="noopener">Buka versi online</a>';
     }
+    unmatchedBlock() {
+      let arr = [];
+      try { arr = JSON.parse(localStorage.getItem("ab-unmatched") || "[]"); } catch (e) { arr = []; }
+      if (!Array.isArray(arr) || !arr.length) return "";
+      const body = arr.map(x => (x && x.q) || "").filter(Boolean).join("\n").slice(0, 1500);
+      const href = "mailto:" + REPORT_EMAIL + "?subject=" + encodeURIComponent("Pertanyaan belum terjawab") + "&body=" + encodeURIComponent(body);
+      return '<div class="card stack-s"><h3>Pertanyaan belum terjawab</h3><p class="small">' + arr.length + ' pertanyaan di perangkat ini belum ada jawabannya di data.</p><div class="row"><a class="btn" href="' + Html.esc(href) + '" style="text-decoration:none">Kirim ke pengembang</a></div></div>';
+    }
     modeBlock() {
       const src = this.source;
       if (src instanceof CloudSource) {
@@ -714,11 +946,12 @@
       const srcs = Object.entries(kb.sources).sort((a, b) => a[1].title.localeCompare(b[1].title));
       return this.page(Html.back("lainnya", "Lainnya") + "<h1>Sumber & pembaruan</h1>" +
         (m ? '<div class="card stack-s"><p><strong>Versi data ' + Html.esc(m.version) + '</strong></p><p class="small muted">Diverifikasi ' + Html.esc(m.verifiedDate) + " · pemeriksaan sumber terakhir " + Html.esc(m.lastCheck || "-") + '</p><p class="small">' + Html.esc(m.note || "") + "</p></div>" : "") +
+        this.unmatchedBlock() +
         this.modeBlock() +
         '<div class="card stack-s"><h3>Cara data diperbarui</h3><ul class="items small"><li>Setiap tanggal 1, Claude memeriksa pedoman terbaru dari IDAI, Kemenkes, WHO, AAP, CDC, dan FDA, lalu menulis usulan perubahan beserta sumbernya.</li><li>Usulan tidak langsung mengubah data. Pemilik meninjau dan menyetujui; usulan yang memuat pernyataan tanpa sumber ditolak otomatis.</li><li>Pertanyaan yang belum terjawab di menu Tanya bisa dicatat untuk diriset.</li></ul></div>' +
         (cloud ? '<div class="stack-s"><h2>Usulan menunggu (' + pend.length + ")</h2>" + (pend.length ? pend.map(u => this.usulan(u, true)).join("") : '<p class="muted small">Tidak ada usulan baru.</p>') + "</div>" + (done.length ? '<div class="stack-s"><h3>Usulan yang sudah diputuskan</h3>' + done.map(u => this.usulan(u, false)).join("") + "</div>" : "") : "") +
         '<div class="stack-s"><h2>Riwayat perubahan</h2><div class="card stack-s">' + (log.length ? log.map(l => "<div><p><strong>" + Html.esc(l.title) + '</strong> <span class="muted small">' + Html.esc(l.date) + '</span></p><p class="small">' + Html.esc(l.text) + "</p></div>").join("") : '<p class="muted small">Belum ada.</p>') + "</div></div>" +
-        '<div class="stack-s"><h2>Daftar sumber (' + srcs.length + ')</h2><div class="card"><ul class="items small">' + srcs.map(([id, s]) => '<li><a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">' + Html.esc(s.title) + "</a>" + (s.type === "sekunder" ? '<span class="tag">sekunder</span>' : "") + "</li>").join("") + "</ul></div></div>");
+        '<div class="stack-s"><h2>Daftar sumber (' + srcs.length + ')</h2><div class="card"><ul class="items small">' + srcs.map(([id, s]) => '<li><a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">' + Html.esc(s.title) + "</a>" + (s.type === "sekunder" ? '<span class="tag">sekunder</span>' : "") + "</li>").join("") + "</ul></div></div>" + Html.footer());
     }
     async onClick(t) {
       const src = this.source;
@@ -743,7 +976,7 @@
       const h = (location.hash || "#beranda").slice(1) || "beranda";
       const prefixes = [["cek-", "checker"], ["panduan-", "guide"]];
       for (const [p, name] of prefixes) if (h.startsWith(p)) return { name, param: h.slice(p.length), raw: h };
-      const map = { beranda: "home", cek: "checkers", napas: "breath", tanya: "ask", lainnya: "more", panduan: "guides", tumbuh: "milestone", imunisasi: "immunization", obat: "medicine", data: "data", profil: "profile" };
+      const map = { beranda: "home", darurat: "emergency", cek: "checkers", napas: "breath", tanya: "ask", lainnya: "more", panduan: "guides", tumbuh: "milestone", imunisasi: "immunization", obat: "medicine", data: "data", profil: "profile" };
       return { name: map[h] || "home", param: null, raw: h };
     }
   }
@@ -757,7 +990,7 @@
       this.source = new DataSource(this.kb);
       this.state = "loading";
       this.views = {
-        home: new HomeView(this), checkers: new CheckerListView(this), checker: new CheckerView(this), breath: new BreathView(this),
+        home: new HomeView(this), emergency: new EmergencyView(this), checkers: new CheckerListView(this), checker: new CheckerView(this), breath: new BreathView(this),
         ask: new AskView(this), more: new MoreView(this), guides: new GuideListView(this), guide: new GuideView(this),
         milestone: new MilestoneView(this), immunization: new ImmunizationView(this), medicine: new MedicineView(this),
         data: new DataView(this), profile: new ProfileView(this)
@@ -783,10 +1016,11 @@
     renderNav() {
       const cloud = this.source instanceof CloudSource;
       const ICON = App.ICON;
-      const fourth = cloud ? ["tanya", "Tanya", "tanya"] : ["panduan", "Panduan", "panduan"];
+      const canTanya = true;
+      const fourth = canTanya ? ["tanya", "Tanya", "tanya"] : ["panduan", "Panduan", "panduan"];
       const items = [["beranda", "Beranda", "beranda"], ["cek", "Cek Gejala", "cek"], ["napas", "Hitung Napas", "napas"], fourth, ["lainnya", "Lainnya", "lainnya"]];
       const r = this.route;
-      const group = (r.name === "checker" || r.name === "checkers") ? "cek" : (!cloud && (r.name === "guides" || r.name === "guide")) ? "panduan" :
+      const group = (r.name === "checker" || r.name === "checkers") ? "cek" : (!canTanya && (r.name === "guides" || r.name === "guide")) ? "panduan" :
         ["guides", "guide", "milestone", "immunization", "medicine", "data", "profile", "more"].includes(r.name) ? "lainnya" : r.raw;
       this.navEl.innerHTML = items.map(([id, label, icon]) => '<a href="#' + id + '"' + (group === id ? ' aria-current="page"' : "") + ">" + ICON[icon] + "<span>" + label + "</span></a>").join("");
     }

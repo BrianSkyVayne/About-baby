@@ -4,9 +4,9 @@ const path = require("path");
 const Engine = require("./engine");
 const sources = require("./kb-sources");
 const checkers = require("./kb-checkers");
-const { guides, milestones, imunisasi, obat, meta } = require("./kb-content");
+const { guides, milestones, imunisasi, obat, mitos, meta } = require("./kb-content");
 
-const kb = { sources, checkers, guides, milestones, imunisasi, obat, meta };
+const kb = { sources, checkers, guides, milestones, imunisasi, obat, mitos, meta };
 const errors = Engine.KnowledgeValidator.validate(kb);
 if (errors.length) {
   console.error("Validasi gagal:\n" + errors.join("\n"));
@@ -25,6 +25,7 @@ checkers.forEach(c => write("checkers", c.id, c));
 guides.forEach(g => write("guides", g.id, g));
 milestones.forEach(m => write("milestones", m.id, m));
 obat.forEach(o => write("obat", o.id, o));
+mitos.forEach(m => write("mitos", m.id, m));
 write("kb", "meta", meta);
 write("kb", "imunisasi", imunisasi);
 write("changelog", "2026-11-07-awal", { date: "2026-11-07", title: "Basis pengetahuan awal", text: "Disusun dari riset sumber resmi (WHO, IDAI, Kemenkes, AAP, CDC, FDA). Setiap fakta bersumber; sumber sekunder ditandai.", by: "Claude" });

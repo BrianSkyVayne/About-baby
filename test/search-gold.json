@@ -1,0 +1,1256 @@
+[
+ {
+  "q": "anak gw gumoh mulu abis mimi, wajar gak?",
+  "expect": "checker:gumoh",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 3 bulan muntah nyembur jauh abis nyusu",
+  "expect": "checker:gumoh",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "muntahan bayi warna ijo kenapa ya",
+  "expect": "checker:gumoh",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi muntah semua yg diminum lemes bgt",
+  "expect": "checker:gumoh",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 1 bln muntah ada darahnya",
+  "expect": "checker:gumoh",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "gumoh kebanyakan bb ga naik",
+  "expect": "checker:gumoh",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anakku 2thn panas 38.2 dr kemarin",
+  "expect": "checker:demam",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "badan bayi anget gmn ngukurnya bun",
+  "expect": "checker:demam",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "suhu 40 anak 3 thn",
+  "expect": "checker:demam",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 2 bln demam 38,1",
+  "expect": "checker:demam",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "panas ga turun2 udh 4 hari",
+  "expect": "checker:demam",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "demam 39 tp anak masih aktif main",
+  "expect": "checker:demam",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "my baby fever 38 since yesterday",
+  "expect": "checker:demam",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak mencret 4x hari ini",
+  "expect": "checker:diare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 8bln bab cair ga mau minum sama sekali",
+  "expect": "checker:diare",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bab cair ada darahnya anak 2 thn",
+  "expect": "checker:diare",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "mata cekung ubun2 cekung abis mencret",
+  "expect": "checker:diare",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "diare anak 1thn udah 3 hari",
+  "expect": "checker:diare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "berak cair mulu bun gimana",
+  "expect": "checker:diare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 1thn batuk pilek napasnya cepet",
+  "expect": "checker:napas",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "dada anak cekung ke dalam pas napas",
+  "expect": "checker:napas",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi napas ngik ngik dr tadi malem",
+  "expect": "checker:napas",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "batuk pilek anak 4 thn seminggu",
+  "expect": "checker:napas",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bibir anak biru sesak banget",
+  "expect": "checker:napas",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "pilek bayi 3 bln idung mampet susah nyusu",
+  "expect": "checker:napas",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi nangis terus tiap malem jam 7an",
+  "expect": "checker:tangis",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 6 minggu rewel ga bisa diem 3 jam",
+  "expect": "checker:tangis",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "nangis melengking bayi ga mau nyusu",
+  "expect": "checker:tangis",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "anakku rewel bgt knp ya",
+  "expect": "checker:tangis",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kolik sampe kapan sih",
+  "expect": "checker:tangis",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak step tadi pas demam 39",
+  "expect": "checker:kejang",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "kejang demam berapa menit boleh ditunggu",
+  "expect": "checker:kejang",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi kejang matanya mendelik ga sadar",
+  "expect": "checker:kejang",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "anak 2 thn pernah kejang demam sekali bahaya ga",
+  "expect": "checker:kejang",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kejang demam bisa kambuh lagi gak",
+  "expect": "checker:kejang",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "badan anak kaku trus kelojotan",
+  "expect": "checker:kejang",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "anak panas hari ke3 ada ruam merah dbd?",
+  "expect": "checker:dbd",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "demam turun hari ke 4 tp lemas muntah perut sakit",
+  "expect": "checker:dbd",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "tanda dbd anak apa aja",
+  "expect": "checker:dbd",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "mimisan trus panas tinggi anak 5 thn",
+  "expect": "checker:dbd",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "trombosit anak 90rb gimana",
+  "expect": "checker:dbd",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi umur 3 hr kuning sampe dada",
+  "expect": "checker:kuning",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kuning belum ilang bayi 3 minggu",
+  "expect": "checker:kuning",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi kuning dlm 24 jam pertama lahir",
+  "expect": "checker:kuning",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "tinja bayi pucat kayak dempul kulit kuning",
+  "expect": "checker:kuning",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "kuning bayi berapa lama hilang",
+  "expect": "checker:kuning",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 12 hari demam 38",
+  "expect": "checker:neonatus",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi newborn ga mau nyusu lemes banget",
+  "expect": "checker:neonatus",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 20 hari napas cepet",
+  "expect": "checker:neonatus",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 1 minggu ada nanah di pusar",
+  "expect": "checker:neonatus",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi baru lahir sering bersin normal gak",
+  "expect": "checker:neonatus",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "asi ga keluar banyak gmn caranya",
+  "expect": "guide:asi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi minum asi tiap berapa jam",
+  "expect": "guide:asi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "lanjut asi sampe umur brp",
+  "expect": "guide:asi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "mpasi pertama kasih apa bun",
+  "expect": "guide:mpasi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 6 bulan makan telur boleh",
+  "expect": "guide:mpasi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "tekstur mpasi 9 bln",
+  "expect": "guide:mpasi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "perlu kasih vit d ga buat bayi asi",
+  "expect": "guide:suplemen",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kapsul vit a kapan di posyandu",
+  "expect": "guide:suplemen",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 4 bln zat besi",
+  "expect": "guide:suplemen",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "posisi tidur bayi yg aman",
+  "expect": "guide:tidur",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 5 bln tidur sehari brp jam",
+  "expect": "guide:tidur",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "sids itu apa",
+  "expect": "guide:tidur",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 2thn nonton hp 2 jam parah ga",
+  "expect": "guide:layar",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "tummy time brp menit sehari",
+  "expect": "guide:layar",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 1 tahun boleh pegang gadget",
+  "expect": "guide:layar",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi keselek ga bisa batuk ga bisa nangis",
+  "expect": "guide:tersedak",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "cara tepuk punggung bayi keselek",
+  "expect": "guide:tersedak",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "anak 3 thn kesedak kacang masih bisa batuk",
+  "expect": "guide:tersedak",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak telen koin nyangkut",
+  "expect": "guide:tersedak",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 7 bulan belum tumbuh gigi wajar",
+  "expect": "guide:gigi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "gusi bengkak bayi mau tumbuh gigi",
+  "expect": "guide:gigi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kapan anak mulai ke dokter gigi",
+  "expect": "guide:gigi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "tali pusat bayi gmn dirawat",
+  "expect": "guide:bbl",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "skrining shk tumit bayi",
+  "expect": "guide:bbl",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "tes pendengaran bayi baru lahir",
+  "expect": "guide:bbl",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 18bln tinggi 75 cm stunting ga",
+  "expect": "guide:tumbuh",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bb anak segini normal ga",
+  "expect": "guide:tumbuh",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "cara ukur tinggi anak 3 thn",
+  "expect": "guide:tumbuh",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak tenggelam di bak mandi",
+  "expect": "guide:aman",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "balita minum obat ortu keracunan",
+  "expect": "guide:aman",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "anak jatuh dari tangga muntah ngantuk",
+  "expect": "guide:aman",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "tips babyproofing rumah",
+  "expect": "guide:aman",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "aku nangis terus sejak lahiran 3 minggu",
+  "expect": "guide:ibu",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "pengen nyakitin diri sendiri sejak punya bayi",
+  "expect": "guide:ibu",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bedanya baby blues sama depresi pp",
+  "expect": "guide:ibu",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 2thn blm ngomong sama sekali",
+  "expect": "guide:skrining",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kapan mchat dilakukan",
+  "expect": "guide:skrining",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 18 bln ga mau tatap mata",
+  "expect": "guide:skrining",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 1thn batuk kasih obat flu aman gak",
+  "expect": "obat:batukpilek",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "antihistamin buat bayi",
+  "expect": "obat:batukpilek",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "sirup batuk pilek balita",
+  "expect": "obat:batukpilek",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "gel gusi bayi benzokain",
+  "expect": "obat:benzokain",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "oles bonjela ke gusi anak 1 thn",
+  "expect": "obat:benzokain",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "obat oles tumbuh gigi aman",
+  "expect": "obat:benzokain",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 9 bln diolesin madu di dot",
+  "expect": "obat:madu",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "madu buat bayi batuk",
+  "expect": "obat:madu",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 10 bln makan madu dikit gpp?",
+  "expect": "obat:madu",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak mencret minum entrostop boleh ga",
+  "expect": "obat:antidiare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "diapet buat balita",
+  "expect": "obat:antidiare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "obat stop mencret anak",
+  "expect": "obat:antidiare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "diare anak harus antibiotik gak",
+  "expect": "obat:antibiotik-diare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kasih amox buat mencret",
+  "expect": "obat:antibiotik-diare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bab berdarah anak antibiotik apa",
+  "expect": "obat:antibiotik-diare",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "sab simplex buat bayi kolik",
+  "expect": "obat:simetikon",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "obat kembung bayi 1 bln",
+  "expect": "obat:simetikon",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "infacol manjur gak",
+  "expect": "obat:simetikon",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "oralit brp ml sekali bab",
+  "expect": "obat:oralit",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "oralit buat bayi 5 bln",
+  "expect": "obat:oralit",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "pedialyte boleh ganti oralit",
+  "expect": "obat:oralit",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "zinc brp hari diminum",
+  "expect": "obat:zinc",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "dosis zinc bayi 4 bln",
+  "expect": "obat:zinc",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "zinc anak 3 thn berapa mg",
+  "expect": "obat:zinc",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kapsul biru vit a umur brp",
+  "expect": "obat:vita",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "vit a 2x setahun buat anak 2 thn",
+  "expect": "obat:vita",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "posyandu bagi vit a bulan apa",
+  "expect": "obat:vita",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "tetes vit d bayi berapa iu",
+  "expect": "obat:vitd",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "vit d3 buat bayi asi",
+  "expect": "obat:vitd",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "jemur bayi pagi cukup ga ganti vit d",
+  "expect": "obat:vitd",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "tetes zat besi bayi brp mg",
+  "expect": "obat:besi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi bblr perlu besi lebih",
+  "expect": "obat:besi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak anemia suplemen besi",
+  "expect": "obat:besi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "dosis sanmol sirup bayi 7kg",
+  "expect": "obat:penurunpanas",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "tempra boleh diulang jam brp",
+  "expect": "obat:penurunpanas",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "pct vs ibuprofen",
+  "expect": "obat:penurunpanas",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "parasetamol bayi 2 bulan boleh",
+  "expect": "obat:penurunpanas",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "katanya madu bagus buat bayi 6 bln bener ga",
+  "expect": "mitos:madu-bayi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "madu dioles ke gusi bayi",
+  "expect": "mitos:madu-bayi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "madu bisa redain batuk anak 3 thn bener?",
+  "expect": "mitos:madu-batuk",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "mitos madu batuk",
+  "expect": "mitos:madu-batuk",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bener gel gigi aman buat bayi?",
+  "expect": "mitos:gel-gigi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "mitos gel gusi bayi",
+  "expect": "mitos:gel-gigi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kalung amber bener bantu gigi bayi?",
+  "expect": "mitos:kalung-gigi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "gelang amber bayi aman gak",
+  "expect": "mitos:kalung-gigi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "mitos mencret harus diobati diapet",
+  "expect": "mitos:obat-diare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bener anak diare perlu obat stop diare",
+  "expect": "mitos:obat-diare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "katanya diare anak butuh antibiotik betul?",
+  "expect": "mitos:antibiotik-diare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "mitos antibiotik buat mencret",
+  "expect": "mitos:antibiotik-diare",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bener obat batuk pilek aman buat bayi?",
+  "expect": "mitos:obat-batpil",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "mitos obat flu balita",
+  "expect": "mitos:obat-batpil",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "katanya simetikon ampuh buat kolik",
+  "expect": "mitos:simetikon-kolik",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "mitos obat kolik bayi",
+  "expect": "mitos:simetikon-kolik",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 3 bulan perlu air putih ga",
+  "expect": "mitos:air-putih",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "katanya bayi harus dikasih air biar ga seret",
+  "expect": "mitos:air-putih",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "katanya bayi tidur tengkurap lebih nyenyak",
+  "expect": "mitos:tidur-tengkurap",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bantal peyang bener aman?",
+  "expect": "mitos:tidur-tengkurap",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 2 bln udah senyum belum seharusnya",
+  "expect": "milestone:m02",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "milestone 2 bulan apa aja",
+  "expect": "milestone:m02",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 4 bln belum bisa tengkurap normal",
+  "expect": "milestone:m04",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "perkembangan bayi 4 bulan",
+  "expect": "milestone:m04",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 6 bulan harusnya udah bisa apa",
+  "expect": "milestone:m06",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bb 6 bln belum guling",
+  "expect": "milestone:m06",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 9 bln belum bisa duduk",
+  "expect": "milestone:m09",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "perkembangan 9 bulan",
+  "expect": "milestone:m09",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 1thn belum jalan wajar",
+  "expect": "milestone:m12",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "12 bulan harus bisa apa",
+  "expect": "milestone:m12",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 18 bln baru bisa 2 kata",
+  "expect": "milestone:m18",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "tahap perkembangan 18 bulan",
+  "expect": "milestone:m18",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 2 tahun harusnya bisa apa",
+  "expect": "milestone:m24",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "2thn belum lari",
+  "expect": "milestone:m24",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 3 thn belum lancar ngomong",
+  "expect": "milestone:m36",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "milestone 3 tahun",
+  "expect": "milestone:m36",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak 5 thn bisa berhitung sampe brp",
+  "expect": "milestone:m60",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kemampuan anak 5 tahun",
+  "expect": "milestone:m60",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "jadwal imunisasi bayi 2 bulan",
+  "expect": "imunisasi:imunisasi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "imunisasi apa aja umur 9 bln",
+  "expect": "imunisasi:imunisasi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "vaksin rotavirus kapan",
+  "expect": "imunisasi:imunisasi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "imunisasi mr kapan",
+  "expect": "imunisasi:imunisasi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "jadwal vaksin idai",
+  "expect": "imunisasi:imunisasi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak telat imunisasi gmn",
+  "expect": "imunisasi:imunisasi",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "harga susu formula yg bagus",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "cara daftar bpjs anak",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "rekomendasi stroller murah",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "nama bayi laki laki islami",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "resep bolu pisang",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "jam buka puskesmas",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "cara bikin akta lahir",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kenapa langit biru",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "boleh potong rambut bayi weton",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "tips lulus cpns",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bawang merah di kaki bayi demam",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kerokan bayi masuk angin",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "biaya persalinan caesar",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "cara hamil cepat",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "daycare terbaik jakarta",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "kapan anak boleh sekolah",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "jodoh lahir bulan apa",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "harga popok murah",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "ngajarin anak toilet training",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "anak tantrum parah gmn",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "ganti nama anak",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "mainan edukasi bayi 1 tahun",
+  "expect": null,
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi sesak napas tarikan dada dalem biru",
+  "expect": "checker:napas",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "anak ngos ngosan lemes bibir biru",
+  "expect": "checker:napas",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "mencret trus muntah semua ga bisa minum",
+  "expect": "checker:diare",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bab darah lendir bayi 7 bln",
+  "expect": "checker:diare",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 6 minggu panas 38.5 harus ke igd?",
+  "expect": "checker:demam",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "anak panas 40,2 lemes banget",
+  "expect": "checker:demam",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "demam anak ga sadar dipanggil ga respon",
+  "expect": "checker:demam",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "anak kejang lebih 5 menit ga berhenti",
+  "expect": "checker:kejang",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi kejang trus biru",
+  "expect": "checker:kejang",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "muntah hijau bayi 3 minggu perut kembung",
+  "expect": "checker:gumoh",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi 5 hari kejang kecil mata berkedip terus",
+  "expect": "checker:neonatus",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi baru lahir biru ga nangis",
+  "expect": "checker:neonatus",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi tersedak muka biru ga bisa napas",
+  "expect": "guide:tersedak",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "anak keracunan minum pembersih lantai",
+  "expect": "guide:aman",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi nangis ga berhenti ubun ubun cekung lemes",
+  "expect": "checker:tangis",
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "anak ga mau minum sama sekali seharian lemes sekali",
+  "expect": null,
+  "danger": true,
+  "synthetic": true
+ },
+ {
+  "q": "bayi tidak sadar dibangunin ga bangun",
+  "expect": null,
+  "danger": true,
+  "synthetic": true
+ }
+]
