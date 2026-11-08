@@ -9,7 +9,7 @@
   - T1 fix: alias panduan Pencegahan cedera mengikuti kosakata aturan bahaya keracunan (tertelan, minyak tanah, bensin, pemutih, obat nyamuk, deterjen) — src/kb-content.js
   - T1 test: target soal "ruam popok merah lecet" null → guide:ruampopok karena KB kini punya isinya — test/search-ortu.json
   - T1 chore: meta.version KB 2026.11.08-3; bangun ulang kb.json, kb/, halaman; versi 17 / 2026.11.08-15 — android/app/build.gradle
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert 517b813
 
 ### [2026.11.08-14] — 2026-11-08
 - Commit: fix: tangkap tanda bahaya ketikan ortu panik, turunkan keyakinan jawaban salah topik
