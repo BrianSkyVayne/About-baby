@@ -12,7 +12,7 @@ const guides = [
       { t: "Berat sedikit turun di minggu pertama itu normal pada bayi ASI; bayi seharusnya kembali ke berat lahir di hari ke-10–14. Bila belum, periksakan ke bidan atau dokter.", src: ["cdc_newborn"] }
     ] }
   ] },
-  { id: "mpasi", order: 2, title: "MPASI", aliases: ["mpasi", "makanan pendamping", "makan bayi", "bubur bayi", "mulai makan", "bayi mulai makan", "tekstur makan", "finger food", "bayi susah makan", "gtm", "porsi makan bayi", "bayi tolak makan"], examples: ["mpasi mulai umur brp", "bb 7bln porsi mpasi brp sdm", "anak gtm mpasi gmn", "bayi 10 bln tekstur makanan apa", "boleh kasih garam gula di mpasi ga"], sections: [
+  { id: "mpasi", order: 2, title: "MPASI", aliases: ["mpasi", "makanan pendamping", "makan bayi", "bubur bayi", "mulai makan", "bayi mulai makan", "tekstur makan", "finger food", "bayi susah makan", "gtm", "porsi makan bayi", "bayi tolak makan", "pisang", "buah", "dikasih buah", "dikasih pisang", "boleh makan"], examples: ["mpasi mulai umur brp", "bb 7bln porsi mpasi brp sdm", "anak gtm mpasi gmn", "bayi 10 bln tekstur makanan apa", "boleh kasih garam gula di mpasi ga"], sections: [
     { h: "Pedoman WHO 2023", items: [
       { t: "Mulai MPASI di usia 6 bulan (180 hari) sambil tetap menyusu.", src: ["who_cf"] },
       { t: "Makanan hewani (daging, ikan, telur) setiap hari.", src: ["who_cf"] },
@@ -294,7 +294,7 @@ const mitos = [
 ];
 
 const meta = {
-  version: "2026.11.08-6",
+  version: "2026.11.08-7",
   verifiedDate: "2026-11-07",
   lastCheck: "2026-11-07",
   reviewMonths: 12,

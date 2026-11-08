@@ -1,0 +1,284 @@
+[
+ {
+  "q": "bun anakku 16 hr td gumoh nyembur 2x abis nyusu, bahaya ga ya",
+  "expect": "checker:gumoh",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "dedek ngemut jempol trs, laper apa ngantuk sih",
+  "expect": "guide:lapar",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi 3bln anget 37,8 abis imunisasi wajar kah",
+  "expect": "checker:demam",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "anak 9 bln mencret 5x hari ini msh mau nenen",
+  "expect": "checker:diare",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "mencret terus sampe lemes ga mau minum",
+  "expect": "checker:diare",
+  "danger": true,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi nangis terus tiap sore kaki ditekuk2",
+  "expect": "checker:tangis",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi 1 bln napasnya ngos2an sampe dadanya cekung",
+  "expect": "checker:napas",
+  "danger": true,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "anakku tiba2 kaku mata mendelik pas panas tinggi",
+  "expect": "checker:kejang",
+  "danger": true,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "panas hari ke 4 ada bintik merah di kaki, dbd bukan",
+  "expect": "checker:dbd",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi baru lahir kuning sampe telapak kaki",
+  "expect": "checker:kuning",
+  "danger": true,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "tali pusar bayi bau dan merah sekitarnya",
+  "expect": "checker:neonatus",
+  "danger": true,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "asi seret gimana biar banyak",
+  "expect": "guide:asi",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "mpasi pertama bagusnya apa bun",
+  "expect": "guide:mpasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi 5 bln udah boleh dikasih pisang blm",
+  "expect": "guide:mpasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi tidur tengkurep katanya biar kepala bagus bener ga",
+  "expect": "mitos:tidur-tengkurap",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi batuk pilek boleh dikasih madu ga",
+  "expect": "obat:madu",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08",
+  "note": "obat:madu dan mitos:madu-bayi sama-sama benar (<12 bln dilarang, botulisme)"
+ },
+ {
+  "q": "oralit buat bayi diare cara bikinnya",
+  "expect": "obat:oralit",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "zinc diminum berapa hari buat diare",
+  "expect": "obat:zinc",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "obat pilek bayi 6 bulan apa ya",
+  "expect": "obat:batukpilek",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi 4 bulan blm bisa tengkurep normal ga",
+  "expect": "milestone:m04",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "anak 1 thn blm bisa jalan telat ga",
+  "expect": "milestone:m12",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "anak 2 tahun belum ngomong",
+  "expect": "milestone:m24",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "jadwal imunisasi bayi",
+  "expect": "imunisasi:imunisasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi 6 bln gigi mau tumbuh rewel gusi gatel",
+  "expect": "guide:gigi",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi keselek susu sampe biru",
+  "expect": "guide:tersedak",
+  "danger": true,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "anakku nelen kancing gimana",
+  "expect": "guide:tersedak",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08",
+  "note": "alarm dibiarkan: kancing bisa berarti baterai kancing"
+ },
+ {
+  "q": "bayi 10 bulan boleh nonton hp ga",
+  "expect": "guide:layar",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi 2 bln tidur brp jam sehari normalnya",
+  "expect": "guide:tidur",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bb bayi 3 bln cuma naik dikit bulan ini",
+  "expect": "guide:tumbuh",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "pantat dedek merah2 lecet abis diare",
+  "expect": "guide:ruampopok",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "aku sedih terus abis lahiran pengen nangis aja",
+  "expect": "guide:ibu",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "anak minum minyak tanah",
+  "expect": "guide:aman",
+  "danger": true,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi muntah hijau",
+  "expect": "checker:gumoh",
+  "danger": true,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi demam 39 umur 2 bulan",
+  "expect": "checker:demam",
+  "danger": true,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "ubun2 bayi cekung abis diare",
+  "expect": "checker:diare",
+  "danger": true,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "anak 3 thn kalau demam kejang lagi ga nanti",
+  "expect": "checker:kejang",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "kapan bayi boleh minum air putih",
+  "expect": "mitos:air-putih",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "vitamin d buat bayi asi perlu ga",
+  "expect": "obat:vitd",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "bayi nenen terus tiap jam apa asiku kurang",
+  "expect": "guide:asi",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ },
+ {
+  "q": "abis nyusu bayi masih buka2 mulut nyari puting",
+  "expect": "guide:lapar",
+  "danger": false,
+  "synthetic": true,
+  "set": "emak-holdout-2026-11-08"
+ }
+]

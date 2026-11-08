@@ -1,5 +1,15 @@
 # Changelog
 
+### [2026.11.08-22] — 2026-11-08
+- Commit: fix: tanda bahaya dari uji emak-emak (dada cekung, mendelik, ruam tidak pudar, bintik dengue)
+- Detail:
+  - T2 fix: sesak menangkap "dadanya cekung" dan "ngos2an" (dinormalisasi "ngosan") — src/engine.js
+  - T2 fix: kejang menangkap "mendelik"; pertanyaan "kejang lagi ga nanti" tidak lagi dianggap kejang sekarang — src/engine.js
+  - T2 fix: "bintik merah" dikeluarkan dari aturan perdarahan dengue (WHO 2009: ruam/uji torniket = dengue tanpa tanda bahaya; perdarahan mukosa = tanda bahaya); aturan baru ruamkaca: ruam yang tidak pudar ditekan = IGD (NHS fever, "call 999") — src/engine.js
+  - T1 feat: alias MPASI untuk buah/pisang; KB meta 2026.11.08-7 — src/kb-content.js
+  - T1 test: set baru test/search-emak.json (40 soal ala emak); label ortu2 "hari ke 4 bintik merah di kaki" dikoreksi jadi bukan bahaya sesuai WHO 2009
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-21] — 2026-11-08
 - Commit: feat: contoh kasus emut tangan lalu menyembur, tautan gambar dan video tanda lapar
 - Detail:
