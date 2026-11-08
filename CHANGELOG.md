@@ -1,5 +1,15 @@
 # Changelog
 
+### [2026.11.08-14] — 2026-11-08
+- Commit: fix: tangkap tanda bahaya ketikan ortu panik, turunkan keyakinan jawaban salah topik
+- Detail:
+  - T2 fix: DangerDetector menangkap mata cekung (who_dehid), kuning sampai telapak/kaki (who_newborn), tali pusat bernanah/bau (sumber belum ada), kepala terbentur, muntah setelah jatuh/terbentur; ubun-ubun boleh berselang kata ("ubun2 bayi cekung"); slang jatoh/kebentur/kejedot/choking/air panas/melepuh — src/engine.js
+  - T2 fix: AskEngine tidak lagi "yakin" bila hasil teratas hanya cocok 1 kata tanpa frasa dan ada kata yang tak dikenal KB (mis. "digigit anjing" -> panduan gigi) — src/engine.js
+  - T2 fix: kartu checker di Tanya tidak lagi menampilkan kesimpulan default ("Tidak ada tanda bahaya", "tanpa dehidrasi") sebelum pertanyaan dijawab, yang bertentangan dengan peringatan bahaya di atasnya (dicek di Safari) — src/page-body.html (AskView.card)
+  - T1 test: soal uji terpisah 50 ketikan ortu buru-buru (test/search-ortu.json), search-eval.js menerima path file — test/
+  - T1 chore: bangun ulang halaman — index.html, offline.html, android/app/src/main/assets/www/index.html; versi 16 / 2026.11.08-14 — android/app/build.gradle
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-13] — 2026-11-08
 - Commit: fix: naikkan versi KB agar koreksi medis sampai ke HP terpasang
 - Detail:

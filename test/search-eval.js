@@ -6,7 +6,8 @@ const Engine = require(path.join(__dirname, "..", "src", "engine"));
 const sources = require(path.join(__dirname, "..", "src", "kb-sources"));
 const checkers = require(path.join(__dirname, "..", "src", "kb-checkers"));
 const content = require(path.join(__dirname, "..", "src", "kb-content"));
-const gold = require(path.join(__dirname, "search-gold.json"));
+// Opsional: node test/search-eval.js test/search-ortu.json (soal uji terpisah, jangan dipakai menyetel).
+const gold = require(process.argv[2] ? path.resolve(process.argv[2]) : path.join(__dirname, "search-gold.json"));
 
 const kb = { sources, checkers, guides: content.guides, milestones: content.milestones, imunisasi: content.imunisasi, obat: content.obat, meta: content.meta };
 if (content.mitos) kb.mitos = content.mitos;

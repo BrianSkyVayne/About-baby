@@ -1,0 +1,352 @@
+[
+ {
+  "q": "tolong anak sy kejang skrg gmn",
+  "expect": "checker:kejang",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi jatoh dr kasur kepala kebentur nangis kenceng",
+  "expect": "guide:aman",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak nelen koin",
+  "expect": "guide:tersedak",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi ga mau nyusu seharian lemes",
+  "expect": "checker:neonatus",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak 1th diare 6x hari ini mata cekung",
+  "expect": "checker:diare",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "ubun2 bayi cekung",
+  "expect": null,
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "ubun ubun menonjol bayi rewel demam",
+  "expect": "checker:demam",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi 3 minggu kuning sampe kaki",
+  "expect": "checker:kuning",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "pup bayi putih pucat",
+  "expect": "checker:kuning",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bibir anak biru abis nangis",
+  "expect": null,
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak alergi abis makan telur bentol2 sesak",
+  "expect": "checker:napas",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi napasnya cepet bgt tarikan dada",
+  "expect": "checker:napas",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "dosis paracetamol anak 10kg",
+  "expect": "obat:penurunpanas",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "boleh ibuprofen buat bayi 2 bulan?",
+  "expect": "obat:penurunpanas",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi 4 bln blm tengkurap",
+  "expect": "milestone:m04",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak 2 thn blm bisa ngomong",
+  "expect": "milestone:m24",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "jadwal imunisasi campak",
+  "expect": "imunisasi:imunisasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "telat imunisasi dpt gmn",
+  "expect": "imunisasi:imunisasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "abis imunisasi panas wajar?",
+  "expect": "imunisasi:imunisasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi pilek idung mampet susah tidur",
+  "expect": "checker:napas",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak batuk grok grok malem",
+  "expect": "checker:napas",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "ruam popok merah lecet",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi cegukan terus",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "mpasi pertama apa",
+  "expect": "guide:mpasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi 5 bulan udh boleh makan?",
+  "expect": "guide:mpasi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak kena air panas melepuh",
+  "expect": "guide:aman",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak minum minyak tanah",
+  "expect": "guide:aman",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi kepanasan biang keringat",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi ga pup 4 hari asi",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak sakit telinga tarik2 kuping",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "mata bayi belekan",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "sariawan anak ga mau makan",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak demam ada bintik merah ga ilang ditekan",
+  "expect": "checker:dbd",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi tidur tengkurap aman ga",
+  "expect": "guide:tidur",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi tidur mulu susah dibangunin lemes",
+  "expect": "checker:neonatus",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak muntah abis kepala kebentur",
+  "expect": "guide:aman",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "berapa ml asi bayi 1 bulan",
+  "expect": "guide:asi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak digigit anjing",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi nangis terus ga berhenti 3 jam",
+  "expect": "checker:tangis",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "tali pusar bau bernanah",
+  "expect": "checker:neonatus",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak ngompol lagi padahal udh bisa",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "tumbuh gigi demam ga",
+  "expect": "guide:gigi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bayi 2 bulan boleh dikasih air putih?",
+  "expect": "mitos:air-putih",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "bolehkah madu buat anak 8 bulan",
+  "expect": "mitos:madu-bayi",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak keracunan obat nyamuk",
+  "expect": "guide:aman",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "kaki bayi bengkok O",
+  "expect": null,
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "BAB berdarah lendir",
+  "expect": "checker:diare",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak susah napas mengi",
+  "expect": "checker:napas",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "baby choking what do",
+  "expect": "guide:tersedak",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ },
+ {
+  "q": "anak gw panas 41",
+  "expect": "checker:demam",
+  "danger": true,
+  "synthetic": true,
+  "set": "ortu-buru2-2026-11-08"
+ }
+]
