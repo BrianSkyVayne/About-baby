@@ -1,5 +1,15 @@
 # Changelog
 
+### [2026.11.08-18] — 2026-11-08
+- Commit: feat: UI bahaya sesuai level, kotak tanya di Beranda, gulir ke hasil
+- Detail:
+  - T2 feat: kotak tanda bahaya mengikuti level tertinggi — igd: merah + tombol 119/IGD; hari: "Periksakan ke dokter hari ini" + cari puskesmas, 119 jadi tautan kecil; pantau: "Pantau di rumah" (AskView.dangerBox) — src/page-body.html
+  - T2 feat: kotak "Keluhan anak" di Beranda langsung menjawab di layar Tanya (HomeView.onSubmit) — src/page-body.html
+  - T1 feat: setelah Tanya, layar menggulir ke tanda bahaya/hasil (sebelumnya di y=879, di bawah layar 818) (AskView.revealResult) — src/page-body.html
+  - T1 style: "Isi tanggal lahir" jadi tautan, tidak bersaing dengan tombol Darurat — src/page-body.html
+  - T1 chore: bangun ulang halaman; versi 20 / 2026.11.08-18 — android/app/build.gradle
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-17] — 2026-11-08
 - Commit: feat: tingkat urgensi per tanda bahaya (igd / hari / pantau)
 - Detail:
