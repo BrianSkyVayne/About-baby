@@ -264,7 +264,7 @@ const mitos = [
 ];
 
 const meta = {
-  version: "2026.11.08-1",
+  version: "2026.11.08-2",
   verifiedDate: "2026-11-07",
   lastCheck: "2026-11-07",
   reviewMonths: 12,
