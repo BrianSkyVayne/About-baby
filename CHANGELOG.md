@@ -1,5 +1,14 @@
 # Changelog
 
+### [2026.11.08-27] — 2026-11-08
+- Commit: feat: tampilan modern tanpa kotak, panduan dari data KB, cadangan 112
+- Detail:
+  - T2 feat: lapisan gaya baru (ubin jadi ikon bulat + label, daftar rata tanpa kartu, panel keluhan gradasi, Darurat merah tegas di dua mode, ikon panduan tidak ganda) — src/page-head.html, src/page-body.html
+  - T1 refactor: GuideListView membaca g.group/g.ages/g.start dari KB, GROUPS/forAge dihapus, ikon grup tetap di UI (GROUP_ICONS) — src/page-body.html
+  - T1 feat: layar darurat menambah "Bila 119 tidak tersambung, telepon 112" (119 Kemenkes tetap utama) — src/page-body.html
+  - build: index.html, offline.html, assets dibangun ulang — android/app/build.gradle
+- Rollback: <pending-sha, fill post-commit>
+
 ### [KB 2026.11.08-10] — 2026-11-08
 - Commit: feat: kategori dan rentang usia jadi field data panduan
 - Detail:
