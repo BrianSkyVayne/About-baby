@@ -1,5 +1,12 @@
 # Changelog
 
+### [2026.11.08-12] — 2026-11-08
+- Commit: fix: predictive back ke layar utama, hapus checklist anak yang dihapus
+- Detail:
+  - T1 fix: callback back Android 13+ hanya terpasang selama WebView punya riwayat, sehingga di halaman pertama sistem menampilkan animasi back ke layar utama — MainActivity.java
+  - T1 fix: menghapus anak ikut menghapus checklist perkembangannya — src/page-body.html
+- Rollback: git revert <sha commit ini>
+
 ### [2026.11.08-11] — 2026-11-08
 - Commit: fix: sumber tersedak, imunisasi HB-0, dan kolik
 - Detail:
@@ -14,7 +21,7 @@
 - Detail:
   - T2 fix: status bar & navigasi Android mengikuti tema di dalam app (jembatan AndroidKB.setDark) — src/page-body.html, KbBridge.java, MainActivity.java
   - T1 fix: checklist perkembangan disimpan per anak (anak baru punya id; anak lama tetap memakai "ab.ms") — src/page-body.html
-- Rollback: git revert <sha commit ini>
+- Rollback: git revert 02e1412
 
 ### [2026.11.08-9] — 2026-11-08
 - Commit: fix: lanjutan koreksi fakta medis dan bersihkan sumber mati
