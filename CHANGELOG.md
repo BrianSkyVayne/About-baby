@@ -7,7 +7,7 @@
   - T2 feat: alias, contoh pertanyaan, koleksi mitos bersumber — src/kb-checkers.js, src/kb-content.js, src/build-kb.js
   - T2 feat: layar Tanya pakai mesin lokal (bahaya/yakin/pilihan/tidak ada), prefill cek, Claude jadi opsional, catatan pertanyaan tak terjawab — src/page-body.html
   - T1 test: 209 soal sintetis + skrip evaluasi — test/search-gold.json, test/search-eval.js
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert e8f2348
 
 ### [2026.11.08-1] — 2026-11-08
 - Commit: feat: chatbot Tanya di APK, update data otomatis bertanda tangan, tombol darurat, bagikan WA
@@ -19,4 +19,4 @@
   - T3 feat: server perantara Claude (Cloudflare Worker, prompt caching, batas 20/hari/perangkat) — worker/
   - T3 feat: update KB otomatis via JobScheduler 24 jam, ETag, tanda tangan ECDSA P-256, simpan atomik + kb.prev.json — android/.../KbUpdateJob.java, AndroidManifest.xml, src/sign-kb.js
   - T2 feat: link tel:/wa.me/maps/mailto dibuka di aplikasi luar — android/.../MainActivity.java
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert e8f2348
