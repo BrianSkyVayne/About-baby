@@ -5,7 +5,7 @@
 - Detail:
   - T1 feat: bagian "Jamu dan obat herbal saat menyusui" di panduan ibu + alias jamu/jamu bersalin/herbal; sumber nhs_bf_medicines; KB 2026.11.08-11 — src/kb-content.js, src/kb-sources.js
   - T1 test: 2 kueri jamu — test/search-semua.json
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert 57d0682
 
 ### [2026.11.08-27] — 2026-11-08
 - Commit: feat: tampilan modern tanpa kotak, panduan dari data KB, cadangan 112
