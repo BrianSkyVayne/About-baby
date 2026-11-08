@@ -5,14 +5,14 @@
 - Detail:
   - T2 fix: meta.version KB 2026.11.08-1 → 2026.11.08-2; tanpa ini KbUpdateJob.java:106 menolak KB baru dan KnowledgeStore.java:41 tetap memakai KB lama tersimpan, sehingga koreksi medis be49540/ceb7a40/45432bf tak pernah sampai — src/kb-content.js
   - T1 chore: bangun ulang kb.json dan halaman — kb.json, kb/kb/meta.json, offline.html, android/app/src/main/assets/www/{index.html,kb.json}; versi 15 / 2026.11.08-13 — android/app/build.gradle
-- Rollback: git revert <sha commit ini>
+- Rollback: git revert e418f55
 
 ### [2026.11.08-12] — 2026-11-08
 - Commit: fix: predictive back ke layar utama, hapus checklist anak yang dihapus
 - Detail:
   - T1 fix: callback back Android 13+ hanya terpasang selama WebView punya riwayat, sehingga di halaman pertama sistem menampilkan animasi back ke layar utama — MainActivity.java
   - T1 fix: menghapus anak ikut menghapus checklist perkembangannya — src/page-body.html
-- Rollback: git revert <sha commit ini>
+- Rollback: git revert a2d0988
 
 ### [2026.11.08-11] — 2026-11-08
 - Commit: fix: sumber tersedak, imunisasi HB-0, dan kolik
@@ -21,7 +21,7 @@
   - T2 fix: jadwal imunisasi menyebut HB-0 dalam 24 jam setelah lahir sesuai WHO (sumber baru who_hepb) — src/kb-content.js, src/kb-sources.js
   - T1 fix: puncak kolik 6 minggu kini juga bersumber AAP HealthyChildren (aap_colic) — src/kb-checkers.js, src/kb-sources.js
   - T1 chore: bangun ulang kb.json dan halaman; versi 13 / 2026.11.08-11 — android/app/build.gradle
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert 45432bf
 
 ### [2026.11.08-10] — 2026-11-08
 - Commit: fix: status bar ikut tema aplikasi, checklist perkembangan per anak
@@ -45,7 +45,7 @@
 - Detail:
   - T1 feat: Beranda hanya Darurat + keluhan sesuai usia; kartu Tanya dobel (sudah di menu bawah) dihapus, "Semua keluhan" jadi tautan "Keluhan lain", teks pembuka satu kalimat — src/page-body.html, src/page-head.html
   - T1 feat: pilihan tema pindah dari Profil ke Lainnya — src/page-body.html
-- Rollback: git revert <sha commit ini>
+- Rollback: git revert c466944
 
 ### [2026.11.08-7] — 2026-11-08
 - Commit: feat: UI/UX ramah ortu (audit Web Interface Guidelines, beberapa anak, mode gelap, back Android 13+)
