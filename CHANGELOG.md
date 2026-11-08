@@ -1,5 +1,11 @@
 # Changelog
 
+### [2026.11.08-20] — 2026-11-08
+- Commit: fix: pertanyaan muntah semua tidak terbaca seperti gumoh biasa
+- Detail:
+  - T1 fix: teks tanda bahaya "muntahsemua" (cek gumoh, demam, napas) diubah jadi "Setiap kali diberi minum atau menyusu, semuanya dimuntahkan lagi (tidak ada yang tertahan sama sekali)?"; sebelumnya ortu bayi gumoh menjawab "ya" karena "susunya keluar semua" lalu dapat hasil IGD. Aturan dan sumber (who_imci_danger) tidak berubah; KB meta 2026.11.08-5 — src/kb-checkers.js, src/kb-content.js
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-19] — 2026-11-08
 - Commit: fix: tingkat bahaya bersumber, luka bakar, sumber dengue, normalisasi bb, keyakinan pencarian
 - Detail:

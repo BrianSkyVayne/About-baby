@@ -6,7 +6,7 @@ const tandaBahayaUmum = [
   { id: "lemas", text: "Anak lemas sekali, sulit dibangunkan, atau tidak merespons saat dipanggil?", type: YN },
   { id: "kejang", text: "Anak kejang sekarang atau barusan?", type: YN },
   { id: "tdkminum", text: "Anak tidak bisa minum atau menyusu sama sekali?", type: YN },
-  { id: "muntahsemua", text: "Anak memuntahkan semua yang diminum (tidak ada yang tertahan)?", type: YN }
+  { id: "muntahsemua", text: "Setiap kali diberi minum atau menyusu, semuanya dimuntahkan lagi (tidak ada yang tertahan sama sekali)?", type: YN }
 ];
 const rulesBahayaUmum = [
   { id: "r-lemas", when: { yes: "lemas" }, level: 4, text: "Lemas, sangat mengantuk, atau sulit dibangunkan termasuk tanda bahaya umum WHO (letargis atau tidak sadar). Segera bawa ke IGD.", src: ["who_imci_danger", "who_dehid"] },
