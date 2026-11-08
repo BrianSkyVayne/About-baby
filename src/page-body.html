@@ -476,15 +476,29 @@
       const items = pick.map(id => kb.checkers.find(c => c.id === id)).filter(Boolean);
       return this.page(
         '<div class="stack-s"><h1>' + (this.profile.hasAge ? "Ada keluhan apa hari ini?" : "Selamat datang") + "</h1>" +
-        '<p class="muted">Pilih keluhan, jawab beberapa pertanyaan.</p></div>' +
+        '<p class="muted">Ketik keluhannya, atau pilih di bawah.</p></div>' +
+        '<form data-form="home-ask" class="card stack-s"><label for="h-q">Keluhan anak</label>' +
+        '<textarea id="h-q" rows="2" placeholder="Contoh: bayi 3 bulan demam 38,5 lemas"></textarea>' +
+        '<button class="btn-primary" type="submit">Cari jawaban</button></form>' +
         '<a class="btn btn-big btn-danger" href="#darurat">Darurat</a>' +
-        (this.profile.hasAge ? "" : '<a class="btn btn-primary" href="#profil" style="text-align:center;text-decoration:none">Isi tanggal lahir anak</a>') +
+        (this.profile.hasAge ? "" : '<a class="more-link" href="#profil">Isi tanggal lahir anak agar hasil sesuai usia ›</a>') +
         (kb.isStale ? '<div class="banner warn">Data terakhir diverifikasi ' + Html.esc(m.verifiedDate) + ". Sebagian fakta mungkin perlu dicek ulang.</div>" : "") +
         (pending && this.source.canApprove ? '<a class="banner" href="#data" style="text-decoration:none;color:inherit">' + pending + " usulan pembaruan data menunggu persetujuan Anda ›</a>" : "") +
         '<div class="stack-s"><p class="eyebrow">Cek gejala</p><div class="list">' +
         items.map(c => '<a href="#cek-' + Html.esc(c.id) + '"><div><div class="t">' + Html.esc(c.title) + '</div><div class="s">' + Html.esc(c.short) + "</div></div>" + Html.chev() + "</a>").join("") +
         '</div><a class="more-link" href="#cek">Keluhan lain ›</a></div>' +
         Html.footer());
+    }
+    /** Ketikan di Beranda dijawab di layar Tanya (mesin yang sama), lalu hasilnya digulir ke depan. */
+    onSubmit(form) {
+      if (form.dataset.form !== "home-ask") return false;
+      const q = form.querySelector("textarea").value.trim();
+      if (!q) return false;
+      const ask = this.app.views.ask;
+      ask.q = q;
+      location.hash = "#tanya";
+      setTimeout(() => ask.local(), 60);
+      return false;
     }
   }
 
@@ -708,6 +722,12 @@
         if (this.res.confidence !== "high") AskView.noteUnmatched(q);
       } catch (e) { this.err = "Pertanyaan belum bisa dicari di data aplikasi."; }
       this.app.render();
+      this.revealResult();
+    }
+    /** Hasil (terutama tanda bahaya) sering jatuh di bawah layar HP setelah form; gulir ke sana. */
+    revealResult() {
+      const el = document.getElementById("t-danger") || document.getElementById("t-res");
+      if (el && el.scrollIntoView) el.scrollIntoView({ block: "start", behavior: "smooth" });
     }
     srcList(src) { return this.sources(Array.isArray(src) ? src : (src ? [src] : [])); }
     chips(ex, ageDays) {
@@ -772,13 +792,23 @@
       } else return "";
       return '<div class="card stack-s">' + h + "</div>";
     }
+    /** Kotak tanda bahaya: tombol mengikuti level tertinggi (igd > hari > pantau; tanpa level dianggap igd). */
+    static dangerBox(list, srcHtml) {
+      const rank = { pantau: 1, hari: 2, igd: 3 };
+      const top = list.reduce((m, d) => Math.max(m, rank[d.level] || 3), 1);
+      const head = { 3: "Tanda bahaya: ke IGD sekarang", 2: "Periksakan ke dokter hari ini", 1: "Pantau di rumah" }[top];
+      const cls = { 3: "r-4", 2: "r-3", 1: "r-2" }[top];
+      const act = top === 3 ? Html.emergency()
+        : '<div class="stack-s">' + (top === 2 ? '<a class="btn btn-big btn-primary" href="https://www.google.com/maps/search/puskesmas+atau+klinik+anak+terdekat" target="_blank" rel="noopener">Cari puskesmas / dokter terdekat</a>' : "") +
+          '<p class="small">Memburuk atau muncul tanda darurat? <a href="tel:119">Telepon 119</a> · <a href="#darurat">Lihat tanda darurat</a></p></div>';
+      return '<div class="result ' + cls + '" id="t-danger"><div class="stack-s"><p><strong>' + head + "</strong></p><ul class=\"items\">" +
+        list.map(d => "<li>" + Html.esc(d.text) + srcHtml(d) + "</li>").join("") + "</ul>" + act + "</div></div>";
+    }
     localHtml() {
       const r = this.res;
       if (!r) return "";
       let h = "";
-      if (r.danger.length) {
-        h += '<div class="result r-3"><div class="stack-s"><p><strong>Ada tanda bahaya:</strong></p><ul class="items">' + r.danger.map(d => "<li>" + Html.esc(d.text) + this.srcList(d.src) + "</li>").join("") + "</ul>" + Html.emergency() + "</div></div>";
-      }
+      if (r.danger.length) h += AskView.dangerBox(r.danger, d => this.srcList(d.src));
       if (r.confidence === "high") h += this.card(this.sel || r.best);
       else if (r.confidence === "low") {
         h += '<div class="card stack-s"><p class="eyebrow">Maksudnya yang mana?</p><div class="list">' +
@@ -807,7 +837,7 @@
         '<form data-form="ask" class="card stack"><label for="t-q">Pertanyaan</label><textarea id="t-q" placeholder="Contoh: bayi 2 minggu gumoh setelah menyusu tapi masih lapar, perlu ke dokter?">' + Html.esc(this.q) + "</textarea>" +
         '<div class="row"><button class="btn-primary" type="submit"' + (this.busy ? " disabled" : "") + ">" + (this.busy ? "Menjawab…" : "Tanya") + "</button>" + (mic ? '<button type="button" data-act="mic" aria-label="Ucapkan pertanyaan"' + (this.busy ? " disabled" : "") + ">Ucapkan</button>" : "") + (this.busy ? '<button type="button" data-act="stop">Hentikan</button>' : "") + "</div></form>" +
         (this.err ? '<div class="banner warn">' + Html.esc(this.err) + "</div>" : "") +
-        this.localHtml() +
+        '<div id="t-res">' + this.localHtml() + "</div>" +
         (this.hits.length ? '<div class="card stack-s"><p class="eyebrow">Mungkin membantu</p><div class="list">' + this.hits.map(([href, t]) => '<a href="' + Html.esc(href) + '"><div><div class="t">' + Html.esc(t) + "</div></div>" + Html.chev() + "</a>").join("") + "</div></div>" : "") +
         (this.text ? '<div class="card stack-s"><p class="eyebrow">Jawaban online</p><div class="answer" id="t-ans">' + this.linkify(this.text) + "</div></div>" : "") +
         (this.res || this.text ? this.feedbackRow() : ""));
