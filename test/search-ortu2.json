@@ -52,9 +52,10 @@
  {
   "q": "anak demam hari ke 4 bintik merah di kaki",
   "expect": "checker:dbd",
-  "danger": true,
+  "danger": false,
   "synthetic": true,
-  "set": "ortu-holdout-2026-11-08b"
+  "set": "ortu-holdout-2026-11-08b",
+  "note": "WHO 2009: ruam & uji torniket positif = dengue tanpa tanda bahaya; perdarahan mukosa baru tanda bahaya. Bintik yang tidak pudar ditekan = darurat (NHS), diuji terpisah."
  },
  {
   "q": "kapan bayi boleh mulai makan",
