@@ -1,5 +1,13 @@
 # Changelog
 
+### [2026.11.08-23] — 2026-11-08
+- Commit: fix: sisa kegagalan uji cari (napas, neonatus, topik di luar KB, kancing)
+- Detail:
+  - T2 fix: pokok pertanyaan yang tidak dikenal KB (kerokan, bawang merah, akta) tidak lagi dijawab "yakin"; kata lemah (cara/bikin/gimana) diabaikan saat menentukan pokok — src/engine.js
+  - T1 fix: alias napas ("ngos ngosan", "bibir biru", "napas tersengal"), neonatus ("bayi 3/5 hari", "bayi seminggu"), m12 ("belum bisa jalan"), lapar ("nyari puting", "buka mulut"); KB 2026.11.08-8 — src/kb-checkers.js, src/kb-content.js
+  - T1 test: "nelen kancing" berlabel bahaya (baterai kancing) — test/search-emak.json
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-22] — 2026-11-08
 - Commit: fix: tanda bahaya dari uji emak-emak (dada cekung, mendelik, ruam tidak pudar, bintik dengue)
 - Detail:

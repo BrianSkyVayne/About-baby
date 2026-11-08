@@ -542,6 +542,10 @@
         const doc = this.index.docs.filter(d => d.type === r0.type && d.id === r0.id)[0];
         const hits = doc ? qt.filter(t => doc.tf[t] && !common(t)).length : r0.hits;
         if (confidence === "high" && typeof hits === "number" && !r0.phrase && unknown > 0 && (hits < 2 || unknown >= hits)) confidence = "low";
+        // Pokok pertanyaan (kata isi pertama) sama sekali tidak dikenal KB ("kerokan ...", "bawang merah ...", "cara bikin akta ..."):
+        // KB tidak membahas topik itu, jadi jangan tampilkan satu jawaban seolah yakin.
+        const head = qt.filter(t => !AskEngine.WEAK_WORDS[t] && !common(t))[0];
+        if (confidence === "high" && head && head.length >= 4 && !this.index.df[head]) confidence = "low";
       }
       let best = results.length ? Object.assign({}, results[0]) : null;
       if (best && best.type === "checker") {
@@ -554,6 +558,7 @@
   /** Ambang "yakin": skor BM25 teratas >= 4 (kira-kira dua kata kunci jarang cocok di judul/alias)
       DAN >= 1,5x skor kedua. Di bawah itu UI menampilkan beberapa pilihan, bukan satu jawaban. */
   AskEngine.HIGH_SCORE = 4;
+  AskEngine.WEAK_WORDS = { cara: 1, bikin: 1, buat: 1, membuat: 1, gimana: 1, bagaimana: 1, apa: 1, apakah: 1, boleh: 1, kenapa: 1, mengapa: 1, tolong: 1 };
   AskEngine.HIGH_RATIO = 1.5;
   /** Pertanyaan perkembangan + usia -> tonggak terdekat usia diberi bonus skor. */
   AskEngine.MILESTONE_BONUS = 4;
