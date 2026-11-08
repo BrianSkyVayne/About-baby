@@ -5,7 +5,7 @@
 - Detail:
   - T1 fix: judul jadi "Mulai dari sini" (tidak ada data pemakaian di balik klaim itu); id "demam" yang bukan panduan diganti "aman" agar 6 ubin genap — src/page-body.html
   - T1 chore: versi 28 / 2026.11.08-26 — android/app/build.gradle
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert 915c8c9
 
 ### [2026.11.08-25] — 2026-11-08
 - Commit: feat: menu lebih ringkas — navigasi 4 tombol, ubin keluhan, panduan dikelompokkan
