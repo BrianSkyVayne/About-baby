@@ -934,7 +934,7 @@
       return this.page('<h1>Panduan</h1>' +
         '<input id="g-find" type="search" class="find" placeholder="Cari: tidur, ruam, MPASI…" aria-label="Cari panduan" autocomplete="off">' +
         '<div id="g-body" class="stack">' +
-        (picks.length ? '<div class="stack-s"><p class="eyebrow">' + (d === null ? "Paling sering dibuka" : "Cocok untuk usia " + Html.esc(this.profile.label.split(" · ").pop())) + "</p>" + Html.tiles(picks.map(g => ["#panduan-" + g.id, g.title, "", GuideListView.icon(g.id)])) + "</div>" : "") +
+        (picks.length ? '<div class="stack-s"><p class="eyebrow">' + (d === null ? "Mulai dari sini" : "Cocok untuk usia " + Html.esc(this.profile.label.split(" · ").pop())) + "</p>" + Html.tiles(picks.map(g => ["#panduan-" + g.id, g.title, "", GuideListView.icon(g.id)])) + "</div>" : "") +
         '<div class="stack-s"><p class="eyebrow">Semua topik</p>' + groups.map(([name, ico, gs]) => '<details class="grp"><summary><span aria-hidden="true">' + ico + "</span> " + Html.esc(name) + ' <span class="n">' + gs.length + '</span></summary><div class="list">' + gs.map(row).join("") + "</div></details>").join("") + "</div></div>" +
         '<p id="g-none" class="muted" hidden>Belum ada panduan dengan kata itu. Coba tanyakan di Keluhan.</p>');
     }
@@ -954,7 +954,7 @@
     static icon(id) { const g = GuideListView.GROUPS.find(x => x[2].includes(id)); return g ? g[1] : "📚"; }
     /** Topik yang paling relevan per usia (hari). Pemetaan tampilan saja, bukan saran medis. */
     static forAge(d) {
-      if (d === null) return ["asi", "tidur", "mpasi", "demam", "tersedak", "gigi"];
+      if (d === null) return ["asi", "tidur", "mpasi", "tersedak", "gigi", "aman"];
       if (d <= 90) return ["bbl", "asi", "lapar", "tidur", "mandibayi", "matabelekan", "cegukanbersin", "ibu"];
       if (d <= 180) return ["tummytime", "tidur", "asi", "kepalapeyang", "pascaimunisasi", "biangkeringat"];
       if (d <= 365) return ["mpasi", "tersedak", "gigi", "dudukberdiri", "merangkak", "alergimakanan"];
