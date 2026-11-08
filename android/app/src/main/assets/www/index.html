@@ -577,7 +577,11 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
     "termometer": "termometer", "derajat celcius": "derajat", "celcius": "derajat", "celsius": "derajat",
     "bgt": "sekali", "banget": "sekali", "bngt": "sekali", "amat": "sekali", "trs": "terus", "terus terusan": "terus", "trus": "terus",
     "mual": "mual", "muntah muntah": "muntah", "kembung": "kembung", "sembelit": "sembelit", "susah bab": "sembelit", "konstipasi": "sembelit",
-    "kolik": "kolik", "cegukan": "cegukan", "ubun ubun": "ubun", "ubunubun": "ubun"
+    "kolik": "kolik", "cegukan": "cegukan", "ubun ubun": "ubun", "ubunubun": "ubun",
+    "choking": "tersedak", "choke": "tersedak", "choked": "tersedak",
+    "jatoh": "jatuh", "jatuhh": "jatuh", "kebentur": "terbentur", "kejedot": "terbentur", "kejeduk": "terbentur", "jedot": "terbentur", "kepentok": "terbentur",
+    "sampe": "sampai", "nanahnya": "nanah", "bernanah": "nanah",
+    "air panas": "luka bakar", "melepuh": "luka bakar", "kesiram": "tersiram", "knalpot": "luka bakar"
   };
   TextNormalizer.MAX_PHRASE = 3;
   TextNormalizer.PROTECTED = new Set(["demam", "minum", "makan", "bayi", "diare", "kejang", "tangan", "badan", "ruam", "pilek",
@@ -691,7 +695,7 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
     { id: "muntahsemua", re: /\s(muntah (terus|semua|setiap|tiap)|semua (dimuntahkan|keluar lagi)|apa pun dimuntahkan)/, text: "Memuntahkan semua yang diminum termasuk tanda bahaya umum WHO.", src: "who_imci_danger" },
     { id: "muntahdarah", re: /\s(muntah (\S+ ){0,2}(ber)?darah|muntah (seperti )?(ampas )?kopi)/, text: "Muntah berdarah atau seperti ampas kopi perlu diperiksa dokter hari ini.", src: "idai_gumoh" },
     { id: "babdarah", re: /\s((bab|diare|tinja|feses) (\S+ ){0,3}(ber)?darah|darah (di|pada|dalam) (bab|tinja|feses))/, text: "Darah di BAB perlu diperiksakan ke dokter.", src: "who_ors" },
-    { id: "ubun", re: /\subun (cekung|menonjol|cembung|tegang|melesak)/, text: "Ubun-ubun cekung atau menonjol perlu segera diperiksa.", src: null },
+    { id: "ubun", re: /\subun (\S+ ){0,2}(cekung|menonjol|cembung|tegang|melesak)/, text: "Ubun-ubun cekung atau menonjol perlu segera diperiksa.", src: null },
     { id: "tersedak", re: /\s(tersedak|tercekik)\s/, unless: /masih bisa batuk/, text: "Tersedak: lakukan pertolongan pertama tersedak dan panggil bantuan bila tidak bisa bernapas.", src: "medline_choke" },
     { id: "tenggelam", re: /\s(tenggelam|kelelep)\s/, text: "Tenggelam: segera ke IGD walau tampak pulih.", src: "who_drowning" },
     { id: "keracunan", re: /\s(keracunan|tertelan|menelan (\S+ )?(baterai|obat|magnet|koin|sabun|deterjen|minyak|kancing)|minum (obat nyamuk|minyak tanah|bensin|pemutih))/, text: "Dugaan keracunan atau benda tertelan: segera ke IGD.", src: "who_injury" },
@@ -699,7 +703,11 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
     { id: "kuning24", re: /\skuning (\S+ ){0,3}(24 jam|hari pertama)/, text: "Kuning dalam 24 jam pertama perlu diperiksa segera.", src: "aap_bili" },
     { id: "tinjapucat", re: /\s(tinja|bab|feses) (\S+ ){0,2}(pucat|putih|dempul)/, text: "Tinja pucat pada bayi kuning perlu pemeriksaan bilirubin direk.", src: "aap_bili" },
     { id: "perdarahan", re: /\s(mimisan|gusi berdarah|bintik merah|muntah darah)/, text: "Perdarahan (mimisan, gusi berdarah) saat atau setelah demam bisa tanda bahaya dengue.", src: "who_dengue" },
-    { id: "cederakepala", re: /\sjatuh (\S+ ){0,4}(muntah|mengantuk|ngantuk|pingsan|kejang)/, text: "Jatuh lalu muntah, mengantuk, atau pingsan: segera ke IGD.", src: null },
+    { id: "cederakepala", re: /\s((jatuh|terjatuh|terbentur) (\S+ ){0,4}(muntah|mengantuk|ngantuk|pingsan|kejang)|muntah (\S+ ){0,3}(jatuh|terjatuh|terbentur))/, text: "Jatuh lalu muntah, mengantuk, atau pingsan: segera ke IGD.", src: null },
+    { id: "kepala", re: /\s(kepala (\S+ ){0,2}terbentur|terbentur (\S+ ){0,2}kepala|jatuh (\S+ ){0,3}kepala)/, unless: /\s(jatuh|terjatuh|terbentur) (\S+ ){0,4}(muntah|mengantuk|ngantuk|pingsan|kejang)|muntah (\S+ ){0,3}(jatuh|terjatuh|terbentur)/, text: "Kepala terbentur: pantau 24 jam. Segera ke IGD bila muntah, sangat mengantuk, pingsan, kejang, atau menangis tak bisa ditenangkan.", src: null },
+    { id: "matacekung", re: /\smata (\S+ ){0,2}cekung/, text: "Mata cekung bisa tanda dehidrasi, apalagi saat diare atau muntah. Nilai dengan penilai \"Diare & dehidrasi\" dan periksakan hari ini.", src: "who_dehid" },
+    { id: "kuningtelapak", re: /\s(kuning (\S+ ){0,3}(telapak|kaki)|telapak (\S+ ){0,3}kuning)/, text: "Kuning sampai telapak tangan atau kaki termasuk tanda bahaya bayi baru lahir WHO.", src: "who_newborn" },
+    { id: "pusar", re: /\s(pusar|pusat) (\S+ ){0,3}(nanah|bau|kemerahan|merah|bengkak)/, text: "Tali pusat bernanah, berbau, atau kemerahan meluas perlu diperiksakan ke dokter atau bidan hari ini.", src: null },
     { id: "pikiranmenyakiti", re: /\s(menyakiti|nyakitin|melukai|bunuh) (\S+ )?(diri|bayi)/, text: "Ada pikiran menyakiti diri atau bayi: cari bantuan hari ini.", src: "ppd" }
   ];
 
@@ -756,13 +764,14 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
       const padded = " " + norm + " ";
       const res = [];
       this.docs.forEach(d => {
-        let s = 0;
+        let s = 0, hits = 0, phrase = false;
         q.forEach(t => {
           const f = d.tf[t]; if (!f) return;
+          hits++;
           s += this.idf(t) * (f * (this.k1 + 1)) / (f + this.k1 * (1 - this.b + this.b * d.len / this.avgLen));
         });
-        d.phrases.forEach(p => { if (padded.indexOf(" " + p + " ") >= 0) s += KbSearch.PHRASE_BONUS; });
-        if (s > 0) res.push({ type: d.type, id: d.id, title: d.title, score: Math.round(s * 1000) / 1000 });
+        d.phrases.forEach(p => { if (padded.indexOf(" " + p + " ") >= 0) { s += KbSearch.PHRASE_BONUS; phrase = true; } });
+        if (s > 0) res.push({ type: d.type, id: d.id, title: d.title, score: Math.round(s * 1000) / 1000, hits, phrase });
       });
       res.sort((a, b) => b.score - a.score);
       return res.slice(0, n);
@@ -805,6 +814,11 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
       if (results.length) {
         const top = results[0].score, second = results.length > 1 ? results[1].score : 0;
         confidence = top >= AskEngine.HIGH_SCORE && top >= AskEngine.HIGH_RATIO * second ? "high" : "low";
+        // Satu kata cocok + ada kata yang sama sekali tidak dikenal KB ("digigit anjing" -> gigi): jangan yakin.
+        const r0 = results[0];
+        const qt = Array.from(new Set(TextNormalizer.tokensOfNorm(norm))).filter(t => !/^\d/.test(t));
+        const unknown = qt.filter(t => !this.index.df[t]).length;
+        if (confidence === "high" && typeof r0.hits === "number" && r0.hits < 2 && !r0.phrase && unknown > 0) confidence = "low";
       }
       let best = results.length ? Object.assign({}, results[0]) : null;
       if (best && best.type === "checker") {
@@ -1547,9 +1561,12 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
       if (r.type === "checker") {
         const c = kb.checkers.find(x => x.id === r.id);
         if (!c) return "";
-        const d = c.default, care = Array.isArray(c.care) ? c.care : [], esc = Array.isArray(c.escalate) ? c.escalate : [];
+        // c.default adalah kesimpulan "semua dijawab tidak"; sebelum ada jawaban, kesimpulan itu menyesatkan
+        // (mis. "Tidak ada tanda bahaya" tepat di bawah peringatan bahaya). Tampilkan deskripsi checker saja.
+        const care = Array.isArray(c.care) ? c.care : [], esc = Array.isArray(c.escalate) ? c.escalate : [];
         h = "<h3>" + Html.esc(c.title) + "</h3>" + this.chips(res.extracted, res.ageDays) +
-          (d && d.text ? '<p class="lead">' + Html.esc(d.text) + ref(d.src) + "</p>" : (c.short ? '<p class="lead">' + Html.esc(c.short) + "</p>" : "")) +
+          (c.short ? '<p class="lead">' + Html.esc(c.short) + "</p>" : "") +
+          '<p class="small muted">Belum dinilai: hasil baru keluar setelah Anda menjawab pertanyaannya.</p>' +
           (care.length ? '<p class="sec">Yang bisa dilakukan</p><ul class="items">' + care.map(it => "<li>" + Html.esc(it.t) + ref(it.src) + "</li>").join("") + "</ul>" : "") +
           (esc.length ? '<div class="watch"><p class="sec">Periksakan ke dokter bila muncul</p><ul class="items">' + esc.map(t => "<li>" + Html.esc(t) + "</li>").join("") + "</ul></div>" : "") +
           '<p class="small muted">Untuk hasil yang sesuai kondisi anak, jawab beberapa pertanyaan singkat:</p>' +

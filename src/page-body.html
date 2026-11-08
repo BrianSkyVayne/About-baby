@@ -737,9 +737,12 @@
       if (r.type === "checker") {
         const c = kb.checkers.find(x => x.id === r.id);
         if (!c) return "";
-        const d = c.default, care = Array.isArray(c.care) ? c.care : [], esc = Array.isArray(c.escalate) ? c.escalate : [];
+        // c.default adalah kesimpulan "semua dijawab tidak"; sebelum ada jawaban, kesimpulan itu menyesatkan
+        // (mis. "Tidak ada tanda bahaya" tepat di bawah peringatan bahaya). Tampilkan deskripsi checker saja.
+        const care = Array.isArray(c.care) ? c.care : [], esc = Array.isArray(c.escalate) ? c.escalate : [];
         h = "<h3>" + Html.esc(c.title) + "</h3>" + this.chips(res.extracted, res.ageDays) +
-          (d && d.text ? '<p class="lead">' + Html.esc(d.text) + ref(d.src) + "</p>" : (c.short ? '<p class="lead">' + Html.esc(c.short) + "</p>" : "")) +
+          (c.short ? '<p class="lead">' + Html.esc(c.short) + "</p>" : "") +
+          '<p class="small muted">Belum dinilai: hasil baru keluar setelah Anda menjawab pertanyaannya.</p>' +
           (care.length ? '<p class="sec">Yang bisa dilakukan</p><ul class="items">' + care.map(it => "<li>" + Html.esc(it.t) + ref(it.src) + "</li>").join("") + "</ul>" : "") +
           (esc.length ? '<div class="watch"><p class="sec">Periksakan ke dokter bila muncul</p><ul class="items">' + esc.map(t => "<li>" + Html.esc(t) + "</li>").join("") + "</ul></div>" : "") +
           '<p class="small muted">Untuk hasil yang sesuai kondisi anak, jawab beberapa pertanyaan singkat:</p>' +
