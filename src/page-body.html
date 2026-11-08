@@ -38,7 +38,7 @@
       return '<div class="tbl"><table><thead><tr>' + t.head.map(x => "<th>" + e(x) + "</th>").join("") + "</tr></thead><tbody>" +
         t.rows.map(r => "<tr>" + r.map((x, i) => i === 0 ? "<td><strong>" + e(x) + "</strong></td>" : "<td>" + e(x) + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>";
     }
-    static emergency() { return '<div class="stack-s"><a class="btn btn-big btn-danger" href="tel:119">Telepon 119</a><a class="btn btn-big" href="https://www.google.com/maps/search/IGD+terdekat" target="_blank" rel="noopener">Cari IGD terdekat</a></div>'; }
+    static emergency() { return '<div class="stack-s"><a class="btn btn-big btn-danger" href="tel:119">Telepon 119 (ambulans)</a><p class="muted small">Bila 119 tidak tersambung, telepon <a href="tel:112">112</a>.</p><a class="btn btn-big" href="https://www.google.com/maps/search/IGD+terdekat" target="_blank" rel="noopener">Cari IGD terdekat</a></div>'; }
     static footer() { return '<p class="small muted" style="text-align:center">' + POWERED + "</p>"; }
     /** Kartu besar berwarna lembut untuk pilihan utama (keluhan, topik). items: [href, judul, sub, emoji]. */
     static tiles(items) {
@@ -922,19 +922,17 @@
   class GuideListView extends View {
     render() {
       const all = this.kb.byOrder(this.kb.guides), d = this.profile.ageDays;
-      const byId = id => all.find(g => g.id === id);
-      const picks = GuideListView.forAge(d).map(byId).filter(Boolean).slice(0, 6);
-      const used = new Set();
-      const groups = GuideListView.GROUPS.map(([name, ico, ids]) => {
-        const gs = ids.map(byId).filter(Boolean); gs.forEach(g => used.add(g.id)); return [name, ico, gs];
-      });
-      const rest = all.filter(g => !used.has(g.id));
+      const picks = all.filter(g => GuideListView.fitsAge(g, d)).slice(0, 6);
+      const names = Object.keys(GuideListView.GROUP_ICONS);
+      all.forEach(g => { if (g.group && !names.includes(g.group)) names.push(g.group); });
+      const groups = names.map(name => [name, GuideListView.GROUP_ICONS[name] || "📚", all.filter(g => g.group === name)]).filter(x => x[2].length);
+      const rest = all.filter(g => !g.group);
       if (rest.length) groups.push(["Lainnya", "📚", rest]);
       const row = g => '<a href="#panduan-' + Html.esc(g.id) + '" data-find="' + Html.esc((g.title + " " + (g.aliases || []).join(" ")).toLowerCase()) + '"><div class="t">' + Html.esc(g.title) + "</div>" + Html.chev() + "</a>";
       return this.page('<h1>Panduan</h1>' +
         '<input id="g-find" type="search" class="find" placeholder="Cari: tidur, ruam, MPASI…" aria-label="Cari panduan" autocomplete="off">' +
         '<div id="g-body" class="stack">' +
-        (picks.length ? '<div class="stack-s"><p class="eyebrow">' + (d === null ? "Mulai dari sini" : "Cocok untuk usia " + Html.esc(this.profile.label.split(" · ").pop())) + "</p>" + Html.tiles(picks.map(g => ["#panduan-" + g.id, g.title, "", GuideListView.icon(g.id)])) + "</div>" : "") +
+        (picks.length ? '<div class="stack-s"><p class="eyebrow">' + (d === null ? "Mulai dari sini" : "Cocok untuk usia " + Html.esc(this.profile.label.split(" · ").pop())) + "</p>" + Html.tiles(picks.map(g => ["#panduan-" + g.id, g.title, "", GuideListView.icon(g)])) + "</div>" : "") +
         '<div class="stack-s"><p class="eyebrow">Semua topik</p>' + groups.map(([name, ico, gs]) => '<details class="grp"><summary><span aria-hidden="true">' + ico + "</span> " + Html.esc(name) + ' <span class="n">' + gs.length + '</span></summary><div class="list">' + gs.map(row).join("") + "</div></details>").join("") + "</div></div>" +
         '<p id="g-none" class="muted" hidden>Belum ada panduan dengan kata itu. Coba tanyakan di Keluhan.</p>');
     }
@@ -951,25 +949,15 @@
       const tiles = body.querySelector(".tiles"); if (tiles) tiles.parentElement.hidden = !!q;
       document.getElementById("g-none").hidden = !q || hit > 0;
     }
-    static icon(id) { const g = GuideListView.GROUPS.find(x => x[2].includes(id)); return g ? g[1] : "📚"; }
-    /** Topik yang paling relevan per usia (hari). Pemetaan tampilan saja, bukan saran medis. */
-    static forAge(d) {
-      if (d === null) return ["asi", "tidur", "mpasi", "tersedak", "gigi", "aman"];
-      if (d <= 90) return ["bbl", "asi", "lapar", "tidur", "mandibayi", "matabelekan", "cegukanbersin", "ibu"];
-      if (d <= 180) return ["tummytime", "tidur", "asi", "kepalapeyang", "pascaimunisasi", "biangkeringat"];
-      if (d <= 365) return ["mpasi", "tersedak", "gigi", "dudukberdiri", "merangkak", "alergimakanan"];
-      return ["berjalan", "bicaraterlambat", "layar", "toilettraining", "kepalaterbentur", "mpasi"];
+    static icon(g) { const id = g.id, own = { mpasi: "🥣", tersedak: "🫁", gigi: "🦷", aman: "🧸", susuformula: "🍶", lapar: "😋", kepalaterbentur: "🤕", lukabakar: "🔥", kursimobil: "🚗", dudukberdiri: "🪑", merangkak: "🐢", berjalan: "👣", bicaraterlambat: "💬", layar: "📱", toilettraining: "🚽", alergimakanan: "🥜" }; if (own[id]) return own[id]; return GuideListView.GROUP_ICONS[g.group] || "📚"; }
+    /** Usia (hari) cocok dengan g.ages dari KB; usia kosong memakai g.start. */
+    static fitsAge(g, d) {
+      if (d === null) return !!g.start;
+      return (g.ages || []).some(([lo, hi]) => d >= lo && (hi === null || d <= hi));
     }
   }
-  GuideListView.GROUPS = [
-    ["Makan & minum", "🍼", ["asi", "lapar", "susuformula", "mpasi", "alergimakanan", "suplemen"]],
-    ["Tidur", "😴", ["tidur", "empeng"]],
-    ["Perawatan harian", "🛁", ["bbl", "mandibayi", "potongkuku", "matabelekan", "cegukanbersin", "sembelit", "gigi", "sunatpenis", "herniaumbilikalis", "pascaimunisasi", "toilettraining"]],
-    ["Kulit & mulut", "🧴", ["ruampopok", "kerakkepala", "biangkeringat", "eksim", "sariawanputih", "mataharinyamuk"]],
-    ["Tumbuh kembang", "🌱", ["tumbuh", "skrining", "tummytime", "dudukberdiri", "merangkak", "berjalan", "bicaraterlambat", "kepalapeyang", "babywalker", "layar"]],
-    ["Keamanan & cedera", "🛡️", ["aman", "tersedak", "kepalaterbentur", "lukabakar", "kursimobil"]],
-    ["Kesehatan ibu", "💗", ["ibu"]]
-  ];
+  /** Ikon per grup (tampilan saja); nama grup dan anggotanya datang dari KB (g.group). */
+  GuideListView.GROUP_ICONS = { "Makan & minum": "🍼", "Tidur": "😴", "Perawatan harian": "🛁", "Kulit & mulut": "🧴", "Tumbuh kembang": "🌱", "Keamanan & cedera": "🛡️", "Kesehatan ibu": "💗" };
 
   class GuideView extends View {
     render(id) {

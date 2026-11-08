@@ -284,4 +284,83 @@ details.review summary { cursor: pointer; font-weight: 500; min-height: 48px; di
 .review-row > div { min-width: 0; }
 .review-row button { flex: none; min-height: 48px; padding: 0 12px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ===== Lapisan gaya "kamar bayi pagi" (2026-11-08): menimpa token di atas, markup tidak berubah. ===== */
+:root {
+  --bg: #eef3fa; --surface: #ffffff; --ink: #1d2742; --muted: #5b6684; --line: #dde4f0;
+  --md-sys-color-primary: #4b63e0; --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-surface-container: #ffffff; --md-sys-color-on-surface: #1d2742; --md-sys-color-on-surface-variant: #5b6684;
+  --md-sys-color-secondary-container: #e3e8ff; --md-sys-color-on-secondary-container: #2c3a8c;
+  --tile-1: #daf3e7; --tile-1-ink: #155b3d; --tile-2: #ebe4fd; --tile-2-ink: #4a2f9a;
+  --tile-3: #fff1c7; --tile-3-ink: #6e4e00; --tile-4: #dceaff; --tile-4-ink: #1f4f94;
+  --hero: #4b63e0; --hero-ink: #ffffff; --hero-field: #ffffff;
+  --soft-shadow: 0 1px 2px rgb(29 39 66 / .06), 0 6px 18px rgb(29 39 66 / .06);
+  --font-display: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, Roboto, sans-serif;
+  --font-body: system-ui, -apple-system, Roboto, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121828; --surface: #1b2338; --ink: #e8ecf8; --muted: #a3acc6; --line: #2a3450;
+  --md-sys-color-primary: #a9b6ff; --md-sys-color-on-primary: #17215c;
+  --md-sys-color-surface-container: #1b2338; --md-sys-color-on-surface: #e8ecf8; --md-sys-color-on-surface-variant: #a3acc6;
+  --md-sys-color-secondary-container: #2a3566; --md-sys-color-on-secondary-container: #dfe4ff;
+  --tile-1: #183a2c; --tile-1-ink: #a6e8c8; --tile-2: #2c2550; --tile-2-ink: #d4c7ff;
+  --tile-3: #3a3015; --tile-3-ink: #f5dc8f; --tile-4: #1b3050; --tile-4-ink: #b4d3ff;
+  --hero: #34449e; --hero-ink: #ffffff; --hero-field: #1b2338; --soft-shadow: none;
+} }
+:root[data-theme="dark"] {
+  --bg: #121828; --surface: #1b2338; --ink: #e8ecf8; --muted: #a3acc6; --line: #2a3450;
+  --md-sys-color-primary: #a9b6ff; --md-sys-color-on-primary: #17215c;
+  --md-sys-color-surface-container: #1b2338; --md-sys-color-on-surface: #e8ecf8; --md-sys-color-on-surface-variant: #a3acc6;
+  --md-sys-color-secondary-container: #2a3566; --md-sys-color-on-secondary-container: #dfe4ff;
+  --tile-1: #183a2c; --tile-1-ink: #a6e8c8; --tile-2: #2c2550; --tile-2-ink: #d4c7ff;
+  --tile-3: #3a3015; --tile-3-ink: #f5dc8f; --tile-4: #1b3050; --tile-4-ink: #b4d3ff;
+  --hero: #34449e; --hero-ink: #ffffff; --hero-field: #1b2338; --soft-shadow: none;
+}
+body { letter-spacing: 0; }
+h1 { font-weight: 800; font-size: 1.875rem; line-height: 2.25rem; letter-spacing: -0.02em; }
+h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 1.125rem; color: var(--md-sys-color-primary); }
+.child-chip { border: 0; border-radius: 999px; background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); font-weight: 600; min-height: 36px; padding: 0 14px; }
+.eyebrow { font-size: 1rem; line-height: 1.5rem; font-weight: 700; color: var(--ink); font-family: var(--font-display); }
+.card, .list, details.grp { border: 0; border-radius: 22px; box-shadow: var(--soft-shadow); }
+.list a, .list button { border-top-color: var(--line); }
+input, select, textarea { border: 1.5px solid var(--line); border-radius: 16px; background: var(--surface); }
+button, .btn { border-radius: 999px; }
+.btn-big { border-radius: 20px; font-weight: 700; }
+.btn-danger { font-weight: 700; }
+/* Pusat perhatian: panel tanya Beranda. */
+form[data-form="home-ask"] { background: var(--hero); color: var(--hero-ink); border-radius: 28px; padding: 20px; box-shadow: none; }
+form[data-form="home-ask"] label { font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; color: var(--hero-ink); }
+form[data-form="home-ask"] textarea { border: 0; background: var(--hero-field); min-height: 84px; }
+form[data-form="home-ask"] .btn-primary { background: #ffd66b; color: #3a2a00; font-weight: 700; min-height: 52px; }
+/* Ubin: empat warna pastel bergiliran, teks warna senada, tanpa garis. */
+.tile { border-radius: 24px; background: var(--tile-1); color: var(--tile-1-ink); min-height: 104px; padding: 16px; justify-content: space-between; }
+.tile:nth-child(4n+2) { background: var(--tile-2); color: var(--tile-2-ink); }
+.tile:nth-child(4n+3) { background: var(--tile-3); color: var(--tile-3-ink); }
+.tile:nth-child(4n+4) { background: var(--tile-4); color: var(--tile-4-ink); }
+.tile .ico { font-size: 1.9rem; }
+.tile .t { font-family: var(--font-display); font-weight: 700; font-size: 1.0625rem; line-height: 1.3rem; }
+.tile .s { color: inherit; opacity: .8; }
+input.find { border-radius: 999px; box-shadow: var(--soft-shadow); border-color: transparent; }
+nav.bottom { background: var(--surface); box-shadow: 0 -1px 0 var(--line); }
+nav.bottom a[aria-current="page"] svg { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+nav.bottom a[aria-current="page"] { color: var(--md-sys-color-primary); }
+/* Kurangi kotak (2026-11-08): ubin = ikon bulat + label, daftar rata tanpa kartu. */
+.tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 6px; }
+.tile, .tile:nth-child(n) { background: none; color: var(--ink); min-height: 0; padding: 0; border-radius: 0; align-items: center; justify-content: flex-start; text-align: center; gap: 8px; overflow: visible; }
+.tile .ico { width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; font-size: 1.7rem; background: var(--tile-1); }
+.tile:nth-child(4n+2) .ico { background: var(--tile-2); }
+.tile:nth-child(4n+3) .ico { background: var(--tile-3); }
+.tile:nth-child(4n+4) .ico { background: var(--tile-4); }
+.tile .t { font-family: inherit; font-weight: 600; font-size: 0.8125rem; line-height: 1.1rem; }
+.tile .s { display: none; }
+.list, details.grp { background: transparent; box-shadow: none; border-radius: 0; }
+details.grp { border-bottom: 1px solid var(--line); }
+details.grp summary { padding: 0 4px; }
+.list a, .list button { padding-left: 4px; padding-right: 4px; }
+.more-link { text-decoration: none; }
+/* Darurat selalu merah tegas di dua mode; satu-satunya warna merah di aplikasi. */
+.btn-danger, .btn-danger:hover { background: #e5484d; color: #fff; border: 0; box-shadow: 0 6px 16px rgba(229,72,77,.28); }
+h1 { letter-spacing: -0.02em; }
+form[data-form="home-ask"] { background: linear-gradient(150deg, var(--hero), color-mix(in srgb, var(--hero) 70%, #b18cff)); }
 </style>
