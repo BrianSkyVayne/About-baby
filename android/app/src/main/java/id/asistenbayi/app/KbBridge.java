@@ -24,14 +24,29 @@ final class KbBridge {
     private final MainActivity activity;
     private final WebView webView;
     private final KnowledgeStore store;
+    private final AdController ads;
+    private final TipController tips;
     private final ExecutorService io = Executors.newSingleThreadExecutor();
     private int pendingPickId = -1;
 
-    KbBridge(MainActivity activity, WebView webView, KnowledgeStore store) {
+    KbBridge(MainActivity activity, WebView webView, KnowledgeStore store, AdController ads, TipController tips) {
         this.activity = activity;
         this.webView = webView;
         this.store = store;
+        this.ads = ads;
+        this.tips = tips;
     }
+
+    /** Halaman memberi tahu apakah layar saat ini boleh menampilkan banner. */
+    @JavascriptInterface public void setAdsAllowed(boolean allowed) { ads.setAllowed(allowed); }
+
+    @JavascriptInterface public boolean canTip() { return tips.isReady(); }
+
+    @JavascriptInterface public String tipPrice() { return tips.price(); }
+
+    @JavascriptInterface public void tip(int id) { tips.launch((ok, message) -> callback(id, ok, message)); }
+
+    @JavascriptInterface public String appVersion() { return BuildConfig.VERSION_NAME; }
 
     @JavascriptInterface public String getKb() { return store.read(); }
 

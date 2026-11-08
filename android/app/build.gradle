@@ -2,21 +2,44 @@ plugins {
     id "com.android.application"
 }
 
+def env = System.getenv()
+def versionCodeFromCi = (env.VERSION_CODE ?: "3") as int
+def keystoreFile = env.KEYSTORE_FILE
+def hasReleaseKey = keystoreFile && file(keystoreFile).exists()
+
 android {
     namespace "id.asistenbayi.app"
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "id.asistenbayi.app"
         minSdk 24
-        targetSdk 35
-        versionCode 2
-        versionName "2026.11.07-2"
+        targetSdk 36
+        versionCode versionCodeFromCi
+        versionName "1.0." + versionCodeFromCi
+        manifestPlaceholders = [admobAppId: project.property("admobAppId")]
+        buildConfigField "String", "ADMOB_BANNER_ID", "\"" + project.property("admobBannerId") + "\""
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    signingConfigs {
+        if (hasReleaseKey) {
+            release {
+                storeFile file(keystoreFile)
+                storePassword env.KEYSTORE_PASSWORD
+                keyAlias env.KEY_ALIAS
+                keyPassword env.KEY_PASSWORD
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
+            if (hasReleaseKey) signingConfig signingConfigs.release
         }
     }
 
@@ -24,4 +47,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+}
+
+dependencies {
+    implementation "com.google.android.gms:play-services-ads:25.5.0"
+    implementation "com.android.billingclient:billing:8.3.0"
 }
