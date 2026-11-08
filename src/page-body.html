@@ -22,6 +22,7 @@
   "use strict";
   const { Level, SymptomChecker, Age, KnowledgeValidator } = window.Engine;
   const ONLINE_URL = "https://claude.ai/artifact/2DjnViTVkzraEi3o7Qmwqr";
+  const PRIVACY_URL = "https://github.com/BrianSkyVayne/About-baby/blob/main/PRIVACY.md";
 
   // =============================================================
   // Utilitas
@@ -263,7 +264,26 @@
     open(url) { this.native.openUrl(url); }
     fetch(url) { return this.call("fetchText", url); }
     pickFile() { return this.call("pickFile"); }
+    has(m) { return typeof this.native[m] === "function"; }
+    setAdsAllowed(b) { if (this.has("setAdsAllowed")) this.native.setAdsAllowed(!!b); }
+    get canTip() { return this.has("canTip") && !!this.native.canTip(); }
+    get tipPrice() { return this.has("tipPrice") ? this.native.tipPrice() || "" : ""; }
+    tip() { return this.call("tip"); }
+    get version() { return this.has("appVersion") ? this.native.appVersion() : ""; }
   }
+
+  /** Persetujuan awal: pengguna membaca bahwa aplikasi ini bukan pengganti dokter. */
+  class Consent {
+    static get accepted() { return LocalStore.get("ab.ack", 0) >= Consent.VERSION; }
+    static accept() { LocalStore.set("ab.ack", Consent.VERSION); }
+  }
+  Consent.VERSION = 1;
+
+  /** Iklan hanya di layar yang dibuka saat tenang; tidak pernah di beranda, cek gejala, hitung napas, atau keamanan obat. */
+  class AdPolicy {
+    static allowed(routeName) { return AdPolicy.CALM.has(routeName); }
+  }
+  AdPolicy.CALM = new Set(["guides", "guide", "milestone", "immunization", "more", "about"]);
 
   /** Aplikasi Android: data tersimpan di perangkat, bisa dipakai tanpa internet. */
   class AndroidSource extends DataSource {
@@ -594,10 +614,56 @@
     }
   }
 
-  class MoreView extends View {
+  class ConsentView extends View {
     render() {
-      const items = [["panduan", "Panduan", "ASI, MPASI, tidur aman, tersedak, kesehatan ibu, dan lainnya"], ["tumbuh", "Perkembangan", "Checklist CDC per usia"], ["imunisasi", "Imunisasi", "Jadwal IDAI 2024"], ["obat", "Keamanan obat", "Yang dihindari dan dosis program resmi"], ["data", "Sumber & pembaruan data", "Versi, usulan, riwayat perubahan"], ["profil", "Profil anak", "Nama dan tanggal lahir"]];
-      return this.page('<h1>Lainnya</h1><div class="list">' + items.map(([id, t, s]) => '<a href="#' + id + '"><div><div class="t">' + t + '</div><div class="s">' + s + "</div></div>" + Html.chev() + "</a>").join("") + "</div>");
+      return '<div class="stack">' + '<div class="top"><span class="brand">Asisten Bayi</span></div>' +
+        '<div class="card stack"><h1>Sebelum mulai</h1>' +
+        '<ul class="items"><li>Asisten Bayi membantu orang tua menilai gejala dan mencari informasi berdasarkan pedoman WHO, IDAI, Kemenkes, AAP, dan CDC. Setiap pernyataan menyebut sumbernya.</li>' +
+        "<li><strong>Bukan pengganti pemeriksaan dokter, bidan, atau tenaga kesehatan, dan bukan alat diagnosis.</strong> Hasilnya berupa kemungkinan dan tingkat kewaspadaan.</li>" +
+        "<li>Bila anak tampak sangat sakit atau Anda ragu, langsung ke IGD atau fasilitas kesehatan terdekat tanpa menunggu aplikasi.</li>" +
+        "<li>Profil anak hanya tersimpan di perangkat ini.</li></ul>" +
+        '<button type="button" class="btn-primary" data-act="ack">Saya mengerti</button>' +
+        '<p class="small muted"><a href="' + PRIVACY_URL + '" target="_blank" rel="noopener">Kebijakan privasi</a></p></div></div>';
+    }
+    onClick(t) { if (t.dataset.act === "ack") { Consent.accept(); return true; } return false; }
+  }
+
+  class TipBlock {
+    static html(source) {
+      if (!(source instanceof AndroidSource) || !source.bridge.canTip) return "";
+      const price = source.bridge.tipPrice;
+      return '<div class="card stack-s"><h3>Dukung Asisten Bayi</h3><p class="small">Aplikasi ini gratis dan semua fiturnya tetap gratis. Bila terbantu, Anda bisa mentraktir pengembang secangkir kopi' + (price ? " (" + Html.esc(price) + ")" : "") + '. Pembayaran lewat Google Play dan tidak membuka fitur tambahan.</p><div class="row"><button type="button" data-act="tip">Traktir kopi</button></div></div>';
+    }
+    static async onClick(t, source) {
+      if (t.dataset.act !== "tip" || !(source instanceof AndroidSource)) return false;
+      const res = await source.bridge.tip();
+      if (res.text) Toast.show(res.text);
+      return "keep";
+    }
+  }
+
+  class AboutView extends View {
+    render() {
+      const m = this.kb.meta, src = this.source;
+      const appVer = src instanceof AndroidSource ? src.bridge.version : "";
+      return this.page(Html.back("lainnya", "Lainnya") + "<h1>Tentang & privasi</h1>" +
+        '<div class="card stack-s"><h3>Apa ini</h3><p>Asisten Bayi membantu orang tua menilai gejala bayi dan anak, lalu menunjukkan tingkat kewaspadaan dan langkah berikutnya. Isinya disusun dari pedoman WHO, IDAI, Kemenkes, AAP, CDC, dan FDA; setiap pernyataan menyebut sumbernya.</p>' +
+        "<p><strong>Bukan pengganti pemeriksaan tenaga kesehatan dan bukan alat diagnosis.</strong> Dalam keadaan darurat, langsung ke IGD atau fasilitas kesehatan terdekat.</p></div>" +
+        '<div class="card stack-s"><h3>Privasi</h3><ul class="items small"><li>Tidak ada akun dan tidak ada server milik aplikasi. Profil anak dan centang perkembangan hanya tersimpan di perangkat ini.</li>' +
+        "<li>Aplikasi Android memeriksa data terbaru dari GitHub; permintaan itu hanya mengambil file data.</li>" +
+        "<li>Aplikasi Android menampilkan iklan Google AdMob hanya di layar panduan, perkembangan, dan imunisasi; tidak pernah di cek gejala, hitung napas, atau keamanan obat. AdMob dapat memakai ID iklan perangkat.</li>" +
+        '</ul><p class="small"><a href="' + PRIVACY_URL + '" target="_blank" rel="noopener">Baca kebijakan privasi lengkap</a></p></div>' +
+        TipBlock.html(src) +
+        '<p class="small muted">' + (appVer ? "Aplikasi versi " + Html.esc(appVer) + " · " : "") + (m ? "Data versi " + Html.esc(m.version) : "") + "</p>");
+    }
+    onClick(t) { return TipBlock.onClick(t, this.source); }
+  }
+
+  class MoreView extends View {
+    onClick(t) { return TipBlock.onClick(t, this.source); }
+    render() {
+      const items = [["panduan", "Panduan", "ASI, MPASI, tidur aman, tersedak, kesehatan ibu, dan lainnya"], ["tumbuh", "Perkembangan", "Checklist CDC per usia"], ["imunisasi", "Imunisasi", "Jadwal IDAI 2024"], ["obat", "Keamanan obat", "Yang dihindari dan dosis program resmi"], ["data", "Sumber & pembaruan data", "Versi, usulan, riwayat perubahan"], ["profil", "Profil anak", "Nama dan tanggal lahir"], ["tentang", "Tentang & privasi", "Batasan aplikasi, privasi, dan iklan"]];
+      return this.page('<h1>Lainnya</h1><div class="list">' + items.map(([id, t, s]) => '<a href="#' + id + '"><div><div class="t">' + t + '</div><div class="s">' + s + "</div></div>" + Html.chev() + "</a>").join("") + "</div>" + TipBlock.html(this.source));
     }
   }
 
@@ -743,7 +809,7 @@
       const h = (location.hash || "#beranda").slice(1) || "beranda";
       const prefixes = [["cek-", "checker"], ["panduan-", "guide"]];
       for (const [p, name] of prefixes) if (h.startsWith(p)) return { name, param: h.slice(p.length), raw: h };
-      const map = { beranda: "home", cek: "checkers", napas: "breath", tanya: "ask", lainnya: "more", panduan: "guides", tumbuh: "milestone", imunisasi: "immunization", obat: "medicine", data: "data", profil: "profile" };
+      const map = { beranda: "home", cek: "checkers", napas: "breath", tanya: "ask", lainnya: "more", panduan: "guides", tumbuh: "milestone", imunisasi: "immunization", obat: "medicine", data: "data", profil: "profile", tentang: "about" };
       return { name: map[h] || "home", param: null, raw: h };
     }
   }
@@ -760,7 +826,7 @@
         home: new HomeView(this), checkers: new CheckerListView(this), checker: new CheckerView(this), breath: new BreathView(this),
         ask: new AskView(this), more: new MoreView(this), guides: new GuideListView(this), guide: new GuideView(this),
         milestone: new MilestoneView(this), immunization: new ImmunizationView(this), medicine: new MedicineView(this),
-        data: new DataView(this), profile: new ProfileView(this)
+        data: new DataView(this), profile: new ProfileView(this), about: new AboutView(this), consent: new ConsentView(this)
       };
       this.route = Router.parse();
       this.bindEvents();
@@ -779,15 +845,20 @@
       this.renderNav();
       if (window.AndroidKB || (window.claude && window.claude.use) || StaticSource.embedded()) go(); else setTimeout(go, 1500);
     }
-    get currentView() { return this.views[this.route.name] || this.views.home; }
+    get needsConsent() { return this.state === "ready" && !Consent.accepted; }
+    get currentView() { return this.needsConsent ? this.views.consent : (this.views[this.route.name] || this.views.home); }
+    updateAds() {
+      if (this.source instanceof AndroidSource) this.source.bridge.setAdsAllowed(this.state === "ready" && !this.needsConsent && AdPolicy.allowed(this.route.name));
+    }
     renderNav() {
       const cloud = this.source instanceof CloudSource;
       const ICON = App.ICON;
       const fourth = cloud ? ["tanya", "Tanya", "tanya"] : ["panduan", "Panduan", "panduan"];
-      const items = [["beranda", "Beranda", "beranda"], ["cek", "Cek Gejala", "cek"], ["napas", "Hitung Napas", "napas"], fourth, ["lainnya", "Lainnya", "lainnya"]];
+      const items = [["beranda", "Beranda", "beranda"], ["cek", "Cek Gejala", "cek"], ["napas", "Napas", "napas"], fourth, ["lainnya", "Lainnya", "lainnya"]];
       const r = this.route;
       const group = (r.name === "checker" || r.name === "checkers") ? "cek" : (!cloud && (r.name === "guides" || r.name === "guide")) ? "panduan" :
-        ["guides", "guide", "milestone", "immunization", "medicine", "data", "profile", "more"].includes(r.name) ? "lainnya" : r.raw;
+        ["guides", "guide", "milestone", "immunization", "medicine", "data", "profile", "more", "about"].includes(r.name) ? "lainnya" : r.raw;
+      this.navEl.parentElement.hidden = this.needsConsent;
       this.navEl.innerHTML = items.map(([id, label, icon]) => '<a href="#' + id + '"' + (group === id ? ' aria-current="page"' : "") + ">" + ICON[icon] + "<span>" + label + "</span></a>").join("");
     }
     stateScreen() {
@@ -800,6 +871,7 @@
     }
     render() {
       this.renderNav();
+      this.updateAds();
       if (this.state === "loading") return;
       const screen = this.stateScreen();
       const active = document.activeElement, focusId = active && active.id, sel = active && active.selectionStart;

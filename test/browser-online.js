@@ -27,6 +27,7 @@ const fakeRuntime = docsJson => {
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await page.addInitScript(() => { try { localStorage.setItem("ab.ack", "1"); } catch (e) { } });
   const errors = [];
   page.on("pageerror", e => errors.push(e.message));
   page.on("console", m => { if (m.type() === "error" && !/ERR_TUNNEL|fonts\.g/.test(m.text())) errors.push(m.text()); });
@@ -60,7 +61,7 @@ const fakeRuntime = docsJson => {
   // buka hasil unduhan offline di halaman baru, tanpa runtime claude
   const off = saved.find(s => /\.html$/.test(s.f));
   const tmp = path.join(require("os").tmpdir(), "ab-off.html"); fs.writeFileSync(tmp, off.d);
-  const p2 = await browser.newPage(); const e2 = []; p2.on("pageerror", e => e2.push(e.message));
+  const p2 = await browser.newPage(); await p2.addInitScript(() => { try { localStorage.setItem("ab.ack", "1"); } catch (e) { } }); const e2 = []; p2.on("pageerror", e => e2.push(e.message));
   await p2.goto("file://" + tmp + "#data"); await p2.waitForSelector("h1");
   check("file offline hasil unduhan terbuka", /Versi offline/.test(await p2.locator("#app").innerText()) && !e2.length);
   check("file offline membawa data terbaru", /Disetujui pemilik|Uji usulan/.test(await p2.locator("#app").innerText()));

@@ -24,6 +24,8 @@ final class KnowledgeStore {
     private static final String BUNDLED = "www/kb.json";
     private static final String PREFS = "asisten-bayi";
     private static final String KEY_URL = "kb_url";
+    /** Alamat bawaan: kb.json di repo publik About-baby, diperiksa setiap aplikasi dibuka. */
+    static final String DEFAULT_URL = "https://raw.githubusercontent.com/BrianSkyVayne/About-baby/main/kb.json";
 
     private final Context context;
 
@@ -64,7 +66,7 @@ final class KnowledgeStore {
         return tmp.renameTo(new File(dir, FILE));
     }
 
-    String getUrl() { return prefs().getString(KEY_URL, ""); }
+    String getUrl() { return prefs().getString(KEY_URL, DEFAULT_URL); }
 
     void setUrl(String url) { prefs().edit().putString(KEY_URL, url == null ? "" : url.trim()).apply(); }
 

@@ -13,6 +13,8 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 /**
  * Satu layar WebView yang menampilkan halaman yang sama dengan versi online,
@@ -26,14 +28,26 @@ public class MainActivity extends Activity {
 
     private WebView webView;
     private KbBridge bridge;
+    private AdController ads;
+    private TipController tips;
     private final AssetServer assets = new AssetServer(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
         webView = new WebView(this);
-        setContentView(webView);
-        applySystemBarPadding(webView);
+        root.addView(webView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
+        FrameLayout adBox = new FrameLayout(this);
+        root.addView(adBox, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        setContentView(root);
+        applySystemBarPadding(root);
+
+        ads = new AdController(this, adBox);
+        ads.init();
+        tips = new TipController(this);
+        tips.connect();
 
         WebSettings s = webView.getSettings();
         s.setJavaScriptEnabled(true);
@@ -42,7 +56,7 @@ public class MainActivity extends Activity {
         s.setAllowContentAccess(false);
         s.setSupportMultipleWindows(false);
 
-        bridge = new KbBridge(this, webView, new KnowledgeStore(this));
+        bridge = new KbBridge(this, webView, new KnowledgeStore(this), ads, tips);
         webView.addJavascriptInterface(bridge, "AndroidKB");
         webView.setWebViewClient(new AppClient());
 
@@ -117,7 +131,21 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onPause() {
+        ads.pause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ads.resume();
+    }
+
+    @Override
     protected void onDestroy() {
+        ads.destroy();
+        tips.destroy();
         bridge.shutdown();
         webView.destroy();
         super.onDestroy();

@@ -20,12 +20,34 @@ Ada tiga cara memakai tampilan yang sama:
 
 **Lewat Android Studio:** buka folder `android`, tunggu sinkronisasi Gradle, lalu **Build → Build APK(s)**.
 
+## Kunci tanda tangan, rilis, dan Play Store
+
+Tanpa secret, GitHub Actions membuat APK **debug** (artifact `asisten-bayi-apk-debug`).
+Setelah empat secret kunci diisi (Settings → Secrets and variables → Actions), setiap push ke `main` membuat:
+
+- **APK rilis bertanda tangan** di halaman Releases, dengan tautan unduh tetap:
+  https://github.com/BrianSkyVayne/About-baby/releases/latest/download/asisten-bayi.apk
+- **AAB untuk Play Store** (artifact `asisten-bayi-play-store`).
+
+| Secret | Isi |
+|---|---|
+| `KEYSTORE_BASE64` | isi `KEYSTORE_BASE64.txt` |
+| `KEYSTORE_PASSWORD` | kata sandi keystore |
+| `KEY_ALIAS` | `upload` |
+| `KEY_PASSWORD` | kata sandi kunci |
+| `ADMOB_APP_ID`, `ADMOB_BANNER_ID` | ID dari akun AdMob (tanpa ini dipakai ID uji Google) |
+
+Bahan halaman toko ada di `store/` (`listing.md`, ikon, feature graphic, tangkapan layar). Kebijakan privasi: `PRIVACY.md`.
+
+Iklan hanya tampil di layar yang dibuka saat tenang (panduan, perkembangan, imunisasi, Lainnya, Tentang); daftar layarnya ada di kelas `AdPolicy` di `src/page-body.html`. Tombol "Traktir kopi" memakai produk Play Billing `traktir_kopi` dan hanya muncul bila aplikasi dipasang dari Play Store.
+
 ## Memperbarui data di APK atau versi offline
 
 1. Di versi online, setujui usulan pembaruan (menu Lainnya → Sumber & pembaruan).
 2. Ketuk **Unduh data untuk APK** (file `.json`) atau **Unduh versi offline** (file `.html`).
 3. Di APK: Lainnya → Sumber & pembaruan → **Impor file data**.
-   Atau taruh `kb.json` di alamat https (misalnya GitHub raw) dan isi alamatnya; aplikasi memeriksa versi baru setiap kali dibuka.
+   Atau perbarui `kb.json` di repo ini: aplikasi memeriksa
+   `https://raw.githubusercontent.com/BrianSkyVayne/About-baby/main/kb.json` setiap kali dibuka.
 
 Data baru selalu diperiksa dulu: file yang memuat pernyataan tanpa sumber ditolak, dan versi yang lebih lama diabaikan.
 

@@ -13,6 +13,16 @@ const SHOTS = process.argv[2] || "/tmp";
   const check = (name, cond) => { if (cond) ok++; else { fail++; console.log("GAGAL:", name); } };
   const text = () => page.locator("#app").innerText();
 
+  // Persetujuan awal muncul sekali
+  await page.goto(url + "#cek-gumoh");
+  await page.waitForSelector("h1");
+  check("peringatan awal tampil", /Sebelum mulai/.test(await text()) && /bukan alat diagnosis/i.test(await text()));
+  check("navigasi disembunyikan saat peringatan", await page.locator("nav.bottom").isHidden());
+  await page.click('[data-act="ack"]');
+  check("setelah setuju, langsung ke tujuan", /Gumoh|tanda ini/.test(await text()));
+  await page.reload(); await page.waitForSelector("h1");
+  check("peringatan tidak muncul lagi", !/Sebelum mulai/.test(await text()));
+
   // Profil: bayi 14 hari
   await page.goto(url);
   await page.evaluate(() => { const d = new Date(Date.now() - 14 * 864e5); localStorage.setItem("ab.profile", JSON.stringify({ nama: "Adik", lahir: d.toISOString().slice(0, 10) })); });
@@ -78,7 +88,7 @@ const SHOTS = process.argv[2] || "/tmp";
   check("Ubah kembali ke pertanyaan", (await page.locator(".qbig").count()) === 1);
 
   // Hitung napas & menu lain
-  for (const [h, re] of [["napas", /Hitung napas/], ["panduan", /Panduan/], ["tumbuh", /Perkembangan/], ["imunisasi", /Imunisasi/], ["obat", /Keamanan obat/], ["data", /Versi offline/], ["profil", /Profil anak/], ["panduan-asi", /ASI/]]) {
+  for (const [h, re] of [["napas", /Hitung napas/], ["panduan", /Panduan/], ["tumbuh", /Perkembangan/], ["imunisasi", /Imunisasi/], ["obat", /Keamanan obat/], ["data", /Versi offline/], ["profil", /Profil anak/], ["panduan-asi", /ASI/], ["tentang", /bukan alat diagnosis/i]]) {
     await page.goto(url + "#" + h);
     await page.waitForTimeout(50);
     check("halaman " + h, re.test(await text()));
