@@ -109,8 +109,9 @@
 
   /** Satu sesi menjawab satu penilai: langkah tanda bahaya, lalu satu pertanyaan per layar. */
   class CheckerSession {
-    constructor(checker, profile) { this.checker = checker; this.profile = profile; this.answers = {}; this.step = null; this.skippedByUrgent = false; this.reset(); }
-    get ctx() { return { ageDays: this.profile.ageDays }; }
+    constructor(checker, profile) { this.checker = checker; this.profile = profile; this.answers = {}; this.step = null; this.skippedByUrgent = false; this.ageOverride = null; this.reset(); }
+    // Umur yang disebut di pertanyaan Tanya lebih spesifik daripada profil, jadi dipakai lebih dulu.
+    get ctx() { return { ageDays: typeof this.ageOverride === "number" ? this.ageOverride : this.profile.ageDays }; }
     get parts() { return this.checker.split(this.answers, this.ctx); }
     reset() { this.answers = {}; this.skippedByUrgent = false; this.step = this.parts.danger.length ? "danger" : 0; }
     get assessment() { return this.checker.assess(this.answers, this.ctx); }
@@ -502,7 +503,8 @@
       if (!s) return this.page('<p>Keluhan ini belum ada di database.</p>' + Html.back("cek", "Semua keluhan"));
       const def = s.checker.def;
       let body = Html.back("cek", "Semua keluhan") + "<h1>" + Html.esc(def.title) + "</h1>";
-      if (def.needsAge && !this.profile.hasAge) body += '<div class="banner warn">Usia anak belum diisi, padahal beberapa kriteria bergantung pada usia. <a href="#profil">Isi tanggal lahir</a></div>';
+      if (typeof s.ageOverride === "number") body += '<div class="banner">Memakai umur dari pertanyaan Anda: <strong>' + Html.esc(Age.label(s.ageOverride)) + "</strong>." + (this.profile.hasAge ? "" : ' <a href="#profil">Simpan tanggal lahir</a> agar tidak perlu ditulis lagi.') + "</div>";
+      else if (def.needsAge && !this.profile.hasAge) body += '<div class="banner warn">Usia anak belum diisi, padahal beberapa kriteria bergantung pada usia. <a href="#profil">Isi tanggal lahir</a></div>';
       if (s.step === "result") body += this.result(s);
       else if (s.step === "danger") body += this.progress(s) + this.dangerStep(s);
       else body += this.progress(s) + this.questionStep(s);
@@ -693,35 +695,47 @@
       if (!r) return "";
       const kb = this.kb, res = this.res;
       const link = (href, label) => '<a class="btn" href="' + Html.esc(href) + '" style="text-decoration:none">' + Html.esc(label) + "</a>";
+      // Sumber tiap poin ditandai nomor [n]; daftar lengkapnya ada di bawah kartu, jadi kaitan poin-sumber tetap terlihat tanpa memanjangkan kartu.
+      const acc = [];
+      const ref = src => {
+        const ids = (Array.isArray(src) ? src : (src ? [src] : [])).filter(id => kb.source(id));
+        if (!ids.length) return "";
+        const n = ids.map(id => { let i = acc.indexOf(id); if (i < 0) { acc.push(id); i = acc.length - 1; } return i + 1; });
+        return ' <sup class="ref">[' + n.join(",") + "]</sup>";
+      };
+      const srcBox = () => {
+        if (!acc.length) return "";
+        return '<details class="srcbox"><summary>Sumber (' + acc.length + ")</summary><ol>" + acc.map(id => { const s = kb.source(id); return '<li><a href="' + Html.esc(s.url) + '" target="_blank" rel="noopener">' + Html.esc(s.title) + "</a>" + (s.type === "sekunder" ? '<span class="tag">sekunder</span>' : "") + "</li>"; }).join("") + "</ol></details>";
+      };
       let h = "";
       if (r.type === "checker") {
         const c = kb.checkers.find(x => x.id === r.id);
         if (!c) return "";
         const d = c.default, care = Array.isArray(c.care) ? c.care : [], esc = Array.isArray(c.escalate) ? c.escalate : [];
         h = "<h3>" + Html.esc(c.title) + "</h3>" + this.chips(res.extracted, res.ageDays) +
-          (d && d.text ? "<p>" + Html.esc(d.text) + "</p>" + this.srcList(d.src) : (c.short ? "<p>" + Html.esc(c.short) + "</p>" : "")) +
-          (care.length ? '<p><strong>Yang bisa dilakukan</strong></p><ul class="items">' + care.map(it => "<li>" + Html.esc(it.t) + this.srcList(it.src) + "</li>").join("") + "</ul>" : "") +
-          (esc.length ? '<p><strong>Periksakan ke dokter bila muncul</strong></p><ul class="items">' + esc.map(t => "<li>" + Html.esc(t) + "</li>").join("") + "</ul>" : "") +
+          (d && d.text ? '<p class="lead">' + Html.esc(d.text) + ref(d.src) + "</p>" : (c.short ? '<p class="lead">' + Html.esc(c.short) + "</p>" : "")) +
+          (care.length ? '<p class="sec">Yang bisa dilakukan</p><ul class="items">' + care.map(it => "<li>" + Html.esc(it.t) + ref(it.src) + "</li>").join("") + "</ul>" : "") +
+          (esc.length ? '<div class="watch"><p class="sec">Periksakan ke dokter bila muncul</p><ul class="items">' + esc.map(t => "<li>" + Html.esc(t) + "</li>").join("") + "</ul></div>" : "") +
           '<p class="small muted">Untuk hasil yang sesuai kondisi anak, jawab beberapa pertanyaan singkat:</p>' +
-          '<div class="row"><button type="button" class="btn-primary" data-start="' + Html.esc(c.id) + '">' + Html.esc("Mulai cek " + c.title) + "</button></div>";
+          '<div class="row"><button type="button" class="btn-primary" data-start="' + Html.esc(c.id) + '">' + Html.esc("Mulai cek " + c.title) + "</button></div>" + srcBox();
       } else if (r.type === "guide") {
         const g = kb.guides.find(x => x.id === r.id);
         if (!g) return "";
         const items = [];
         (g.sections || []).forEach(sec => (sec.items || []).forEach(it => { if (items.length < 2) items.push(it); }));
-        h = "<h3>" + Html.esc(g.title) + "</h3>" + (items.length ? '<ul class="items">' + items.map(it => "<li>" + Html.esc(it.t) + this.srcList(it.src) + "</li>").join("") + "</ul>" : "") +
-          '<div class="row">' + link("#panduan-" + g.id, "Buka panduan lengkap") + "</div>";
+        h = "<h3>" + Html.esc(g.title) + "</h3>" + (items.length ? '<ul class="items">' + items.map(it => "<li>" + Html.esc(it.t) + ref(it.src) + "</li>").join("") + "</ul>" : "") +
+          '<div class="row">' + link("#panduan-" + g.id, "Buka panduan lengkap") + "</div>" + srcBox();
       } else if (r.type === "obat") {
         const o = kb.obat.find(x => x.id === r.id);
         if (!o) return "";
         const names = { hindari: "Hindari", dokter: "Lewat dokter", info: "Info", program: "Program resmi" };
-        h = "<h3>" + Html.esc(o.name) + '</h3><p class="small muted">' + Html.esc(names[o.status] || o.status || "") + (o.age ? " · Usia: " + Html.esc(o.age) : "") + "</p><p>" + Html.esc(o.t) + "</p>" + this.srcList(o.src) +
-          '<div class="row">' + link("#obat", "Buka keamanan obat") + "</div>";
+        h = "<h3>" + Html.esc(o.name) + '</h3><p class="small muted">' + Html.esc(names[o.status] || o.status || "") + (o.age ? " · Usia: " + Html.esc(o.age) : "") + "</p><p>" + Html.esc(o.t) + ref(o.src) + "</p>" +
+          '<div class="row">' + link("#obat", "Buka keamanan obat") + "</div>" + srcBox();
       } else if (r.type === "mitos") {
         const m = (kb.mitos || []).find(x => x.id === r.id);
         if (!m) return "";
         const v = { benar: "Benar", tidak: "Tidak benar", belum: "Belum terbukti" }[m.verdict] || "Belum terbukti";
-        h = '<p><span class="lv ' + (m.verdict === "tidak" ? "lv-3" : m.verdict === "benar" ? "lv-1" : "lv-2") + '">' + Html.esc(v) + "</span></p><p><strong>" + Html.esc(m.claim) + "</strong></p><p>" + Html.esc(m.text) + "</p>" + this.srcList(m.src);
+        h = '<p><span class="lv ' + (m.verdict === "tidak" ? "lv-3" : m.verdict === "benar" ? "lv-1" : "lv-2") + '">' + Html.esc(v) + "</span></p><p><strong>" + Html.esc(m.claim) + "</strong></p><p>" + Html.esc(m.text) + ref(m.src) + "</p>" + srcBox();
       } else if (r.type === "milestone") {
         h = "<h3>" + Html.esc(r.title) + '</h3><div class="row">' + link("#tumbuh", "Buka perkembangan") + "</div>";
       } else if (r.type === "imunisasi") {
@@ -753,7 +767,7 @@
     feedbackRow() {
       if (this.busy) return "";
       const body = "Pertanyaan: " + this.q.trim() + "\n\nJawaban: " + (this.text || (this.sel ? this.sel.type + ":" + this.sel.id : "-"));
-      return '<div class="row"><button type="button" data-fb="up" aria-label="Jawaban membantu">👍</button><button type="button" data-fb="down" aria-label="Jawaban kurang membantu">👎</button><a class="btn" href="' + Html.esc("mailto:" + REPORT_EMAIL + "?subject=" + encodeURIComponent("Laporan jawaban") + "&body=" + encodeURIComponent(body)) + '" style="text-decoration:none">Laporkan jawaban</a>' +
+      return '<div class="fb"><span class="small muted">Membantu?</span><button type="button" class="icon-btn" data-fb="up" aria-label="Jawaban membantu">👍</button><button type="button" class="icon-btn" data-fb="down" aria-label="Jawaban kurang membantu">👎</button><a class="btn btn-text" href="' + Html.esc("mailto:" + REPORT_EMAIL + "?subject=" + encodeURIComponent("Laporan jawaban") + "&body=" + encodeURIComponent(body)) + '">Laporkan</a>' +
         (this.text && this.source.saveQuestion ? '<button type="button" data-act="save-q">Catat untuk diriset</button>' : "") + "</div>";
     }
     render() {
@@ -791,7 +805,8 @@
       if (t.dataset.start) {
         const id = t.dataset.start, c = this.kb.checkers.find(x => x.id === id), v = this.app.views.checker, sess = v.session(id);
         if (c && sess) {
-          const pre = window.Engine.AskEngine.prefill(c, (this.res && this.res.extracted) || {});
+          const ex = (this.res && this.res.extracted) || {}, pre = window.Engine.AskEngine.prefill(c, ex);
+          sess.ageOverride = typeof ex.ageDays === "number" ? ex.ageDays : null;
           sess.reset();
           Object.keys(pre).forEach(k => v.prefill(id, k, String(pre[k])));
         }

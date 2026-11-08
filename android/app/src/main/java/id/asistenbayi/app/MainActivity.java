@@ -36,8 +36,12 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         webView = new WebView(this);
-        setContentView(webView);
-        applySystemBarPadding(webView);
+        // WebView mengabaikan padding miliknya sendiri, jadi ruang status bar/navigasi dipasang di pembungkus.
+        android.widget.FrameLayout root = new android.widget.FrameLayout(this);
+        root.setBackgroundColor(0xFFF4FBF9);
+        root.addView(webView, new android.widget.FrameLayout.LayoutParams(-1, -1));
+        setContentView(root);
+        applySystemBarPadding(root);
 
         WebSettings s = webView.getSettings();
         s.setJavaScriptEnabled(true);
