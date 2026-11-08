@@ -7,7 +7,7 @@
   - T1 refactor: GuideListView membaca g.group/g.ages/g.start dari KB, GROUPS/forAge dihapus, ikon grup tetap di UI (GROUP_ICONS) — src/page-body.html
   - T1 feat: layar darurat menambah "Bila 119 tidak tersambung, telepon 112" (119 Kemenkes tetap utama) — src/page-body.html
   - build: index.html, offline.html, assets dibangun ulang — android/app/build.gradle
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert 889a5f7
 
 ### [KB 2026.11.08-10] — 2026-11-08
 - Commit: feat: kategori dan rentang usia jadi field data panduan
