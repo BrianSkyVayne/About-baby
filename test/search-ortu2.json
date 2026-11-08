@@ -209,5 +209,33 @@
   "danger": false,
   "synthetic": true,
   "set": "ortu-holdout-2026-11-08b"
+ },
+ {
+  "q": "ayahnya suruh nyusuin terus soalnya bayi emut tangan, malah nyembur",
+  "expect": "guide:lapar",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-lapar-2026-11-08"
+ },
+ {
+  "q": "bayi ngemut tangan abis nyusu masih lapar ga",
+  "expect": "guide:lapar",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-lapar-2026-11-08"
+ },
+ {
+  "q": "tanda bayi lapar apa aja ada gambarnya",
+  "expect": "guide:lapar",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-lapar-2026-11-08"
+ },
+ {
+  "q": "video tanda bayi kenyang",
+  "expect": "guide:lapar",
+  "danger": false,
+  "synthetic": true,
+  "set": "ortu-lapar-2026-11-08"
  }
 ]

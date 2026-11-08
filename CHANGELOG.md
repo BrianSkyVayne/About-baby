@@ -1,5 +1,12 @@
 # Changelog
 
+### [2026.11.08-21] — 2026-11-08
+- Commit: feat: contoh kasus emut tangan lalu menyembur, tautan gambar dan video tanda lapar
+- Detail:
+  - T2 feat: panduan "Tanda lapar & kenyang" mendapat bagian contoh kasus (emut tangan, disusui lagi terus, lalu menyembur) dengan sumber per butir (AAP cues, AAP Why Babies Spit Up, CDC cues, RCH pyloric) dan bagian tautan gambar (CDC) & video (AAP); butir "mengisap" yang dobel digabung; sumber baru aap_cues_video; KB meta 2026.11.08-6 — src/kb-content.js, src/kb-sources.js
+  - T1 test: 4 pertanyaan ortu soal lapar/emut tangan ke test/search-ortu2.json
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-20] — 2026-11-08
 - Commit: fix: pertanyaan muntah semua tidak terbaca seperti gumoh biasa
 - Detail:

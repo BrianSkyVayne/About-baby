@@ -20,6 +20,7 @@ module.exports = {
   aap_bili: { title: "Indian Pediatrics 2023 (Bhardwaj, Kohli, Thukral) — ringkasan pedoman AAP 2022: Management of Hyperbilirubinemia in Newborn Infants ≥35 Weeks", url: "https://indianpediatrics.net/jan2023/63.pdf", type: "primer" },
   aap_vitd: { title: "AAP HealthyChildren — Vitamin D & Iron Supplements", url: "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Vitamin-Iron-Supplements.aspx", type: "primer" },
   aap_cues: { title: "AAP HealthyChildren — How Often and How Much Should Your Baby Eat?", url: "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/How-Often-and-How-Much-Should-Your-Baby-Eat.aspx", type: "primer" },
+  aap_cues_video: { title: "AAP HealthyChildren — Is Your Baby Hungry or Full? Responsive Feeding Explained (video)", url: "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Is-Your-Baby-Hungry-or-Full-Responsive-Feeding-Explained.aspx", type: "primer" },
   cdc_cues: { title: "CDC — Signs Your Child is Hungry or Full", url: "https://www.cdc.gov/infant-toddler-nutrition/mealtime/signs-your-child-is-hungry-or-full.html", type: "primer" },
   medline_spitup: { title: "MedlinePlus (NIH) — Spitting up: self-care", url: "https://medlineplus.gov/ency/patientinstructions/000754.htm", type: "primer" },
   aap_spitup: { title: "AAP HealthyChildren — Why Babies Spit Up", url: "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Why-Babies-Spit-Up.aspx", type: "primer" },
