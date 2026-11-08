@@ -1,5 +1,12 @@
 # Changelog
 
+### [2026.11.08-13] — 2026-11-08
+- Commit: fix: naikkan versi KB agar koreksi medis sampai ke HP terpasang
+- Detail:
+  - T2 fix: meta.version KB 2026.11.08-1 → 2026.11.08-2; tanpa ini KbUpdateJob.java:106 menolak KB baru dan KnowledgeStore.java:41 tetap memakai KB lama tersimpan, sehingga koreksi medis be49540/ceb7a40/45432bf tak pernah sampai — src/kb-content.js
+  - T1 chore: bangun ulang kb.json dan halaman — kb.json, kb/kb/meta.json, offline.html, android/app/src/main/assets/www/{index.html,kb.json}; versi 15 / 2026.11.08-13 — android/app/build.gradle
+- Rollback: git revert <sha commit ini>
+
 ### [2026.11.08-12] — 2026-11-08
 - Commit: fix: predictive back ke layar utama, hapus checklist anak yang dihapus
 - Detail:
