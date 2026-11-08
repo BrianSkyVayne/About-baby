@@ -1,5 +1,16 @@
 # Changelog
 
+### [2026.11.08-7] — 2026-11-08
+- Commit: feat: UI/UX ramah ortu (audit Web Interface Guidelines, beberapa anak, mode gelap, back Android 13+)
+- Detail:
+  - T2 feat: beberapa anak per perangkat (pilih, tambah, hapus dengan konfirmasi di halaman); "ab.profile" lama dipindah ke "ab.kids" dan tetap disinkronkan — src/page-body.html
+  - T1 feat: pilihan tampilan Ikuti HP / Terang / Gelap — src/page-body.html
+  - T1 feat: hasil cek gejala memperingatkan pertanyaan wajib yang dilewati — src/page-body.html
+  - T1 feat: hitung napas bergetar tiap ketukan dan saat selesai, layar dijaga menyala; dihentikan bila pindah halaman — src/page-body.html, android/app/src/main/AndroidManifest.xml (VIBRATE)
+  - T1 fix: toast diumumkan pembaca layar; sasaran sentuh tab/"Ubah" 48px, checkbox 24px dengan label bisa diketuk, touch-action: manipulation — src/page-body.html, src/page-head.html
+  - T1 fix: back lewat OnBackInvokedCallback di Android 13+ — android/app/src/main/java/id/asistenbayi/app/MainActivity.java, android/app/src/main/AndroidManifest.xml
+- Rollback: git revert <sha commit ini>
+
 ### [2026.11.08-6] — 2026-11-08
 - Commit: fix: koreksi fakta medis sesuai sumber resmi
 - Detail:
