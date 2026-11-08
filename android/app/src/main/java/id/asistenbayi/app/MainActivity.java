@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
 
     private WebView webView;
     private View root;
+    private Object backCb; // OnBackInvokedCallback, hanya terdaftar selama WebView masih punya riwayat
     private KbBridge bridge;
     private final AssetServer assets = new AssetServer(this);
 
@@ -73,6 +74,11 @@ public class MainActivity extends Activity {
             // tel:, mailto:, wa.me, Google Maps, dan semua host lain dibuka di aplikasi luar.
             openExternal(uri.toString());
             return true;
+        }
+
+        @Override
+        public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+            updateBack();
         }
 
         @Override
@@ -160,17 +166,30 @@ public class MainActivity extends Activity {
         if (requestCode == REQ_PICK) bridge.onFilePicked(resultCode == RESULT_OK && data != null ? data.getData() : null);
     }
 
-    /** Android 13+ (API 33): back lewat OnBackInvokedCallback, siap untuk predictive back (wajib saat target API 36). */
+    /** Android 13+ (API 33): back lewat OnBackInvokedCallback. Callback hanya dipasang selama halaman punya
+     *  riwayat; di halaman pertama dilepas supaya sistem bisa menampilkan animasi predictive back ke layar utama. */
     private void registerBack() {
-        if (Build.VERSION.SDK_INT >= 33) {
-            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
-                    android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::handleBack);
+        updateBack();
+    }
+
+    void updateBack() {
+        if (Build.VERSION.SDK_INT < 33 || webView == null) return;
+        android.window.OnBackInvokedDispatcher d = getOnBackInvokedDispatcher();
+        boolean want = webView.canGoBack();
+        if (want && backCb == null) {
+            android.window.OnBackInvokedCallback cb = this::handleBack;
+            d.registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, cb);
+            backCb = cb;
+        } else if (!want && backCb != null) {
+            d.unregisterOnBackInvokedCallback((android.window.OnBackInvokedCallback) backCb);
+            backCb = null;
         }
     }
 
     private void handleBack() {
         if (webView.canGoBack()) webView.goBack();
         else finish();
+        updateBack();
     }
 
     /** Android 12 ke bawah tetap lewat jalur lama. */

@@ -51,6 +51,7 @@
   class LocalStore {
     static get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
     static set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* abaikan */ } }
+    static remove(k) { try { localStorage.removeItem(k); } catch (e) { /* abaikan */ } }
   }
 
   class Toast {
@@ -82,7 +83,8 @@
     /** Kunci checklist perkembangan anak aktif. Anak pertama dari versi lama tanpa id tetap memakai "ab.ms". */
     get msKey() { return this.cur.id ? "ab.ms." + this.cur.id : "ab.ms"; }
     add() { this.list.push({ id: Date.now().toString(36), nama: "", lahir: "" }); this.active = this.list.length - 1; this.persist(); }
-    remove() { if (this.list.length > 1) this.list.splice(this.active, 1); else this.list = [{ nama: "", lahir: "" }]; this.active = 0; this.persist(); }
+    /** Hapus anak aktif beserta checklist perkembangannya, supaya tidak ada data tertinggal di HP. */
+    remove() { LocalStore.remove(this.msKey); if (this.list.length > 1) this.list.splice(this.active, 1); else this.list = [{ nama: "", lahir: "" }]; this.active = 0; this.persist(); }
     static labelOf(k) { const d = Age.days(k.lahir); return d !== null ? (k.nama ? k.nama + " · " : "") + Age.label(d) : (k.nama || "Belum diisi"); }
     get ageDays() { return Age.days(this.birth); }
     get hasAge() { return this.ageDays !== null; }
