@@ -13,7 +13,7 @@
 - Commit: feat: kategori dan rentang usia jadi field data panduan
 - Detail:
   - T1 feat: tiap panduan membawa group (nama grup), ages ([[hariMin,hariMax]], null = tanpa batas atas) dan start (pilihan bila usia kosong), menyalin pemetaan GuideListView.GROUPS/forAge milik sesi UI; versi APK tidak dinaikkan (nomor 29 dipegang sesi UI) — src/kb-content.js, kb/, kb.json
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert a0106b9
 
 ### [2026.11.08-26] — 2026-11-08
 - Commit: fix: label panduan tanpa usia tidak lagi mengklaim "paling sering dibuka"
