@@ -1,5 +1,12 @@
 # Changelog
 
+### [2026.11.08-29] — 2026-11-08
+- Commit: feat: kartu jawaban menampilkan butir panduan yang cocok dengan pertanyaan
+- Detail:
+  - T2 feat: kelas GuideExcerpt (memilih butir panduan paling cocok dengan pertanyaan; sinonim pusar=pusat), dipakai kartu jawaban panduan — src/engine.js, src/page-body.html
+  - T1 fix: dua aturan bahaya "pusar" (satu tanpa sumber) digabung jadi satu (AAP), sebelumnya peringatan tampil dobel — src/engine.js
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-28] — 2026-11-08
 - Commit: feat: jawaban jamu/obat herbal saat menyusui (NHS)
 - Detail:
