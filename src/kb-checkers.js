@@ -21,8 +21,8 @@ module.exports = [
     order: 1,
     title: "Gumoh & muntah bayi",
     short: "Bayi di bawah 1 tahun yang gumoh atau muntah",
-    aliases: ["gumoh", "muntah", "muntah susu", "nyembur", "gumoh banyak", "ngeluarin susu", "muntah bayi", "gumoh terus", "refluks", "gerd", "guah", "gumoh nyembur"],
-    examples: ["bayi 2 bln gumoh terus tiap abis nyusu normal ga", "anak muntah nyembur gmn bun", "gumoh hijau bahaya ga", "bayi 1bln muntah semua susunya", "gumoh campur darah"],
+    aliases: ["gumoh", "muntah", "muntah susu", "nyembur", "gumoh banyak", "ngeluarin susu", "muntah bayi", "gumoh terus", "refluks", "gerd", "guah", "gumoh nyembur", "gumoh lalu tidur", "gumoh masih haus", "gumoh masih lapar", "habis gumoh"],
+    examples: ["bayi 2 bln gumoh terus tiap abis nyusu normal ga", "anak muntah nyembur gmn bun", "gumoh hijau bahaya ga", "bayi 1bln muntah semua susunya", "gumoh campur darah", "anakku gumoh 2x tapi masih haus, boleh langsung tidur?", "habis gumoh digendong 20 menit terus tidur aman ga"],
     needsAge: true,
     danger: ["lemas", "tdkminum", "muntahsemua"],
     questions: [
@@ -65,9 +65,10 @@ module.exports = [
       { t: "Susui sebelum bayi sangat lapar.", src: ["aap_spitup"] },
       { t: "Sendawakan di sela-sela menyusu, bukan hanya di akhir.", src: ["aap_spitup"] },
       { t: "Setelah menyusu, gendong tegak minimal 20 menit dan hindari main aktif.", src: ["aap_spitup"] },
-      { t: "Ikuti tanda lapar dan kenyang bayi. Bila masih ada tanda lapar setelah gumoh, boleh disusui lagi; bila sudah tampak kenyang, tidak perlu dipaksa.", src: ["cdc_milestones"] },
+      { t: "Ikuti tanda lapar dan kenyang bayi. Bila masih ada tanda lapar setelah gumoh, boleh disusui lagi; bila sudah tampak kenyang, tidak perlu dipaksa.", src: ["cdc_cues", "aap_cues"] },
+      { t: "Terlalu banyak minum membuat perut terlalu penuh sehingga susu keluar lagi. Menyusu lebih sedikit tapi lebih sering bisa membantu.", src: ["medline_spitup"] },
       { t: "Lanjutkan ASI dan hindari pemberian berlebihan. Penanganan awal gumoh tidak memakai obat.", src: ["hegar"] },
-      { t: "Saat tidur, tetap telentang.", src: ["aap_sleep"] }
+      { t: "Setelah digendong tegak, bayi boleh ditidurkan. Tetap telentang di alas datar; gumoh tidak membuat posisi miring atau tengkurap jadi aman.", src: ["aap_sleep", "medline_spitup"] }
     ],
     escalate: ["Muntah mulai menyembur dan berulang hampir setiap menyusu", "Muntahan hijau atau berdarah", "Popok basah berkurang", "Bayi lemas atau menolak menyusu"]
   },
@@ -291,7 +292,7 @@ module.exports = [
     order: 8,
     title: "Kuning bayi baru lahir",
     short: "Ikterus pada bayi usia 0–2 bulan",
-    aliases: ["bayi kuning", "kulit kuning", "mata kuning", "jaundice", "ikterus", "kuning bayi", "bilirubin", "bayi kuning berapa lama", "kuning di muka", "badan kuning", "bayi kunyit"],
+    aliases: ["bayi kuning", "kulit kuning", "mata kuning", "jaundice", "ikterus", "kuning bayi", "bilirubin", "bayi kuning berapa lama", "kuning di muka", "badan kuning", "bayi kunyit", "kuning sampai dada", "kuning sampai perut", "kuning sampai kaki"],
     examples: ["bayi 5 hari kuning sampe perut", "mata bayi kuning normal ga", "kuning hari ke 2 lahir bahaya", "bilirubin bayi tinggi gmn", "bayi kuning mau dijemur pagi ga"],
     needsAge: true,
     danger: ["awal", "telapak"],
