@@ -780,8 +780,7 @@
       } else if (r.type === "guide") {
         const g = kb.guides.find(x => x.id === r.id);
         if (!g) return "";
-        const items = [];
-        (g.sections || []).forEach(sec => (sec.items || []).forEach(it => { if (items.length < 2) items.push(it); }));
+        const items = new window.Engine.GuideExcerpt(g).pick(this.q || "", 2); // butir yang paling cocok dengan pertanyaan
         h = "<h3>" + Html.esc(g.title) + "</h3>" + (items.length ? '<ul class="items">' + items.map(it => "<li>" + Html.esc(it.t) + ref(it.src) + "</li>").join("") + "</ul>" : "") +
           '<div class="row">' + link("#panduan-" + g.id, "Buka panduan lengkap") + "</div>" + srcBox();
       } else if (r.type === "obat") {

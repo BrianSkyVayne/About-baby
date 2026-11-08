@@ -796,7 +796,7 @@ form[data-form="home-ask"] { background: linear-gradient(150deg, var(--hero), co
     { id: "tersedak", level: "igd", re: /\s(tersedak|tercekik)\s/, unless: /masih bisa batuk/, text: "Tersedak: lakukan pertolongan pertama tersedak dan panggil bantuan bila tidak bisa bernapas.", src: "medline_choke" },
     { id: "tenggelam", level: "igd", re: /\s(tenggelam|kelelep)\s/, text: "Tenggelam: segera ke IGD walau tampak pulih.", src: "who_drowning" },
     { id: "keracunan", level: "igd", re: /\s(keracunan|tertelan|menelan (\S+ )?(baterai|obat|magnet|koin|sabun|deterjen|minyak|kancing)|minum (obat nyamuk|minyak tanah|bensin|pemutih))/, text: "Dugaan keracunan atau benda tertelan: segera ke IGD.", src: "who_injury" },
-    { id: "pusar", level: "hari", re: /\s(pusar|tali pusat)( \S+){0,2} (bernanah|nanah|bau|berbau|berdarah|merah)\s|\snanah( \S+){0,2} (pusar|tali pusat)\s/, text: "Tali pusat yang mengeluarkan cairan kekuningan berbau, kulit di pangkalnya merah, atau bayi menangis saat disentuh perlu diperiksakan ke dokter. Bila tali pusat terus berdarah, segera hubungi dokter.", src: "aap_cord" },
+    { id: "pusar", level: "hari", re: /\s(pusar|tali pusat)( \S+){0,2} (bernanah|nanah|bau|berbau|berdarah|merah|kemerahan|bengkak)\s|\snanah( \S+){0,2} (pusar|tali pusat)\s/, text: "Tali pusat yang mengeluarkan cairan kekuningan berbau, kulit di pangkalnya merah, atau bayi menangis saat disentuh perlu diperiksakan ke dokter. Bila tali pusat terus berdarah, segera hubungi dokter.", src: "aap_cord" },
     { id: "lukabakar", level: "hari", re: /\s(luka bakar|tersiram|melepuh)\s/, text: "Luka bakar: segera siram air mengalir yang sejuk selama 20 menit. Ke IGD bila luas atau dalam, mengenai wajah, kelamin, atau bokong, atau akibat bahan kimia atau listrik. Untuk anak di bawah 5 tahun, mintalah saran tenaga kesehatan.", src: "nhs_burns" },
     { id: "muntahhijau", level: "hari", re: /\smuntah (\S+ )?hijau/, text: "Muntah berwarna hijau perlu diperiksakan ke dokter hari ini, sesegera mungkin.", src: "orami_gumoh" },
     { id: "kuning24", level: "igd", re: /\skuning (\S+ ){0,3}(24 jam|hari pertama)/, text: "Kuning sebelum bayi berumur 24 jam: bawa ke rumah sakit sekarang.", src: ["who_imci_jaundice", "aap_bili"] },
@@ -807,7 +807,6 @@ form[data-form="home-ask"] { background: linear-gradient(150deg, var(--hero), co
     { id: "kepala", level: "pantau", re: /\s(kepala (\S+ ){0,2}terbentur|terbentur (\S+ ){0,2}kepala|jatuh (\S+ ){0,3}kepala)/, unless: /\s(jatuh|terjatuh|terbentur) (\S+ ){0,4}(muntah|mengantuk|ngantuk|pingsan|kejang)|muntah (\S+ ){0,3}(jatuh|terjatuh|terbentur)/, text: "Kepala terbentur: pantau 24 jam. Segera ke IGD bila muntah, sangat mengantuk, pingsan, kejang, atau menangis tak bisa ditenangkan.", src: null },
     { id: "matacekung", level: "hari", re: /\smata (\S+ ){0,2}cekung/, text: "Mata cekung bisa tanda dehidrasi, apalagi saat diare atau muntah. Nilai dengan penilai \"Diare & dehidrasi\" dan periksakan hari ini.", src: "who_dehid" },
     { id: "kuningtelapak", level: "igd", re: /\s(kuning (\S+ ){0,3}(telapak|kaki)|telapak (\S+ ){0,3}kuning)/, text: "Telapak tangan atau kaki yang kuning termasuk kuning berat menurut WHO: bawa ke rumah sakit sekarang.", src: ["who_imci_jaundice", "who_newborn"] },
-    { id: "pusar", level: "hari", re: /\s(pusar|pusat) (\S+ ){0,3}(nanah|bau|kemerahan|merah|bengkak)/, text: "Tali pusat bernanah, berbau, atau kemerahan meluas perlu diperiksakan ke dokter atau bidan hari ini.", src: null },
     { id: "pikiranmenyakiti", level: "hari", re: /\s(menyakiti|nyakitin|melukai|bunuh) (\S+ )?(diri|bayi)/, text: "Ada pikiran menyakiti diri atau bayi: cari bantuan hari ini.", src: "ppd" }
   ];
 
@@ -885,6 +884,32 @@ form[data-form="home-ask"] { background: linear-gradient(150deg, var(--hero), co
   KbSearch.PHRASE_BONUS = 3;
 
   /** Penjawab: tanda bahaya lebih dulu, lalu entri KB paling cocok. Tidak pernah mengarang jawaban. */
+  /** Memilih butir panduan yang paling cocok dengan pertanyaan, untuk kartu jawaban singkat. */
+  class GuideExcerpt {
+    constructor(guide) { this.guide = guide; }
+    /** Kata kunci pertanyaan: dinormalisasi, distem, sinonim disamakan, kata lemah dibuang. */
+    static keys(text) {
+      return GuideExcerpt.words(text).filter(t => t.length >= 3 && !AskEngine.WEAK_WORDS[t]);
+    }
+    static words(text) { return TextNormalizer.tokens(text).map(t => GuideExcerpt.SAME[t] || t); }
+    /** Seluruh butir beserta kata dari judul bagiannya, dalam urutan asli. */
+    entries() {
+      const out = [];
+      (this.guide.sections || []).forEach(sec => (sec.items || []).forEach(it => {
+        out.push({ item: it, words: new Set(GuideExcerpt.words((sec.h || "") + " " + it.t)), pos: out.length });
+      }));
+      return out;
+    }
+    /** n butir dengan kecocokan terbanyak; seri dan tanpa kecocokan jatuh ke urutan asli. */
+    pick(text, n) {
+      const keys = GuideExcerpt.keys(text);
+      const scored = this.entries().map(e => ({ e, score: keys.filter(x => e.words.has(x)).length }));
+      scored.sort((a, b) => b.score - a.score || a.e.pos - b.e.pos);
+      return scored.slice(0, n || 2).sort((a, b) => a.e.pos - b.e.pos).map(x => x.e.item);
+    }
+  }
+  GuideExcerpt.SAME = { pusar: "pusat" };
+
   class AskEngine {
     constructor(kb) { this.kb = kb || {}; this.index = new KbSearch(this.kb); }
     static prefill(checker, ex) {
@@ -956,7 +981,7 @@ form[data-form="home-ask"] { background: linear-gradient(150deg, var(--hero), co
   AskEngine.DEV_WORDS = { bisa: 1, belum: 1, jalan: 1, berjalan: 1, lari: 1, bicara: 1, merangkak: 1, tengkurap: 1, duduk: 1, berdiri: 1, perkembangan: 1, harusnya: 1, seharusnya: 1, tonggak: 1, milestone: 1, lancar: 1, merespons: 1, senyum: 1, tersenyum: 1, mengoceh: 1 };
 
   return { Level, ConditionEvaluator, Assessment, SymptomChecker, Age, KnowledgeValidator,
-    TextNormalizer, QueryExtractor, DangerDetector, KbSearch, AskEngine };
+    TextNormalizer, QueryExtractor, DangerDetector, KbSearch, GuideExcerpt, AskEngine };
 });
 
 </script>
@@ -1723,8 +1748,7 @@ form[data-form="home-ask"] { background: linear-gradient(150deg, var(--hero), co
       } else if (r.type === "guide") {
         const g = kb.guides.find(x => x.id === r.id);
         if (!g) return "";
-        const items = [];
-        (g.sections || []).forEach(sec => (sec.items || []).forEach(it => { if (items.length < 2) items.push(it); }));
+        const items = new window.Engine.GuideExcerpt(g).pick(this.q || "", 2); // butir yang paling cocok dengan pertanyaan
         h = "<h3>" + Html.esc(g.title) + "</h3>" + (items.length ? '<ul class="items">' + items.map(it => "<li>" + Html.esc(it.t) + ref(it.src) + "</li>").join("") + "</ul>" : "") +
           '<div class="row">' + link("#panduan-" + g.id, "Buka panduan lengkap") + "</div>" + srcBox();
       } else if (r.type === "obat") {
