@@ -11,7 +11,7 @@ const tandaBahayaUmum = [
 const rulesBahayaUmum = [
   { id: "r-lemas", when: { yes: "lemas" }, level: 4, text: "Lemas atau sulit dibangunkan termasuk tanda bahaya umum WHO. Anak yang letargis berbeda dengan anak yang sekadar tidur: ia tidak bisa dibangunkan sepenuhnya.", src: ["who_imci_danger", "who_dehid"] },
   { id: "r-kejang", when: { yes: "kejang" }, level: 4, text: "Kejang termasuk tanda bahaya umum WHO.", src: ["who_imci_danger"] },
-  { id: "r-tdkminum", when: { yes: "tdkminum" }, level: 4, text: "Tidak bisa minum atau menyusu termasuk tanda bahaya umum WHO.", src: ["who_imci_danger", "who_newborn"] },
+  { id: "r-tdkminum", when: { yes: "tdkminum" }, level: 4, text: "Tidak bisa minum atau menyusu termasuk tanda bahaya umum WHO.", src: ["who_imci_danger"] },
   { id: "r-muntahsemua", when: { yes: "muntahsemua" }, level: 4, text: "Memuntahkan semua yang diminum termasuk tanda bahaya umum WHO.", src: ["who_imci_danger"] }
 ];
 
@@ -43,23 +43,23 @@ module.exports = [
       ...rulesBahayaUmum.filter(r => r.id !== "r-kejang"),
       { id: "r-nb-tolak", when: { all: [{ age: ["<=", 28] }, { yes: "tolak" }] }, level: 4, text: "Pada bayi usia 0–28 hari, tidak mau menyusu dengan baik termasuk tanda bahaya bayi baru lahir menurut WHO.", src: ["who_newborn"] },
       { id: "r-hijau", when: { yes: "hijau" }, level: 3, text: "Muntah berwarna hijau perlu diperiksakan ke dokter hari ini, sesegera mungkin.", src: ["orami_gumoh"] },
-      { id: "r-darah", when: { yes: "darah" }, level: 3, text: "Muntah berdarah atau seperti ampas kopi perlu diperiksakan ke dokter hari ini.", src: ["idai_gumoh", "orami_gumoh"] },
-      { id: "r-sembur-sp", when: { all: [{ yes: "sembur" }, { age: [">=", 14] }, { age: ["<=", 56] }] }, level: 3, text: "Muntah menyembur yang berulang pada usia 2–8 minggu sebaiknya diperiksakan hari ini. Dokter akan menilai, salah satunya, kemungkinan stenosis pilorus (jarang).", src: ["rch_pyloric", "banner_pyloric"] },
-      { id: "r-sembur", when: { all: [{ yes: "sembur" }, { not: { all: [{ age: [">=", 14] }, { age: ["<=", 56] }] } }] }, level: 3, text: "Muntah menyembur yang berulang hampir setiap menyusu sebaiknya diperiksakan hari ini.", src: ["rch_pyloric", "orami_gumoh"] },
-      { id: "r-popok", when: { yes: "popok" }, level: 3, text: "Popok basah kurang dari 6 kali sehari setelah hari ke-5 bisa menandakan asupan kurang. Sebaiknya bayi ditimbang dan diperiksa hari ini.", src: ["newborn_intake"] },
-      { id: "r-bb", when: { yes: "bb" }, level: 3, text: "Berat badan yang tidak naik termasuk tanda yang membedakan GERD dari gumoh biasa. Periksakan ke dokter.", src: ["idai_gumoh", "hegar"] },
+      { id: "r-darah", when: { yes: "darah" }, level: 3, text: "Muntah berdarah atau seperti ampas kopi perlu diperiksakan ke dokter hari ini.", src: ["medline_vomitblood", "idai_gumoh"] },
+      { id: "r-sembur-sp", when: { all: [{ yes: "sembur" }, { age: [">=", 14] }, { age: ["<=", 42] }] }, level: 3, text: "Muntah menyembur yang berulang pada usia 2–6 minggu sebaiknya diperiksakan hari ini. Dokter akan menilai, salah satunya, kemungkinan stenosis pilorus (jarang).", src: ["rch_pyloric", "medline_pyloric"] },
+      { id: "r-sembur", when: { all: [{ yes: "sembur" }, { not: { all: [{ age: [">=", 14] }, { age: ["<=", 42] }] } }] }, level: 3, text: "Muntah menyembur yang berulang hampir setiap menyusu sebaiknya diperiksakan hari ini.", src: ["rch_pyloric", "orami_gumoh"] },
+      { id: "r-popok", when: { yes: "popok" }, level: 3, text: "Popok basah kurang dari 6 kali sehari setelah hari ke-5 bisa menandakan asupan kurang. Sebaiknya bayi ditimbang dan diperiksa hari ini.", src: ["cdc_newborn"] },
+      { id: "r-bb", when: { yes: "bb" }, level: 3, text: "Kenaikan berat badan yang tidak sesuai usia termasuk tanda yang perlu diwaspadai pada bayi yang sering gumoh. Periksakan ke dokter.", src: ["idai_gumoh", "hegar"] },
       { id: "r-tolak", when: { all: [{ age: [">", 28] }, { yes: "tolak" }] }, level: 3, text: "Menolak menyusu termasuk tanda yang perlu diperiksakan ke dokter.", src: ["idai_gumoh"] },
       { id: "r-babdarah", when: { yes: "babdarah" }, level: 3, text: "Darah di BAB perlu diperiksakan ke dokter.", src: ["who_ors", "idai_alergi"] },
       { id: "r-rewel", when: { all: [{ yes: "rewel" }, { not: { any: [{ yes: "bb" }, { yes: "tolak" }] } }] }, level: 2, text: "Rewel atau menangis lama saja belum berarti GERD; menurut ahli gastroenterologi anak, gejala ini juga ditemukan pada bayi sehat. Pantau, dan sampaikan ke dokter bila berlanjut atau muncul tanda lain.", src: ["hegar"] },
       { id: "r-diare", when: { all: [{ yes: "diare" }, { no: "babdarah" }] }, level: 2, text: "Ada diare. Gunakan juga penilai \"Diare & dehidrasi\" untuk melihat tanda dehidrasi.", src: ["who_dehid"] },
       { id: "r-ruam", when: { all: [{ yes: "ruam" }, { no: "babdarah" }, { no: "diare" }] }, level: 2, text: "Ruam saja belum mengarah ke kondisi tertentu. Pantau, dan sampaikan ke dokter saat kontrol.", src: ["idai_alergi"] }
     ],
-    default: { level: 1, title: "Umum", text: "Gumoh dialami sekitar 3 dari 10 bayi, paling sering di usia 3–4 bulan, dan berkurang sampai usia 12 bulan. Bayi yang gumoh tetapi tetap aktif, mau menyusu, dan beratnya naik disebut happy spitter.", src: ["hegar", "idai_gumoh"] },
+    default: { level: 1, title: "Umum", text: "Gumoh dialami sekitar 3 dari 10 bayi, paling sering di usia 3–4 bulan, dan biasanya berkurang sampai usia 12 bulan. Bayi yang gumoh tetapi tetap aktif, mau menyusu, dan beratnya naik sesuai usia umumnya tidak perlu khawatir.", src: ["hegar", "idai_gumoh"] },
     differentials: [
       { name: "Gumoh normal (regurgitasi)", freq: "Sekitar 3 dari 10 bayi", features: "Keluar pelan atau meleleh, bayi tetap aktif dan tumbuh.", baseline: true, src: ["hegar"] },
       { name: "GERD", freq: "3–8 dari 100 bayi", features: "Disertai berat badan tidak naik, menolak menyusu, rewel berkepanjangan, punggung melengkung, atau muntah darah.", when: { any: [{ yes: "bb" }, { count: { of: [{ yes: "rewel" }, { yes: "tolak" }, { yes: "darah" }], min: 2 } }] }, src: ["hegar", "idai_gumoh"] },
       { name: "Alergi protein susu sapi", freq: "3–4 dari 100 bayi", features: "Disertai gejala pencernaan (diare, bisa berdarah, kolik), kulit (ruam), atau napas. Dipastikan dokter lewat uji eliminasi lalu provokasi.", when: { any: [{ yes: "babdarah" }, { count: { of: [{ yes: "ruam" }, { yes: "diare" }, { yes: "rewel" }], min: 2 } }] }, src: ["idai_alergi"] },
-      { name: "Stenosis pilorus", freq: "2–5 dari 1.000 bayi", features: "Usia 2–8 minggu, muntah menyembur yang makin kuat, tidak hijau, bayi tetap lapar, berat turun. Dipastikan dengan USG.", when: { all: [{ yes: "sembur" }, { age: [">=", 14] }, { age: ["<=", 56] }] }, src: ["rch_pyloric", "banner_pyloric"] }
+      { name: "Stenosis pilorus", freq: "Jarang", features: "Biasanya usia 2–6 minggu, muntah menyembur yang makin kuat, tidak hijau, bayi tetap lapar, berat turun. Dipastikan dengan USG.", when: { all: [{ yes: "sembur" }, { age: [">=", 14] }, { age: ["<=", 42] }] }, src: ["rch_pyloric", "medline_pyloric"] }
     ],
     care: [
       { t: "Susui sebelum bayi sangat lapar.", src: ["aap_spitup"] },
@@ -68,7 +68,7 @@ module.exports = [
       { t: "Ikuti tanda lapar dan kenyang bayi. Bila masih ada tanda lapar setelah gumoh, boleh disusui lagi; bila sudah tampak kenyang, tidak perlu dipaksa.", src: ["cdc_cues", "aap_cues"] },
       { t: "Terlalu banyak minum membuat perut terlalu penuh sehingga susu keluar lagi. Menyusu lebih sedikit tapi lebih sering bisa membantu.", src: ["medline_spitup"] },
       { t: "Lanjutkan ASI dan hindari pemberian berlebihan. Penanganan awal gumoh tidak memakai obat.", src: ["hegar"] },
-      { t: "Setelah digendong tegak, bayi boleh ditidurkan. Tetap telentang di alas datar; gumoh tidak membuat posisi miring atau tengkurap jadi aman.", src: ["aap_sleep", "medline_spitup"] }
+      { t: "Setelah digendong tegak, bayi boleh ditidurkan. Tetap telentang di alas yang datar dan kokoh, juga pada bayi dengan refluks. Bayi tidak tersedak karena tidur telentang.", src: ["aap_hc_safesleep", "aap_sleep"] }
     ],
     escalate: ["Muntah mulai menyembur dan berulang hampir setiap menyusu", "Muntahan hijau atau berdarah", "Popok basah berkurang", "Bayi lemas atau menolak menyusu"]
   },
@@ -94,14 +94,14 @@ module.exports = [
       ...rulesBahayaUmum,
       { id: "r-nb-panas", when: { all: [{ age: ["<=", 28] }, { num: ["suhu", ">=", 37.5] }] }, level: 4, text: "Pada bayi usia 0–28 hari, suhu ≥ 37,5 °C termasuk tanda bahaya bayi baru lahir menurut WHO.", src: ["who_newborn"] },
       { id: "r-nb-dingin", when: { all: [{ age: ["<=", 28] }, { num: ["suhu", "<", 35.5] }] }, level: 4, text: "Pada bayi usia 0–28 hari, suhu < 35,5 °C termasuk tanda bahaya bayi baru lahir menurut WHO.", src: ["who_newborn"] },
-      { id: "r-tarikan", when: { yes: "tarikan" }, level: 4, text: "Tarikan dinding dada bagian bawah termasuk tanda pneumonia berat menurut WHO, perlu dirujuk segera.", src: ["who_imci_pneu"] },
+      { id: "r-tarikan", when: { yes: "tarikan" }, level: 4, text: "Tarikan dinding dada bagian bawah termasuk tanda pneumonia menurut WHO. Periksakan ke tenaga kesehatan hari ini.", src: ["who_imci_pneu"] },
       { id: "r-3bln", when: { all: [{ age: ["<", 90] }, { yes: "demamya" }] }, level: 3, text: "Menurut IDAI, bayi di bawah 3 bulan yang demam dibawa ke dokter, apa pun keadaan umumnya.", src: ["idai_demam"] },
       { id: "r-3hari", when: { all: [{ age: [">=", 90] }, { age: ["<=", 1095] }, { num: ["hari", ">", 3] }] }, level: 3, text: "Menurut IDAI, anak usia 3–36 bulan yang demam lebih dari 3 hari dibawa ke dokter.", src: ["idai_demam"] },
       { id: "r-napascepat", when: { yes: "napascepat" }, level: 2, text: "Napas tampak cepat perlu dipastikan dengan menghitung 60 detik penuh saat anak tenang (menu Hitung Napas). Bila memenuhi ambang WHO untuk usianya, periksakan hari ini.", src: ["who_imci_pneu"] },
       { id: "r-tua", when: { all: [{ age: [">", 1095] }, { num: ["hari", ">", 3] }] }, level: 2, text: "Aplikasi belum punya pedoman terverifikasi untuk demam lebih dari 3 hari pada usia di atas 3 tahun. Bila ragu, konsultasikan ke dokter.", src: [] },
-      { id: "n-dbd", when: { num: ["hari", ">=", 2] }, level: 0, text: "Di daerah DBD, perhatikan juga penilai \"DBD\": demam yang turun setelah sekitar 3 hari justru masuk fase kritis.", src: ["kemenkes_dbd"] }
+      { id: "n-dbd", when: { num: ["hari", ">=", 2] }, level: 0, text: "Di daerah DBD, perhatikan juga penilai \"DBD\": demam tinggi sekitar 3 hari yang turun di hari keempat justru masuk fase kritis.", src: ["kemenkes_dbd"] }
     ],
-    default: { level: 1, title: "Pantau di rumah", text: "Demam adalah gejala, bukan penyakit, dan tinggi suhu tidak selalu menunjukkan beratnya kondisi. Belum ada kriteria rujukan yang terpenuhi dari jawaban Anda.", src: ["idai_demam"] },
+    default: { level: 1, title: "Pantau di rumah", text: "Demam adalah respons alami tubuh melawan infeksi. Belum ada kriteria rujukan yang terpenuhi dari jawaban Anda.", src: ["nhs_fever"] },
     differentials: [],
     care: [
       { t: "Obat penurun panas diberikan sesuai label kemasan atau arahan apoteker/dokter. Aplikasi ini sengaja tidak memberi dosis obat.", src: [] }
@@ -132,7 +132,7 @@ module.exports = [
         { not: { count: { of: [{ eq: ["kondisi", "lemas"] }, { yes: "mata" }, { eq: ["minum", "buruk"] }, { eq: ["cubit", "sangat"] }], min: 2 } } }
       ] }, level: 3, text: "Sesuai kriteria dehidrasi ringan–sedang WHO (minimal 2 tanda). Berikan oralit sedikit-sedikit tapi sering, dan bawa ke puskesmas atau dokter hari ini untuk dinilai.", src: ["who_dehid", "who_ors"] },
       { id: "r-lemas1", when: { all: [{ eq: ["kondisi", "lemas"] }] }, level: 4, text: "Lemas atau sulit dibangunkan termasuk tanda bahaya umum WHO, walaupun tanda dehidrasi lain belum lengkap.", src: ["who_imci_danger"] },
-      { id: "r-buruk1", when: { eq: ["minum", "buruk"] }, level: 4, text: "Tidak bisa minum termasuk tanda bahaya umum WHO.", src: ["who_imci_danger"] },
+      { id: "r-buruk1", when: { eq: ["minum", "buruk"] }, level: 4, text: "Tidak bisa minum termasuk tanda bahaya umum WHO; minum buruk termasuk tanda dehidrasi berat.", src: ["who_imci_danger"] },
       { id: "r-satu", when: { all: [
         { count: { of: [{ eq: ["kondisi", "gelisah"] }, { yes: "mata" }, { eq: ["minum", "haus"] }, { eq: ["cubit", "lambat"] }], min: 1 } },
         { not: { count: { of: [{ any: [{ eq: ["kondisi", "gelisah"] }, { eq: ["kondisi", "lemas"] }] }, { yes: "mata" }, { any: [{ eq: ["minum", "haus"] }, { eq: ["minum", "buruk"] }] }, { any: [{ eq: ["cubit", "lambat"] }, { eq: ["cubit", "sangat"] }] }], min: 2 } } }
@@ -144,7 +144,7 @@ module.exports = [
     differentials: [],
     care: [
       { t: "Oralit setiap kali BAB cair: usia < 2 tahun 50–100 ml, usia 2–10 tahun 100–200 ml.", src: ["who_ors", "unicef_ors"] },
-      { t: "Zinc selama 10–14 hari sejak awal diare: usia < 6 bulan 10 mg/hari, usia ≥ 6 bulan 20 mg/hari. Habiskan walau diare sudah berhenti.", src: ["who_ors"] },
+      { t: "Zinc selama 10–14 hari sejak awal diare: usia < 6 bulan 10 mg/hari, usia ≥ 6 bulan 20 mg/hari. Teruskan sampai 10–14 hari walau diare sudah berhenti.", src: ["who_zinc", "who_ors"] },
       { t: "Lanjutkan ASI dan makan seperti biasa.", src: ["who_ors"] },
       { t: "Jangan beri obat anti-diare.", src: ["who_ors"] }
     ],
@@ -168,7 +168,7 @@ module.exports = [
     ],
     rules: [
       ...rulesBahayaUmum,
-      { id: "r-tarikan", when: { yes: "tarikan" }, level: 4, text: "Tarikan dinding dada bagian bawah: sesuai kriteria pneumonia berat WHO, perlu dirujuk segera.", src: ["who_imci_pneu"] },
+      { id: "r-tarikan", when: { yes: "tarikan" }, level: 4, text: "Tarikan dinding dada bagian bawah: sesuai kriteria pneumonia WHO. Periksakan ke tenaga kesehatan hari ini.", src: ["who_imci_pneu"] },
       { id: "r-stridor", when: { yes: "stridor" }, level: 4, text: "Stridor saat anak tenang termasuk tanda penyakit berat menurut WHO, perlu dirujuk segera.", src: ["who_imci_pneu"] },
       { id: "r-nb", when: { all: [{ age: ["<=", 28] }, { num: ["rr", ">", 60] }] }, level: 4, text: "Pada bayi usia 0–28 hari, napas lebih dari 60×/menit termasuk tanda bahaya bayi baru lahir menurut WHO.", src: ["who_newborn"] },
       { id: "r-gap", when: { all: [{ age: [">", 28] }, { age: ["<", 60] }, { num: ["rr", ">", 0] }] }, level: 2, text: "Aplikasi belum punya ambang napas cepat yang terverifikasi untuk usia 29–59 hari. Bila napas tampak cepat atau berat, periksakan.", src: [] },
@@ -180,8 +180,8 @@ module.exports = [
     differentials: [],
     care: [
       { t: "Jangan beri obat batuk-pilek bebas yang mengandung dekongestan atau antihistamin untuk anak di bawah 2 tahun.", src: ["fda_cough"] },
-      { t: "Produsen melabeli obat batuk-pilek bebas \"jangan dipakai di bawah 4 tahun\". Obat ini hanya meredakan gejala, tidak mempercepat sembuh.", src: ["fda_cough"] },
-      { t: "Madu boleh untuk batuk pada usia 1 tahun ke atas. Di bawah 1 tahun, madu dilarang dalam bentuk apa pun.", src: ["coughhoney", "honey"] }
+      { t: "Produsen melabeli obat batuk-pilek bebas \"jangan dipakai di bawah 4 tahun\". Menurut AAP, risikonya lebih besar daripada manfaatnya untuk meredakan gejala pilek.", src: ["fda_cough", "coughhoney"] },
+      { t: "Madu boleh untuk batuk pada usia 1 tahun ke atas (AAP: 2–5 ml sesuai kebutuhan). Di bawah 1 tahun, madu dilarang dalam bentuk apa pun.", src: ["coughhoney", "honey", "honey_sfa"] }
     ],
     escalate: ["Dada bawah tertarik ke dalam", "Napas di atas ambang WHO untuk usianya", "Stridor saat tenang", "Lemas, kejang, atau tidak bisa minum"]
   },
@@ -213,11 +213,11 @@ module.exports = [
       { id: "r-usia", when: { all: [{ yes: "pola" }, { age: [">=", 150] }] }, level: 2, text: "Pola menangis ini terjadi di luar batas usia kolik menurut Rome IV (gejala mulai dan berhenti sebelum 5 bulan). Konsultasikan ke dokter.", src: ["rome4"] },
       { id: "n-kolik", when: { all: [{ yes: "pola" }, { age: ["<", 150] }, { not: { eq: ["tumbuh", "tidak"] } }] }, level: 0, text: "Gambaran ini sesuai kriteria kolik Rome IV bila bayi tetap tumbuh baik dan tidak demam atau sakit. Kolik memuncak sekitar usia 6 minggu dan membaik sampai 5 bulan.", src: ["rome4", "amboss_colic"] }
     ],
-    default: { level: 1, title: "Umum", text: "Tangisan bayi sering paling berat di bulan-bulan pertama, lalu membaik.", src: ["cdc_milestones"] },
+    default: { level: 1, title: "Umum", text: "Tangisan bayi sering paling berat di bulan-bulan pertama, lalu membaik.", src: ["cdc_aht"] },
     differentials: [],
     care: [
-      { t: "Jangan pernah mengguncang bayi. Bila mulai emosi, letakkan bayi di tempat tidur yang aman, menjauh sebentar, dan cek setiap 5–10 menit.", src: ["cdc_milestones"] },
-      { t: "Menggendong dan merespons bayi tidak membuatnya manja.", src: ["cdc_milestones"] },
+      { t: "Jangan pernah mengguncang bayi. Bila mulai emosi, letakkan bayi di tempat yang aman, menjauh sebentar untuk menenangkan diri, dan cek setiap 5–10 menit.", src: ["cdc_aht"] },
+      { t: "Merespons tangisan bayi kecil tidak membuatnya manja.", src: ["hc_cries"] },
       { t: "Obat seperti simetikon atau obat GERD umumnya tidak efektif untuk kolik.", src: ["amboss_colic"] }
     ],
     escalate: ["Demam", "Muntah hijau atau menyembur", "BAB berdarah", "Malas menyusu", "Lemas", "Berat badan tidak naik"]
@@ -243,7 +243,7 @@ module.exports = [
       { id: "n-sederhana", when: { all: [{ yes: "demam" }, { age: [">=", 180] }, { age: ["<=", 1825] }, { no: "durasi" }, { no: "fokal" }, { no: "ulang" }] }, level: 0, text: "Gambaran ini sesuai kriteria kejang demam sederhana AAP: usia 6–60 bulan, seluruh tubuh, kurang dari 15 menit, tidak berulang dalam 24 jam. Kejang demam terjadi pada 2–5 dari 100 anak. Kejang demam sederhana umumnya tidak memerlukan EEG, tes darah, atau pencitraan; dokter fokus mencari sumber demam.", src: ["aap_febrile"] },
       { id: "n-kompleks", when: { all: [{ yes: "demam" }, { age: [">=", 180] }, { age: ["<=", 1825] }, { any: [{ yes: "durasi" }, { yes: "fokal" }, { yes: "ulang" }] }] }, level: 0, text: "Gambaran ini sesuai kriteria kejang demam kompleks AAP (fokal, 15 menit atau lebih, atau berulang dalam 24 jam).", src: ["aap_febrile"] },
       { id: "n-usia", when: { all: [{ yes: "demam" }, { any: [{ age: ["<", 180] }, { age: [">", 1825] }] }] }, level: 0, text: "Definisi kejang demam AAP berlaku untuk usia 6–60 bulan. Usia anak di luar rentang itu, jadi dokter perlu menilai penyebab lain.", src: ["aap_febrile"] },
-      { id: "n-ulang", when: { yes: "demam" }, level: 0, text: "Sekitar 1 dari 3 anak mengalami kejang demam lagi. Obat penurun panas tidak mengurangi risiko kejang demam berulang.", src: ["aap_febrile", "febrile_5min"] }
+      { id: "n-ulang", when: { yes: "demam" }, level: 0, text: "Sekitar 1 dari 3 anak mengalami kejang demam lagi. Obat penurun panas tidak mengurangi risiko kejang demam berulang.", src: ["febrile_recur"] }
     ],
     default: { level: 4, title: "Bawa ke fasilitas kesehatan", text: "Kejang termasuk tanda bahaya umum WHO.", src: ["who_imci_danger"] },
     differentials: [],
@@ -270,21 +270,21 @@ module.exports = [
       { id: "cairan", text: "Perut tampak membesar atau anak sesak?", type: YN },
       { id: "darah", text: "Perdarahan: gusi berdarah, mimisan, BAB hitam/berdarah, atau muntah darah?", type: YN },
       { id: "lemas", text: "Lemas atau gelisah?", type: YN },
-      { id: "syok", text: "Tangan dan kaki dingin, kulit lembap dan pucat?", type: YN }
+      { id: "syok", text: "Kulit pucat dan dingin?", type: YN }
     ],
     rules: [
-      { id: "r-syok", when: { yes: "syok" }, level: 4, text: "Kulit dingin, lembap, dan pucat bisa menandakan syok. Bawa ke IGD sekarang.", src: ["who_dengue"] },
+      { id: "r-syok", when: { yes: "syok" }, level: 4, text: "Kulit pucat dan dingin termasuk tanda bahaya dengue berat menurut WHO. Bawa ke IGD sekarang.", src: ["who_dengue_fs"] },
       { id: "r-ws", when: { any: [{ yes: "perut" }, { yes: "muntah" }, { yes: "cairan" }, { yes: "darah" }, { yes: "lemas" }] }, level: 4, text: "Ada tanda bahaya dengue menurut WHO. Bawa ke rumah sakit sekarang.", src: ["who_dengue"] },
-      { id: "r-turun", when: { yes: "turun" }, level: 2, text: "Menurut Kemenkes, demam yang turun setelah sekitar 3 hari (pola pelana kuda) justru fase kritis, bukan tanda sembuh. Pantau ketat tanda bahaya di bawah.", src: ["kemenkes_dbd"] },
+      { id: "r-turun", when: { yes: "turun" }, level: 2, text: "Menurut Kemenkes, demam tinggi sekitar 3 hari yang turun di hari keempat (pola pelana kuda) justru fase kritis, bukan tanda sembuh. Pantau ketat tanda bahaya di bawah.", src: ["kemenkes_dbd"] },
       { id: "r-3hari", when: { all: [{ age: [">=", 90] }, { age: ["<=", 1095] }, { num: ["hari", ">", 3] }] }, level: 3, text: "Menurut IDAI, anak usia 3–36 bulan yang demam lebih dari 3 hari dibawa ke dokter.", src: ["idai_demam"] },
       { id: "r-3bln", when: { age: ["<", 90] }, level: 3, text: "Menurut IDAI, bayi di bawah 3 bulan yang demam dibawa ke dokter.", src: ["idai_demam"] }
     ],
     default: { level: 2, title: "Pantau", text: "Belum ada tanda bahaya dengue. Demam punya banyak penyebab, dan DBD hanya bisa dipastikan lewat pemeriksaan darah oleh dokter.", src: ["who_dengue"] },
     differentials: [],
     care: [
-      { t: "Pastikan anak cukup minum dan pantau tanda bahaya setiap hari, terutama saat demam mulai turun.", src: ["kemenkes_dbd"] }
+      { t: "Pastikan anak banyak minum dan pantau tanda bahaya setiap hari, terutama saat demam mulai turun.", src: ["who_dengue", "kemenkes_dbd"] }
     ],
-    escalate: ["Nyeri perut", "Muntah terus-menerus", "Perdarahan", "Lemas atau gelisah", "Tangan kaki dingin"]
+    escalate: ["Nyeri perut", "Muntah terus-menerus", "Perdarahan", "Lemas atau gelisah", "Kulit pucat dan dingin"]
   },
 
   {
@@ -308,13 +308,13 @@ module.exports = [
       { id: "r-telapak", when: { yes: "telapak" }, level: 4, text: "Telapak tangan atau kaki yang kuning termasuk tanda bahaya bayi baru lahir WHO.", src: ["who_newborn"] },
       { id: "r-malas-nb", when: { all: [{ yes: "malas" }, { age: ["<=", 28] }] }, level: 4, text: "Tidak mau menyusu dengan baik termasuk tanda bahaya bayi baru lahir WHO.", src: ["who_newborn"] },
       { id: "r-malas", when: { all: [{ yes: "malas" }, { age: [">", 28] }] }, level: 3, text: "Malas menyusu disertai kuning perlu diperiksakan hari ini.", src: ["aap_bili"] },
-      { id: "r-urin", when: { yes: "urin" }, level: 3, text: "Menurut AAP, urin gelap atau tinja pucat bisa menandakan gangguan hati atau saluran empedu, sehingga perlu pemeriksaan bilirubin direk. Periksakan hari ini.", src: ["aap_bili"] },
-      { id: "r-lama", when: { yes: "lama" }, level: 3, text: "Kuning yang menetap lewat usia 2 minggu perlu diperiksa bilirubin total dan direk.", src: ["medstar_bili", "aap_bili"] }
+      { id: "r-urin", when: { yes: "urin" }, level: 3, text: "Urin kuning gelap atau cokelat, atau tinja pucat seperti krem, perlu segera diperiksakan ke dokter atau bidan hari ini. Simpan contoh tinjanya untuk ditunjukkan.", src: ["nhs_jaundice"] },
+      { id: "r-lama", when: { yes: "lama" }, level: 3, text: "Kuning yang menetap lewat 2 minggu pada bayi susu formula, atau lewat 3–4 minggu pada bayi ASI, perlu diperiksa bilirubin total dan direk. Bila bayi Anda minum ASI dan baru lewat 2 minggu, sampaikan ke dokter atau bidan, terutama bila kuningnya tidak membaik.", src: ["aap_bili", "hc_jaundice", "nhs_jaundice"] }
     ],
-    default: { level: 2, title: "Pantau", text: "Tidak ada tanda bahaya dari jawaban Anda. Sampaikan kuningnya ke bidan atau dokter saat kontrol; AAP menganjurkan semua bayi diperiksa bilirubin di usia 24–48 jam. Menyusu sering membantu.", src: ["aap_bili", "newborn_intake"] },
+    default: { level: 2, title: "Pantau", text: "Tidak ada tanda bahaya dari jawaban Anda. Sampaikan kuningnya ke bidan atau dokter saat kontrol; AAP menganjurkan semua bayi diperiksa bilirubin di usia 24–48 jam. Menyusu sering membantu.", src: ["aap_bili", "nhs_jaundice"] },
     differentials: [],
     care: [
-      { t: "Susui 8–12 kali dalam 24 jam.", src: ["newborn_intake", "aap_bili"] }
+      { t: "Susui 8–12 kali dalam 24 jam.", src: ["nhs_jaundice", "hc_jaundice"] }
     ],
     escalate: ["Kuning menjalar sampai telapak tangan/kaki", "Urin gelap atau tinja pucat", "Malas menyusu atau sulit dibangunkan", "Kuning masih ada setelah 2 minggu"]
   },
@@ -343,9 +343,9 @@ module.exports = [
     default: { level: 1, title: "Tidak ada tanda bahaya WHO", text: "Tidak ada tanda bahaya bayi baru lahir dari jawaban Anda.", src: ["who_newborn"] },
     differentials: [],
     care: [
-      { t: "Bayi baru lahir menyusu 8–12 kali dalam 24 jam.", src: ["newborn_intake"] },
-      { t: "Mulai hari ke-5, umumnya minimal 6 popok basah sehari.", src: ["newborn_intake"] },
-      { t: "Kebanyakan bayi kembali ke berat lahir di hari ke-10 sampai ke-14.", src: ["newborn_intake"] },
+      { t: "Bayi baru lahir menyusu 8–12 kali dalam 24 jam.", src: ["cdc_newborn"] },
+      { t: "Mulai hari ke-5, umumnya minimal 6 popok basah sehari.", src: ["cdc_newborn"] },
+      { t: "Bayi ASI seharusnya kembali ke berat lahir di hari ke-10 sampai ke-14.", src: ["cdc_newborn"] },
       { t: "Rawat tali pusat tetap bersih dan kering.", src: ["who_cord"] }
     ],
     escalate: []

@@ -24,11 +24,11 @@ test("satu tanda ringan (rewel) = Pantau, tidak langsung GERD", () => {
   assert.ok(!r.differentials.some(d => d.name === "GERD"));
 });
 
-test("menyembur berulang di usia 3 minggu = Periksa hari ini, stenosis pilorus disebut dengan angka kejadian", () => {
+test("menyembur berulang di usia 3 minggu = Periksa hari ini, stenosis pilorus disebut dengan kejadian (angka hanya bila bersumber)", () => {
   const r = A(C("gumoh"), { sembur: "ya" }, { ageDays: 21 });
   assert.strictEqual(r.level, 3);
   const sp = r.differentials.find(d => d.name === "Stenosis pilorus");
-  assert.ok(sp && /dari 1\.000/.test(sp.freq));
+  assert.ok(sp && /dari \d|^Jarang$/.test(sp.freq));
 });
 
 test("stenosis pilorus tidak disebut bila tidak menyembur", () => {
@@ -98,6 +98,6 @@ test("langkah tanda bahaya dipisah dari pertanyaan lain", () => {
   assert.ok(C("gumoh").split({}, { ageDays: 10 }).rest.some(q => q.id === "popok"));
 });
 
-test("angka kejadian memakai frekuensi alami (x dari y), bukan persen", () => {
-  checkers.forEach(c => (c.differentials || []).forEach(d => assert.ok(/dari \d/.test(d.freq) && !/%/.test(d.freq), c.id + ": " + d.freq)));
+test("angka kejadian memakai frekuensi alami (x dari y) atau kata tanpa angka, bukan persen", () => {
+  checkers.forEach(c => (c.differentials || []).forEach(d => assert.ok(/dari \d|^(Jarang|Sering|Sangat jarang)$/.test(d.freq) && !/%/.test(d.freq), c.id + ": " + d.freq)));
 });
