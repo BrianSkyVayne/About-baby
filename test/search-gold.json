@@ -1252,5 +1252,29 @@
   "expect": null,
   "danger": true,
   "synthetic": true
+ },
+ {
+  "q": "anakku gumoh 2 x tapi masih haus digendong 20 menit tidur aman atau bahaya",
+  "expect": "checker:gumoh",
+  "danger": false,
+  "synthetic": false
+ },
+ {
+  "q": "tangan diemut bayi berarti masih lapar ya",
+  "expect": "mitos:emut-tangan",
+  "danger": false,
+  "synthetic": false
+ },
+ {
+  "q": "gimana tau bayi udah kenyang",
+  "expect": "guide:lapar",
+  "danger": false,
+  "synthetic": true
+ },
+ {
+  "q": "bayi nyusu terus tiap nangis apa kebanyakan",
+  "expect": "guide:lapar",
+  "danger": false,
+  "synthetic": true
  }
 ]

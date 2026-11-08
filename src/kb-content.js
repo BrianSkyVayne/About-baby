@@ -1,6 +1,6 @@
 // Panduan, milestone, imunisasi, keamanan obat.
 const guides = [
-  { id: "asi", order: 1, title: "ASI", aliases: ["asi", "menyusui", "nyusu", "asi eksklusif", "asip", "asi kurang", "pumping", "laktasi", "menyusu", "asi perah", "puting lecet", "asi seret"], examples: ["asi eksklusif sampe kapan", "bayi 1 bln nyusu brp kali sehari", "asi kurang gmn ya bun", "bayi boleh minum air putih sblm 6 bln", "tanda bayi cukup asi apa"], sections: [
+  { id: "asi", order: 1, title: "ASI", aliases: ["asi", "menyusui", "nyusu", "asi eksklusif", "asip", "asi kurang", "pumping", "laktasi", "menyusu", "asi perah", "puting lecet", "asi seret", "asi sedikit", "asi ga keluar", "asi tidak keluar", "kurang asi"], examples: ["asi eksklusif sampe kapan", "bayi 1 bln nyusu brp kali sehari", "asi kurang gmn ya bun", "bayi boleh minum air putih sblm 6 bln", "tanda bayi cukup asi apa"], sections: [
     { h: "Rekomendasi WHO", items: [
       { t: "Mulai menyusu dalam 1 jam pertama setelah lahir.", src: ["who_bf"] },
       { t: "ASI saja selama 6 bulan pertama, tanpa makanan atau minuman lain, termasuk air.", src: ["who_bf", "cdc_milestones"] },
@@ -129,6 +129,20 @@ const guides = [
       { t: "Skrining perkembangan umum di usia 9, 18, dan 24 atau 30 bulan.", src: ["cdc_autism"] },
       { t: "Skrining autisme (misalnya M-CHAT-R) di usia 18 dan 24 bulan untuk semua anak.", src: ["cdc_autism"] }
     ] }
+  ] },
+  { id: "lapar", order: 13, title: "Tanda lapar & kenyang", aliases: ["tanda lapar", "tanda kenyang", "masih lapar", "masih haus", "bayi lapar", "bayi kenyang", "ngemut tangan", "emut tangan", "isap tangan", "tangan dimasukin mulut", "ngenyot tangan", "nyusu terus", "kapan berhenti nyusu", "overfeeding"], examples: ["bayi ngemut tangan berarti lapar ya", "gimana tau bayi udah kenyang", "abis nyusu masih emut tangan, kasih lagi?", "bayi nyusu terus tiap nangis", "bayi masih haus padahal udah gumoh"], sections: [
+    { h: "Tanda lapar (0–5 bulan)", items: [
+      { t: "Tanda awal: mengecap atau menjilat bibir, menjulurkan lidah, membuka mulut, menoleh mencari payudara atau botol (rooting), berulang memasukkan tangan ke mulut, tangan mengepal, mulai gelisah.", src: ["aap_cues", "cdc_cues"] },
+      { t: "Menangis adalah tanda lapar yang sudah terlambat. Susui saat tanda awal muncul.", src: ["aap_cues"] }
+    ] },
+    { h: "Tanda kenyang (0–5 bulan)", items: [
+      { t: "Menutup mulut, memalingkan kepala dari payudara atau botol, dan tangan menjadi rileks.", src: ["cdc_cues"] },
+      { t: "Bayi yang minum dari botol kadang terus mengisap walau sudah kenyang. Perhatikan tanda kenyang, jangan hanya menunggu botol habis.", src: ["aap_cues"] }
+    ] },
+    { h: "Mengisap tidak selalu berarti lapar", items: [
+      { t: "Bayi mengisap bukan hanya karena lapar, tetapi juga untuk menenangkan diri. Tidak setiap tangis atau isapan berarti lapar; bisa jadi ia ingin digendong atau popoknya perlu diganti.", src: ["aap_cues"] },
+      { t: "Satu tanda saja belum cukup. Lihat beberapa tanda sekaligus dan kapan terakhir menyusu.", src: ["aap_cues", "cdc_cues"] }
+    ] }
   ] }
 ];
 
@@ -245,11 +259,12 @@ const mitos = [
   { id: "obat-batpil", order: 7, claim: "Obat batuk-pilek bebas aman untuk bayi dan balita", verdict: "tidak", text: "Jangan beri obat batuk-pilek bebas yang mengandung dekongestan atau antihistamin untuk anak di bawah 2 tahun karena efek samping serius. Obat ini hanya meredakan gejala.", src: ["fda_cough"], aliases: ["obat batuk bayi", "obat flu bayi", "sirup batuk", "dekongestan"], examples: ["bayi 1thn batuk pilek kasih obat flu boleh", "sirup batuk buat balita aman ga"] },
   { id: "simetikon-kolik", order: 8, claim: "Simetikon atau obat GERD efektif untuk kolik", verdict: "tidak", text: "Simetikon dan obat GERD umumnya tidak efektif untuk kolik.", src: ["amboss_colic"], aliases: ["obat kolik", "simetikon", "infacol", "obat kembung bayi"], examples: ["bayi kolik kasih infacol manjur ga", "obat gerd buat kolik bayi"] },
   { id: "air-putih", order: 9, claim: "Bayi di bawah 6 bulan perlu diberi air putih atau makanan lain", verdict: "tidak", text: "ASI saja selama 6 bulan pertama, tanpa makanan atau minuman lain, termasuk air.", src: ["who_bf", "cdc_milestones"], aliases: ["air putih bayi", "bayi minum air", "kasih air", "pisang bayi 4 bulan"], examples: ["bayi 3 bln boleh minum air putih ga", "bayi 4bln udah dikasih pisang boleh ga"] },
+  { id: "emut-tangan", order: 11, claim: "Bayi mengemut tangan pasti masih lapar", verdict: "tidak", text: "Tangan ke mulut memang salah satu tanda lapar, tetapi bayi juga mengisap untuk menenangkan diri. Lihat tanda lain (mencari puting, mengecap, gelisah) dan tanda kenyang (menutup mulut, memalingkan kepala, tangan rileks).", src: ["aap_cues", "cdc_cues"], aliases: ["ngemut tangan", "emut tangan", "isap tangan", "tangan diemut", "ngenyot tangan", "jempol"], examples: ["bayi ngemut tangan berarti lapar kan", "tangan diemut terus abis nyusu, kasih lagi?"] },
   { id: "tidur-tengkurap", order: 10, claim: "Bayi aman tidur tengkurap, miring, atau dengan bantal dan bumper", verdict: "tidak", text: "Telentang setiap kali tidur sampai usia 1 tahun; miring dan tengkurap tidak aman. Area tidur harus kosong tanpa bantal, bumper, atau selimut longgar.", src: ["aap_sleep"], aliases: ["tidur tengkurap", "bantal bayi", "bumper", "tidur miring", "bantal peyang"], examples: ["bayi tidur tengkurap boleh ga", "pasang bumper di box bayi aman gak"] },
 ];
 
 const meta = {
-  version: "2026.11.07-2",
+  version: "2026.11.08-1",
   verifiedDate: "2026-11-07",
   lastCheck: "2026-11-07",
   reviewMonths: 12,

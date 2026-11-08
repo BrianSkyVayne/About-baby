@@ -697,7 +697,12 @@
       if (r.type === "checker") {
         const c = kb.checkers.find(x => x.id === r.id);
         if (!c) return "";
-        h = "<h3>" + Html.esc(c.title) + "</h3>" + (c.short ? "<p>" + Html.esc(c.short) + "</p>" : "") + this.chips(res.extracted, res.ageDays) +
+        const d = c.default, care = Array.isArray(c.care) ? c.care : [], esc = Array.isArray(c.escalate) ? c.escalate : [];
+        h = "<h3>" + Html.esc(c.title) + "</h3>" + this.chips(res.extracted, res.ageDays) +
+          (d && d.text ? "<p>" + Html.esc(d.text) + "</p>" + this.srcList(d.src) : (c.short ? "<p>" + Html.esc(c.short) + "</p>" : "")) +
+          (care.length ? '<p><strong>Yang bisa dilakukan</strong></p><ul class="items">' + care.map(it => "<li>" + Html.esc(it.t) + this.srcList(it.src) + "</li>").join("") + "</ul>" : "") +
+          (esc.length ? '<p><strong>Periksakan ke dokter bila muncul</strong></p><ul class="items">' + esc.map(t => "<li>" + Html.esc(t) + "</li>").join("") + "</ul>" : "") +
+          '<p class="small muted">Untuk hasil yang sesuai kondisi anak, jawab beberapa pertanyaan singkat:</p>' +
           '<div class="row"><button type="button" class="btn-primary" data-start="' + Html.esc(c.id) + '">' + Html.esc("Mulai cek " + c.title) + "</button></div>";
       } else if (r.type === "guide") {
         const g = kb.guides.find(x => x.id === r.id);

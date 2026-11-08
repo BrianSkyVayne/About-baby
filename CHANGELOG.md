@@ -1,10 +1,20 @@
 # Changelog
 
+### [2026.11.08-4] — 2026-11-08
+- Commit: feat: topik tanda lapar & kenyang, jawaban gumoh yang menenangkan
+- Detail:
+  - T2 feat: panduan "Tanda lapar & kenyang" dan mitos "ngemut tangan pasti lapar" (AAP HealthyChildren, CDC) — src/kb-content.js, src/kb-sources.js
+  - T1 fix: sumber tanda lapar/kenyang di perawatan gumoh diganti dari checklist milestone CDC ke CDC & AAP; tambah poin overfeeding dan tidur telentang setelah gumoh (MedlinePlus) — src/kb-checkers.js
+  - T1 feat: kartu jawaban cek gejala memuat penjelasan umum, perawatan, dan kapan ke dokter — src/page-body.html
+  - T1 test: 4 soal uji baru (2 dari pertanyaan ortu nyata) — test/search-gold.json
+  - KB meta 2026.11.08-1
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-3] — 2026-11-08
 - Commit: fix: aplikasi crash saat dibuka karena izin ACCESS_NETWORK_STATE hilang
 - Detail:
   - T1 fix: tambah izin ACCESS_NETWORK_STATE yang wajib untuk job auto-update ber-syarat jaringan (crash SecurityException di KbUpdateJob.schedule) — android/app/src/main/AndroidManifest.xml
-- Rollback: git revert <sha commit ini>
+- Rollback: git revert 3af3172
 
 ### [2026.11.08-2] — 2026-11-08
 - Commit: feat: chatbot Tanya offline tanpa token (mesin pencari KB lokal)
