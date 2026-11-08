@@ -1,5 +1,18 @@
 # Changelog
 
+### [2026.11.08-19] — 2026-11-08
+- Commit: fix: tingkat bahaya bersumber, luka bakar, sumber dengue, normalisasi bb, keyakinan pencarian
+- Detail:
+  - T2 fix: aturan bahaya ubun-ubun bersumber MedlinePlus (cekung: "check the infant right away"; menonjol: "immediate, emergency care") — tetap igd — src/engine.js, src/kb-sources.js
+  - T2 fix: kuning < 24 jam dan telapak kuning bersumber WHO IMCI Chart Booklet hal. 46 ("SEVERE JAUNDICE … Refer URGENTLY to hospital") — tetap igd — src/engine.js, src/kb-checkers.js, src/kb-sources.js
+  - T2 fix: who_dengue kembali menunjuk klasifikasi WHO 2009 (salinan fact sheet yang menimpanya dihapus); aturan perdarahan dan "bawa ke RS sekarang" kini juga mengutip who_dengue_fs ("seek care immediately") — src/engine.js, src/kb-checkers.js, src/kb-sources.js
+  - T2 feat: aturan bahaya luka bakar (level hari, kriteria IGD dalam teks) dan bagian pertolongan pertama luka bakar di panduan Pencegahan cedera, bersumber NHS Burns and scalds — src/engine.js, src/kb-content.js, src/kb-sources.js
+  - T2 fix: "bb" dibaca "berat badan" bila diikuti kata tentang berat ("bb ga naik", "bb anak segini"); selain itu tetap "bayi" — src/engine.js
+  - T2 fix: alias yang isinya hanya kata umum tidak memberi bonus frasa; jawaban tidak yakin bila kata tak dikenal KB sebanyak kata yang cocok ("kuku bayi panjang cara potong") — src/engine.js
+  - T1 test: label bahaya "anak kena air panas melepuh" dan "bayi muntah tiap habis nyusu" (IMCI vomits everything) diperbaiki — test/search-ortu.json, test/search-ortu2.json
+  - T1 chore: KB meta 2026.11.08-4; bangun ulang kb.json, kb/, halaman; versi 21 / 2026.11.08-19 — android/app/build.gradle
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-18] — 2026-11-08
 - Commit: feat: UI bahaya sesuai level, kotak tanya di Beranda, gulir ke hasil
 - Detail:

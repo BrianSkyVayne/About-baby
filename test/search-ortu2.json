@@ -16,9 +16,10 @@
  {
   "q": "bayi muntah tiap habis nyusu wajar ga",
   "expect": "checker:gumoh",
-  "danger": false,
+  "danger": true,
   "synthetic": true,
-  "set": "ortu-holdout-2026-11-08b"
+  "set": "ortu-holdout-2026-11-08b",
+  "note": "IMCI: 'vomits everything' = tanda bahaya umum; label awal salah"
  },
  {
   "q": "mencret 5x sehari bayi 8 bulan",

@@ -105,11 +105,16 @@ const guides = [
       { t: "Ukur tinggi juga, bukan hanya berat. Masa paling menentukan adalah sejak kehamilan sampai usia 2 tahun.", src: ["stunting"] }
     ] }
   ] },
-  { id: "aman", order: 10, title: "Pencegahan cedera", aliases: ["cedera", "jatuh", "tenggelam", "kecelakaan", "luka bakar", "keracunan", "bahaya rumah", "child proofing", "jatuh dari kasur", "kepala kebentur", "terjatuh", "obat terkunci", "baby proofing", "tertelan", "minyak tanah", "bensin", "pemutih", "obat nyamuk", "deterjen", "baterai tertelan"], examples: ["bayi jatuh dari kasur gmn", "anak deket kolam bahaya", "bayi minum sabun keracunan", "cara aman simpen obat dr anak", "anak kebentur kepala muntah"], sections: [
+  { id: "aman", order: 10, title: "Pencegahan cedera", aliases: ["cedera", "jatuh", "tenggelam", "kecelakaan", "luka bakar", "keracunan", "bahaya rumah", "child proofing", "jatuh dari kasur", "kepala kebentur", "terjatuh", "obat terkunci", "baby proofing", "tertelan", "minyak tanah", "bensin", "pemutih", "obat nyamuk", "deterjen", "baterai tertelan", "luka bakar", "tersiram air panas", "melepuh"], examples: ["bayi jatuh dari kasur gmn", "anak deket kolam bahaya", "bayi minum sabun keracunan", "cara aman simpen obat dr anak", "anak kebentur kepala muntah"], sections: [
     { h: "WHO", items: [
       { t: "Anak usia 0–4 tahun punya angka tenggelam tertinggi. Risiko naik saat anak dekat air tanpa pengawasan aktif orang dewasa.", src: ["who_drowning"] },
       { t: "Penyebab utama kematian akibat cedera pada anak: kecelakaan lalu lintas, tenggelam, luka bakar, jatuh, dan keracunan.", src: ["who_injury"] },
       { t: "Simpan obat, bahan kimia, dan pembersih terkunci dan jauh dari jangkauan anak.", src: ["aap_poison"] }
+    ] },
+    { h: "Luka bakar atau tersiram air panas", items: [
+      { t: "Siram bagian yang terbakar dengan air mengalir yang sejuk selama 20 menit, secepatnya (paling lambat dalam 3 jam). Tanpa air mengalir, pakai air sejuk dalam botol atau handuk basah.", src: ["nhs_burns"] },
+      { t: "Lepaskan pakaian atau perhiasan di dekat luka, tetapi biarkan yang menempel pada luka. Setelah dingin, tutup dengan plastik wrap secara longgar, jangan dililitkan.", src: ["nhs_burns"] },
+      { t: "Ke IGD bila luka bakar luas atau dalam, mengenai wajah, kelamin, atau bokong, atau akibat bahan kimia atau listrik. Untuk anak di bawah 5 tahun, mintalah saran tenaga kesehatan.", src: ["nhs_burns"] }
     ] }
   ] },
   { id: "ibu", order: 11, title: "Kesehatan ibu", aliases: ["baby blues", "depresi pascapersalinan", "ppd", "ibu sedih", "stres ibu", "postpartum", "capek mental", "nangis terus ibu", "kesehatan ibu", "ibu baru", "burnout", "mood swing"], examples: ["baby blues sampe kapan", "aku sering nangis habis lahiran normal ga", "ppd tanda tandanya apa", "ibu pengen nyakitin bayi", "stres ngurus bayi gmn"], sections: [
@@ -279,7 +284,7 @@ const mitos = [
 ];
 
 const meta = {
-  version: "2026.11.08-3",
+  version: "2026.11.08-4",
   verifiedDate: "2026-11-07",
   lastCheck: "2026-11-07",
   reviewMonths: 12,
