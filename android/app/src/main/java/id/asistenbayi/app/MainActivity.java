@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
     private KbBridge bridge;
     private AdController ads;
     private TipController tips;
+    private BackNavigation back;
     private final AssetServer assets = new AssetServer(this);
 
     @Override
@@ -58,6 +59,7 @@ public class MainActivity extends Activity {
 
         bridge = new KbBridge(this, webView, new KnowledgeStore(this), ads, tips);
         webView.addJavascriptInterface(bridge, "AndroidKB");
+        back = new BackNavigation(this, webView);
         webView.setWebViewClient(new AppClient());
 
         if (savedInstanceState != null) webView.restoreState(savedInstanceState);
@@ -72,6 +74,11 @@ public class MainActivity extends Activity {
             if (HOST.equals(uri.getHost())) return false;
             openExternal(uri.toString());
             return true;
+        }
+
+        @Override
+        public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+            back.update();
         }
 
         @Override
@@ -91,12 +98,14 @@ public class MainActivity extends Activity {
     }
 
     /** Android 15 menggambar sampai tepi layar; beri ruang untuk status bar dan navigasi. */
+    @SuppressWarnings("deprecation")
     private void applySystemBarPadding(View v) {
         v.setOnApplyWindowInsetsListener((view, insets) -> {
             if (Build.VERSION.SDK_INT >= 30) {
                 Insets bars = insets.getInsets(WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
                 view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             } else {
+                //noinspection deprecation
                 view.setPadding(insets.getSystemWindowInsetLeft(), insets.getSystemWindowInsetTop(),
                         insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());
             }
@@ -118,10 +127,11 @@ public class MainActivity extends Activity {
         if (requestCode == REQ_PICK) bridge.onFilePicked(resultCode == RESULT_OK && data != null ? data.getData() : null);
     }
 
+    /** Hanya dipakai di Android 12 ke bawah; versi baru memakai {@link BackNavigation}. */
     @Override
+    @SuppressWarnings("deprecation")
     public void onBackPressed() {
-        if (webView.canGoBack()) webView.goBack();
-        else super.onBackPressed();
+        if (!back.handleLegacy()) super.onBackPressed();
     }
 
     @Override
