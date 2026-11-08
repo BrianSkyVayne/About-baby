@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
     static final int REQ_SPEECH = 42;
 
     private WebView webView;
+    private View root;
     private KbBridge bridge;
     private final AssetServer assets = new AssetServer(this);
 
@@ -40,6 +41,7 @@ public class MainActivity extends Activity {
         android.widget.FrameLayout root = new android.widget.FrameLayout(this);
         root.setBackgroundColor(0xFFF4FBF9);
         root.addView(webView, new android.widget.FrameLayout.LayoutParams(-1, -1));
+        this.root = root;
         setContentView(root);
         applySystemBarPadding(root);
         registerBack();
@@ -103,6 +105,25 @@ public class MainActivity extends Activity {
             }
             return insets;
         });
+    }
+
+    /** Latar di balik status bar/navigasi dan warna ikonnya, menyamai tema halaman (warna = --md-sys-color-surface). */
+    @SuppressWarnings("deprecation")
+    void applyBars(boolean dark) {
+        int bg = dark ? 0xFF0E1514 : 0xFFF4FBF9;
+        root.setBackgroundColor(bg);
+        getWindow().setStatusBarColor(bg);
+        getWindow().setNavigationBarColor(bg);
+        if (Build.VERSION.SDK_INT >= 30) {
+            int light = android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                    | android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
+            getWindow().getInsetsController().setSystemBarsAppearance(dark ? 0 : light, light);
+        } else {
+            View d = getWindow().getDecorView();
+            int f = d.getSystemUiVisibility();
+            int light = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | (Build.VERSION.SDK_INT >= 26 ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR : 0);
+            d.setSystemUiVisibility(dark ? f & ~light : f | light);
+        }
     }
 
     void startPicker() {
