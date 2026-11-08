@@ -59,7 +59,7 @@ final class AdController {
     private AdSize bannerSize() {
         DisplayMetrics m = activity.getResources().getDisplayMetrics();
         int widthDp = (int) (m.widthPixels / m.density);
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, widthDp);
+        return AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, widthDp);
     }
 
     void pause() { if (adView != null) adView.pause(); }
