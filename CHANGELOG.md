@@ -1,5 +1,15 @@
 # Changelog
 
+### [2026.11.08-9] — 2026-11-08
+- Commit: fix: lanjutan koreksi fakta medis dan bersihkan sumber mati
+- Detail:
+  - T3 fix: bayi kuning yang sama sekali tidak mau menyusu, lebih mengantuk, atau sulit dibangunkan diarahkan ke IGD (NHS "Call 999 or go to A&E"); sumber diganti dari aap_bili yang tidak memuat klaim itu ke nhs_jaundice — src/kb-checkers.js
+  - T3 fix: tanda bahaya lemas memakai istilah bagan IMCI "letargis atau tidak sadar", definisi yang tak terverifikasi dihapus — src/kb-checkers.js
+  - T2 fix: anjuran "lebih sedikit tapi lebih sering" dibatasi untuk susu formula sesuai MedlinePlus — src/kb-checkers.js
+  - T1 chore: hapus 5 sumber yang tak lagi dirujuk (redcross_choke, banner_pyloric, newborn_intake, medstar_bili, febrile_5min) — src/kb-sources.js, kb/sources/
+  - T1 chore: bangun ulang kb.json dan halaman; versi 11 / 2026.11.08-9 — android/app/build.gradle
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-8] — 2026-11-08
 - Commit: feat: Beranda dan Profil diringkas dari sudut pandang ortu
 - Detail:
@@ -27,7 +37,7 @@
   - T2 fix: judul/URL sumber yang salah atau mati diganti tautan resmi; sumber baru ditambahkan — src/kb-sources.js
   - T1 test: tes frekuensi menerima kata tanpa angka bila angka tak bersumber — test/engine.test.js
   - T1 chore: bangun ulang kb.json dan halaman — kb.json, index.html, offline.html, android/app/src/main/assets/www/index.html; versi 8 / 2026.11.08-6 — android/app/build.gradle
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert be49540
 
 ### [2026.11.08-5] — 2026-11-08
 - Commit: feat: tampilan Material 3 dan kartu jawaban ringkas bersumber bernomor

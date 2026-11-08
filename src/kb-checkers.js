@@ -9,7 +9,7 @@ const tandaBahayaUmum = [
   { id: "muntahsemua", text: "Anak memuntahkan semua yang diminum (tidak ada yang tertahan)?", type: YN }
 ];
 const rulesBahayaUmum = [
-  { id: "r-lemas", when: { yes: "lemas" }, level: 4, text: "Lemas atau sulit dibangunkan termasuk tanda bahaya umum WHO. Anak yang letargis berbeda dengan anak yang sekadar tidur: ia tidak bisa dibangunkan sepenuhnya.", src: ["who_imci_danger", "who_dehid"] },
+  { id: "r-lemas", when: { yes: "lemas" }, level: 4, text: "Lemas, sangat mengantuk, atau sulit dibangunkan termasuk tanda bahaya umum WHO (letargis atau tidak sadar). Segera bawa ke IGD.", src: ["who_imci_danger", "who_dehid"] },
   { id: "r-kejang", when: { yes: "kejang" }, level: 4, text: "Kejang termasuk tanda bahaya umum WHO.", src: ["who_imci_danger"] },
   { id: "r-tdkminum", when: { yes: "tdkminum" }, level: 4, text: "Tidak bisa minum atau menyusu termasuk tanda bahaya umum WHO.", src: ["who_imci_danger"] },
   { id: "r-muntahsemua", when: { yes: "muntahsemua" }, level: 4, text: "Memuntahkan semua yang diminum termasuk tanda bahaya umum WHO.", src: ["who_imci_danger"] }
@@ -66,7 +66,7 @@ module.exports = [
       { t: "Sendawakan di sela-sela menyusu, bukan hanya di akhir.", src: ["aap_spitup"] },
       { t: "Setelah menyusu, gendong tegak minimal 20 menit dan hindari main aktif.", src: ["aap_spitup"] },
       { t: "Ikuti tanda lapar dan kenyang bayi. Bila masih ada tanda lapar setelah gumoh, boleh disusui lagi; bila sudah tampak kenyang, tidak perlu dipaksa.", src: ["cdc_cues", "aap_cues"] },
-      { t: "Terlalu banyak minum membuat perut terlalu penuh sehingga susu keluar lagi. Menyusu lebih sedikit tapi lebih sering bisa membantu.", src: ["medline_spitup"] },
+      { t: "Terlalu banyak minum membuat perut terlalu penuh sehingga susu keluar lagi. Bila minum susu formula, berikan lebih sedikit tapi lebih sering.", src: ["medline_spitup"] },
       { t: "Lanjutkan ASI dan hindari pemberian berlebihan. Penanganan awal gumoh tidak memakai obat.", src: ["hegar"] },
       { t: "Setelah digendong tegak, bayi boleh ditidurkan. Tetap telentang di alas yang datar dan kokoh, juga pada bayi dengan refluks. Bayi tidak tersedak karena tidur telentang.", src: ["aap_hc_safesleep", "aap_sleep"] }
     ],
@@ -307,7 +307,7 @@ module.exports = [
       { id: "r-awal", when: { yes: "awal" }, level: 4, text: "Kuning dalam 24 jam pertama termasuk tanda bahaya bayi baru lahir WHO, dan menurut AAP kadar bilirubinnya perlu diperiksa segera.", src: ["who_newborn", "aap_bili"] },
       { id: "r-telapak", when: { yes: "telapak" }, level: 4, text: "Telapak tangan atau kaki yang kuning termasuk tanda bahaya bayi baru lahir WHO.", src: ["who_newborn"] },
       { id: "r-malas-nb", when: { all: [{ yes: "malas" }, { age: ["<=", 28] }] }, level: 4, text: "Tidak mau menyusu dengan baik termasuk tanda bahaya bayi baru lahir WHO.", src: ["who_newborn"] },
-      { id: "r-malas", when: { all: [{ yes: "malas" }, { age: [">", 28] }] }, level: 3, text: "Malas menyusu disertai kuning perlu diperiksakan hari ini.", src: ["aap_bili"] },
+      { id: "r-malas", when: { all: [{ yes: "malas" }, { age: [">", 28] }] }, level: 3, text: "Malas menyusu disertai kuning perlu diperiksakan hari ini. Bila bayi yang kuning sama sekali tidak mau menyusu, lebih mengantuk dari biasanya, atau sulit dibangunkan, segera bawa ke IGD.", src: ["nhs_jaundice"] },
       { id: "r-urin", when: { yes: "urin" }, level: 3, text: "Urin kuning gelap atau cokelat, atau tinja pucat seperti krem, perlu segera diperiksakan ke dokter atau bidan hari ini. Simpan contoh tinjanya untuk ditunjukkan.", src: ["nhs_jaundice"] },
       { id: "r-lama", when: { yes: "lama" }, level: 3, text: "Kuning yang menetap lewat 2 minggu pada bayi susu formula, atau lewat 3–4 minggu pada bayi ASI, perlu diperiksa bilirubin total dan direk. Bila bayi Anda minum ASI dan baru lewat 2 minggu, sampaikan ke dokter atau bidan, terutama bila kuningnya tidak membaik.", src: ["aap_bili", "hc_jaundice", "nhs_jaundice"] }
     ],
