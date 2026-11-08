@@ -11,7 +11,7 @@
   - T2 fix: alias yang isinya hanya kata umum tidak memberi bonus frasa; jawaban tidak yakin bila kata tak dikenal KB sebanyak kata yang cocok ("kuku bayi panjang cara potong") — src/engine.js
   - T1 test: label bahaya "anak kena air panas melepuh" dan "bayi muntah tiap habis nyusu" (IMCI vomits everything) diperbaiki — test/search-ortu.json, test/search-ortu2.json
   - T1 chore: KB meta 2026.11.08-4; bangun ulang kb.json, kb/, halaman; versi 21 / 2026.11.08-19 — android/app/build.gradle
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert e2dce0e
 
 ### [2026.11.08-18] — 2026-11-08
 - Commit: feat: UI bahaya sesuai level, kotak tanya di Beranda, gulir ke hasil
