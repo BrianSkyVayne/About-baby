@@ -5,7 +5,7 @@
 - Detail:
   - T2 feat: setiap hasil DangerDetector membawa level "igd" | "hari" | "pantau", diambil dari kalimat aturan yang sudah ada ("hari ini", "periksakan", "pantau 24 jam"); aturan yang kalimatnya tidak menyebut waktu tetap "igd" (lebih aman) — src/engine.js
   - T1 chore: bangun ulang halaman; versi 19 / 2026.11.08-17 — android/app/build.gradle
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert 031047e
 
 ### [2026.11.08-16] — 2026-11-08
 - Commit: chore: hapus sumber dobel, tambah soal uji tertahan baru
