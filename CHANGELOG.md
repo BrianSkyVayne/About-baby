@@ -1,5 +1,16 @@
 # Changelog
 
+### [2026.11.08-5] — 2026-11-08
+- Commit: feat: tampilan Material 3 dan kartu jawaban ringkas bersumber bernomor
+- Detail:
+  - T2 feat: token Material Design 3 (skema SchemeTonalSpot dari seed #1f6f6a via material-color-utilities, tipografi/bentuk/state dari @material/web), font Roboto — src/page-head.html
+  - T1 fix: status bar dan bar navigasi gestur tidak lagi menimpa halaman (WebView dibungkus FrameLayout yang diberi padding inset) — android/app/src/main/java/id/asistenbayi/app/MainActivity.java
+  - T1 feat: kartu jawaban ringkas, rujukan [n] dan daftar "Sumber" yang bisa dibuka; kotak "Periksakan ke dokter bila muncul" — src/page-body.html
+  - T1 feat: baris umpan balik satu baris, target sentuh 48px — src/page-body.html
+  - T1 feat: umur di pertanyaan dibawa ke cek gejala, dengan banner penjelas — src/page-body.html
+  - Build versionCode 7 — android/app/build.gradle
+- Rollback: <pending-sha, fill post-commit>
+
 ### [2026.11.08-4] — 2026-11-08
 - Commit: feat: topik tanda lapar & kenyang, jawaban gumoh yang menenangkan
 - Detail:
@@ -8,7 +19,7 @@
   - T1 feat: kartu jawaban cek gejala memuat penjelasan umum, perawatan, dan kapan ke dokter — src/page-body.html
   - T1 test: 4 soal uji baru (2 dari pertanyaan ortu nyata) — test/search-gold.json
   - KB meta 2026.11.08-1
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert c780785
 
 ### [2026.11.08-3] — 2026-11-08
 - Commit: fix: aplikasi crash saat dibuka karena izin ACCESS_NETWORK_STATE hilang
