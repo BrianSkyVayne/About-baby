@@ -70,7 +70,7 @@ const guides = [
   { id: "tersedak", order: 6, title: "Tersedak", aliases: ["tersedak", "keselek", "ke selek", "kesedak", "nyangkut di tenggorokan", "heimlich", "bayi keselek", "anak tersedak", "tertelan benda", "menelan koin", "rjp", "bayi tidak bisa napas"], examples: ["bayi keselek ga bisa nangis gmn", "anak tersedak kacang tolong", "bayi 8 bln tersedak mpasi", "tepuk punggung bayi tersedak caranya", "anak keselek tapi masih batuk"], sections: [
     { h: "Bayi di bawah 1 tahun yang tidak bisa menangis atau batuk", items: [
       { t: "1. Telungkupkan bayi di lengan Anda, kepala lebih rendah dari badan, lalu beri hingga 5 tepukan di punggung di antara tulang belikat.", src: ["medline_choke_infant", "nhs_choke"] },
-      { t: "2. Bila belum keluar, balikkan bayi telentang dengan kepala lebih rendah, lalu beri hingga 5 tekanan dada dengan 2 jari di tengah dada, tepat di bawah garis puting.", src: ["nhs_choke", "medline_choke_infant"] },
+      { t: "2. Bila belum keluar, balikkan bayi telentang dengan kepala lebih rendah, lalu beri hingga 5 tekanan dada dengan 2 jari di tengah dada, tepat di bawah garis puting.", src: ["nhs_choke"] },
       { t: "3. Ulangi bergantian sampai benda keluar. Bila bayi tidak sadar, panggil bantuan (119/112) dan mulai RJP di alas datar dan keras.", src: ["medline_choke_infant", "nhs_choke"] },
       { t: "Jangan lakukan hentakan perut pada bayi di bawah 1 tahun, dan jangan mencolok jari ke mulut bila bendanya tidak terlihat.", src: ["acep_choke"] }
     ] },
@@ -211,8 +211,8 @@ const milestones = [
 ];
 
 const imunisasi = {
-  note: "Sumber sekunder (Bio Farma mengutip IDAI 2024). Cocokkan dengan jadwal resmi IDAI atau buku KIA sebelum dijadikan patokan; IDAI merevisi jadwal sekitar tiap 3 tahun.",
-  src: ["idai_imun"],
+  note: "Sumber sekunder (Bio Farma mengutip IDAI 2024). Cocokkan dengan jadwal resmi IDAI atau buku KIA sebelum dijadikan patokan; IDAI merevisi jadwal sekitar tiap 3 tahun. Hepatitis B-0 dalam 24 jam setelah lahir sesuai anjuran WHO.",
+  src: ["idai_imun", "who_hepb"],
   rows: [
     ["Lahir (< 24 jam)", "Hepatitis B-0, Polio-0"],
     ["< 1 bulan", "BCG"],

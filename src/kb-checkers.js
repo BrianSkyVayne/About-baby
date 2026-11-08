@@ -211,7 +211,7 @@ module.exports = [
       { id: "r-flag", when: { any: [{ yes: "demam" }, { yes: "muntah" }, { yes: "diare" }, { yes: "kembung" }, { yes: "malas" }, { yes: "melengking" }] }, level: 3, text: "Tangisan yang disertai tanda ini tidak termasuk kolik dan perlu diperiksakan ke dokter.", src: ["amboss_colic", "rome4"] },
       { id: "r-bb", when: { eq: ["tumbuh", "tidak"] }, level: 3, text: "Kolik hanya ditegakkan bila pertumbuhan baik. Berat badan yang tidak naik perlu diperiksakan.", src: ["rome4"] },
       { id: "r-usia", when: { all: [{ yes: "pola" }, { age: [">=", 150] }] }, level: 2, text: "Pola menangis ini terjadi di luar batas usia kolik menurut Rome IV (gejala mulai dan berhenti sebelum 5 bulan). Konsultasikan ke dokter.", src: ["rome4"] },
-      { id: "n-kolik", when: { all: [{ yes: "pola" }, { age: ["<", 150] }, { not: { eq: ["tumbuh", "tidak"] } }] }, level: 0, text: "Gambaran ini sesuai kriteria kolik Rome IV bila bayi tetap tumbuh baik dan tidak demam atau sakit. Kolik memuncak sekitar usia 6 minggu dan membaik sampai 5 bulan.", src: ["rome4", "amboss_colic"] }
+      { id: "n-kolik", when: { all: [{ yes: "pola" }, { age: ["<", 150] }, { not: { eq: ["tumbuh", "tidak"] } }] }, level: 0, text: "Gambaran ini sesuai kriteria kolik Rome IV bila bayi tetap tumbuh baik dan tidak demam atau sakit. Kolik memuncak sekitar usia 6 minggu dan membaik sampai 5 bulan.", src: ["rome4", "amboss_colic", "aap_colic"] }
     ],
     default: { level: 1, title: "Umum", text: "Tangisan bayi sering paling berat di bulan-bulan pertama, lalu membaik.", src: ["cdc_aht"] },
     differentials: [],
