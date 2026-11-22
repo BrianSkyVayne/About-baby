@@ -4,7 +4,7 @@
 - Commit: feat: ikon app baru keluarga SkyDreamer (botol gold-putih di langit malam)
 - Detail:
   - T1 feat: ikon launcher adaptif + legacy + round (mdpi–xxxhdpi) dari SKYDREAMER_LOGO, manifest pindah dari @drawable/ic_launcher ke @mipmap/ic_launcher — android/app/src/main/res/mipmap-*, android/app/src/main/AndroidManifest.xml
-- Rollback: <pending-sha, fill post-commit>
+- Rollback: git revert faf5161
 
 ### [2026.11.08-29] — 2026-11-08
 - Commit: feat: kartu jawaban menampilkan butir panduan yang cocok dengan pertanyaan
